@@ -6,7 +6,7 @@
 #    By: hsabir <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/22 13:45:33 by hsabir            #+#    #+#              #
-#    Updated: 2022/01/22 14:33:05 by hsabir           ###   ########.fr        #
+#    Updated: 2022/01/22 14:52:00 by hsabir           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,9 +37,9 @@ LMLX = $(LMLX_DIR)/$(LMLX_NAME)
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 # Debug flags
-CFLAGS += -g3 -fsanitize=address -v
+DBFLAGS += -g3 -fsanitize=address -v
 # LIBS FLAG
-CFLAGS += -I ./$(LFT_DIR)/incs -I ./$(LMLX_DIR) -I ./incs
+IFLAGS += -I ./$(LFT_DIR)/incs -I ./$(LMLX_DIR) -I ./incs
 
 LDFLAGS = -L ./
 
@@ -65,7 +65,7 @@ endif
 all: $(NAME)
 
 $(NAME): $(LFT_NAME) $(LMLX_NAME)
-	$(CC) $(SRC_FILES) $^ -o $@ $(CCFLAGS) $(LDFLAGS) $(LDLIBS)
+	$(CC) $(SRC_FILES) $^ -o $@ $(CCFLAGS) $(LDFLAGS) $(LDLIBS) $(IFLAGS) #$(DBFLAGS)
 
 $(LFT_NAME):
 	$(MAKE) all -sC $(LFT_DIR)

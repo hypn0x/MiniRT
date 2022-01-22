@@ -6,13 +6,14 @@
 /*   By: hsabir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/22 14:16:34 by hsabir            #+#    #+#             */
-/*   Updated: 2022/01/22 14:17:40 by hsabir           ###   ########.fr       */
+/*   Updated: 2022/01/22 14:54:12 by hsabir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINI_RT
 # define MINI_RT
 
-# include "../libs/libft/incs/libft.h"
+# include <libft.h>
+# include <mlx.h>
 
 #endif
