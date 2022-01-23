@@ -37,12 +37,12 @@ int main(void)
 	t_data	img;
 
 	mlx = mlx_init();
-	mlx_win = mlx_new_window(mlx, 1920, 1080, "Hello MiniRT!");
-	img.img = mlx_new_image(mlx, 1920, 1080);
+	mlx_win = mlx_new_window(mlx, 800, 800, "Hello MiniRT!");
+	img.img = mlx_new_image(mlx, 800, 800);
 	img.addr = mlx_get_data_addr(img.img, &img.bbp, &img.line_len, &img.endian);
-	for (int i = 0; i < 1920; i++)
-		for (int j = 0; j < 1080; j++)
-				my_mlx_pixel_put(&img, i, j, 0x00FF0000 + i * j);
+	for (int i = 0; i < 800; i++)
+		for (int j = 0; j < 800; j++)
+			my_mlx_pixel_put(&img, i, j, 0xFFFF0000 + i * j + i * j);
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
 	mlx_loop(mlx);
 }

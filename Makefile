@@ -49,7 +49,8 @@ SRC_FILES =	$(SRC_PATH)/main.c
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
 	CFLAGS += -D LINUX
-	LDLIBS = -lft -lmlx_Linux
+#	LDLIBS = -lft -lmlx_Linux
+	LDLIBS = -lft -l:libmlx_Linux.a
 	LDLIBS += -lXext -lX11 -lm -lz
 	LMLX_NAME = $(LMLX_NAME_LINUX)
 	LMLX_DIR = $(LMLX_DIR_LINUX)
