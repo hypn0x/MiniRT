@@ -12,6 +12,7 @@
 
 #include <parser.h>
 #include <mlx.h>
+#include <libft.h>
 //#include <mlx.h>
 
 typedef struct s_data

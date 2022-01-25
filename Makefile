@@ -19,7 +19,7 @@ CFLAGS := ${CFLAGS}
 CC     ?= gcc
 LD     ?= gcc
 
-INC_FLAGS := -Ilibs/libft
+INC_FLAGS := -Ilibs/libft/incs
 LIBS := -Llibs/libft -lft -lmlx
 
 UNAME = $(shell uname -s)
@@ -50,6 +50,7 @@ INC_FLAGS += $(addprefix -I,$(INC_DIRS))
 LIB    := libs/libft/libft.a
 
 CFLAGS += -Wall -Wextra -Werror
+CFLAGS += -std=c99 -pedantic
 #CFLAGS += -O2 -march=native
 #CFLAGS += -g3 -fsanitize=address -v
 
