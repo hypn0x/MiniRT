@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minirt.h>
+#include <parser.h>
+#include <mlx.h>
 //#include <mlx.h>
 
 typedef struct s_data
@@ -30,13 +31,17 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
 	void	*mlx;
 	void	*mlx_win;
 	t_data	img;
 
-
+	if (argc > 1)
+	{
+		parser(argc, argv);
+		return (0);
+	}
 	mlx = mlx_init();
 	mlx_win = mlx_new_window(mlx, 800, 800, "Hello MiniRT!");
 	img.img = mlx_new_image(mlx, 800, 800);

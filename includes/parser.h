@@ -10,11 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINI_RT
-# define MINI_RT
+#ifndef PARSER_H
+# define PARSER_H
 
-# include <libft.h>
-# include <libgnl.h>
-# include <mlx.h>
+int parser(int argc, char **argv);
 
 #endif

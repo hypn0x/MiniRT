@@ -11,7 +11,9 @@ include_directories(libs/libft libs/get_next_line/includes)
 link_directories(libs/libft libs/get_next_line)
 
 add_executable(miniRT
-        srcs/parser.c
+        src/main.c
+        src/parser.c
+        includes/parser.h
 )
 
 TARGET_LINK_LIBRARIES(miniRT mlx)

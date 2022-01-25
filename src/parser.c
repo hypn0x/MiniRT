@@ -155,7 +155,7 @@ int	parse_line(char *line, t_list **head)
 	return (ret);
 }
 
-int main(int argc, char **argv)
+int parser(int argc, char **argv)
 {
 	printf("BUFFER_SIZE=%d\n", BUFFER_SIZE);
 	char	*line;
@@ -185,4 +185,5 @@ int main(int argc, char **argv)
 	}
 	free(line);
 	close(fd);
+	return (0);
 }
