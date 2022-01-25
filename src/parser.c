@@ -2,8 +2,8 @@
 // Created by segransm on 1/25/22.
 //
 
-#include <libgnl.h>
-#include <libft.h>
+
+#include "../libs/libft/incs/libft.h"
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>

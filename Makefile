@@ -6,7 +6,7 @@
 #    By: hsabir <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/22 13:45:33 by hsabir            #+#    #+#              #
-#    Updated: 2022/01/22 14:52:00 by hsabir           ###   ########.fr        #
+#    Updated: 2022/01/25 21:04:02 by penguin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,8 +19,8 @@ CFLAGS := ${CFLAGS}
 CC     ?= gcc
 LD     ?= gcc
 
-INC_FLAGS := -Ilibs/libft -Ilibs/get_next_line/includes
-LIBS := -Llibs/libft -Llibs/get_next_line/dist -lft -lmlx -lgnl
+INC_FLAGS := -Ilibs/libft
+LIBS := -Llibs/libft -lft -lmlx
 
 UNAME = $(shell uname -s)
 ifeq ($(UNAME), Linux)
@@ -47,7 +47,7 @@ OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 INC_DIRS := $(shell find $(INCLUDE_DIR) -type d)
 INC_FLAGS += $(addprefix -I,$(INC_DIRS))
 
-LIB    := libs/libft/libft.a libs/get_next_line/dist/libgnl.a
+LIB    := libs/libft/libft.a
 
 CFLAGS += -Wall -Wextra -Werror
 #CFLAGS += -O2 -march=native
@@ -68,20 +68,17 @@ $(BUILD_DIR)/%.c.o: %.c
 $(LIB):
 	@$(MAKE) -C libs/libft
 	@echo Libft done
-	@$(MAKE) -C libs/get_next_line
 	@echo GNL done
 
 clean:
 	@rm -rf $(BUILD_DIR)
 	@$(MAKE) -C libs/libft clean
-	@$(MAKE) -C libs/get_next_line clean
 	@echo Clean done
 
 fclean:
 	@rm -rf $(BUILD_DIR)
 	@rm -f $(NAME)
 	@$(MAKE) -C libs/libft fclean
-	@$(MAKE) -C libs/get_next_line fclean
 	@echo Fclean done
 
 re: fclean
