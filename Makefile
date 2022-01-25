@@ -10,83 +10,81 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = miniRT
 
-# PATHS
-INC_PATH = incs
-SRC_PATH = srcs
-OBJ_PATH = objs
-LIB_PATH = libs
 
-# LIBS NAME
-LFT_NAME = libft.a
-LMLX_MACOS = libmlx.a
-LMLX_LINUX = libmlx.a
+SHELL = /bin/sh
 
-MAKE = make
+CFLAGS := ${CFLAGS}
 
-# LIBS DIR
-LFT_DIR = $(LIB_PATH)/libft
-LMLX_DIR_LINUX = $(LIB_PATH)/mlx_linux
-LMLX_DIR_MACOS = $(LIB_PATH)/mlx_macos
+CC     ?= gcc
+LD     ?= gcc
 
-# LIBS
-LFT = $(LFT_DIR)/$(LFT_NAME)
-LMLX = $(LMLX_DIR)/$(LMLX_NAME)
+INC_FLAGS := -Ilibs/libft -Ilibs/get_next_line/includes
+LIBS := -Llibs/libft -Llibs/get_next_line/dist -lft -lmlx -lgnl
 
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror
-# Debug flags
-DBFLAGS += -g3 -fsanitize=address -v
-# LIBS FLAG
-IFLAGS += -I ./$(LFT_DIR)/incs -I ./$(LMLX_DIR) -I ./incs
-
-LDFLAGS = -L ./
-
-# SOURCES
-SRC_FILES =	$(SRC_PATH)/main.c
-
-UNAME_S := $(shell uname -s)
-ifeq ($(UNAME_S),Linux)
-	CFLAGS += -D LINUX
-#	LDLIBS = -lft -lmlx_Linux
-	LDLIBS = -lft -l:libmlx_Linux.a
-	LDLIBS += -lXext -lX11 -lm -lz
-	LMLX_NAME = $(LMLX_NAME_LINUX)
-	LMLX_DIR = $(LMLX_DIR_LINUX)
-endif
-ifeq ($(UNAME_S),Darwin)
-	CFLAGS += -D OSX
-	CCFLAGS += -framework OpenGL -framework AppKit
-	LDLIBS = -lft -lmlx
-	LMLX_NAME = $(LMLX_MACOS)
-	LMLX_DIR = $(LMLX_DIR_MACOS)
+UNAME = $(shell uname -s)
+ifeq ($(UNAME), Linux)
+	NPROC := $(shell nproc)
+	LIBS += -lmlx -lXext -lX11 -lm -lbsd
+else
+	NPROC := $(shell sysctl -n hw.ncpu)
+	INC_FLAGS += -Ilibs/mlx
+    LIBS += -Llibs/mlx -framework OpenGL -framework Appkit
 endif
 
-all: $(NAME)
+MAKEFLAGS += --output-sync=target
+MAKEFLAGS += --no-print-directory
 
-$(NAME): $(LFT_NAME) $(LMLX_NAME)
-	$(CC) $(SRC_FILES) $^ -o $@ $(CCFLAGS) $(LDFLAGS) $(LDLIBS) $(IFLAGS) #$(DBFLAGS)
+NAME ?= miniRT
 
-$(LFT_NAME):
-	$(MAKE) all -sC $(LFT_DIR)
-	cp $(LFT) $(LFT_NAME)
+BUILD_DIR ?= ./build
+SRC_DIRS ?= ./src
+INCLUDE_DIR ?= ./includes
 
-$(LMLX_NAME):
-	$(MAKE) all -sC $(LMLX_DIR) 2> /dev/null
-	cp $(LMLX) $(LMLX_NAME)
+SRCS := $(shell find $(SRC_DIRS) -name '*.c')
+OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
+
+INC_DIRS := $(shell find $(INCLUDE_DIR) -type d)
+INC_FLAGS += $(addprefix -I,$(INC_DIRS))
+
+LIB    := libs/libft/libft.a libs/get_next_line/dist/libgnl.a
+
+CFLAGS += -Wall -Wextra -Werror
+#CFLAGS += -O2 -march=native
+#CFLAGS += -g3 -fsanitize=address -v
+
+all:
+	@$(MAKE) -j$(NPROC) $(NAME)
+
+$(NAME): $(LIB) $(OBJS)
+	@echo Linking $@
+	@$(CC) $(CFLAGS) $(INC_FLAGS) $(OBJS) $(LIBS) -o $(NAME)
+
+$(BUILD_DIR)/%.c.o: %.c
+	@echo Compiling $@
+	@mkdir -p $(dir $@)
+	@$(CC) -c  $(CFLAGS) $(INC_FLAGS) $< -o $@
+
+$(LIB):
+	@$(MAKE) -C libs/libft
+	@echo Libft done
+	@$(MAKE) -C libs/get_next_line
+	@echo GNL done
 
 clean:
-	$(MAKE) clean -sC $(LFT_DIR)
-	$(MAKE) clean -sC $(LMLX_DIR)
-	rm -rf $(LFT_NAME)
-	rm -rf $(LMLX_NAME)
-	rm -rf $(OBJ_PATH)
+	@rm -rf $(BUILD_DIR)
+	@$(MAKE) -C libs/libft clean
+	@$(MAKE) -C libs/get_next_line clean
+	@echo Clean done
 
-fclean: clean
-	$(MAKE) fclean -sC $(LFT_DIR)
-	rm -rf $(NAME)
+fclean:
+	@rm -rf $(BUILD_DIR)
+	@rm -f $(NAME)
+	@$(MAKE) -C libs/libft fclean
+	@$(MAKE) -C libs/get_next_line fclean
+	@echo Fclean done
 
-re: fclean all
+re: fclean
+	@$(MAKE) -j$(NPROC) $(NAME)
 
 .PHONY: all clean fclean re
