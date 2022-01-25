@@ -36,6 +36,7 @@ int main(void)
 	void	*mlx_win;
 	t_data	img;
 
+
 	mlx = mlx_init();
 	mlx_win = mlx_new_window(mlx, 800, 800, "Hello MiniRT!");
 	img.img = mlx_new_image(mlx, 800, 800);

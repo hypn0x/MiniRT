@@ -1,20 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minirt.h                                           :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hsabir <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: msegrans <msegrans@student.42lausan>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/22 14:16:34 by hsabir            #+#    #+#             */
-/*   Updated: 2022/01/22 14:54:12 by hsabir           ###   ########.fr       */
+/*   Created: 2021/10/22 17:01:24 by msegrans          #+#    #+#             */
+/*   Updated: 2021/10/22 17:01:27 by msegrans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINI_RT
-# define MINI_RT
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-# include <libft.h>
-# include <libgnl.h>
-# include <mlx.h>
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
 
-#endif
+char	*get_next_line(int fd);
+
+#endif //GET_NEXT_LINE_H

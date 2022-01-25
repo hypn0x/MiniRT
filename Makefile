@@ -20,47 +20,43 @@ LIB_PATH = libs
 
 # LIBS NAME
 LFT_NAME = libft.a
-LMLX_MACOS = libmlx.a
-LMLX_LINUX = libmlx.a
+LGNL_NAME = libgnl.a
+LMLX = libmlx.a
 
 MAKE = make
 
 # LIBS DIR
 LFT_DIR = $(LIB_PATH)/libft
-LMLX_DIR_LINUX = $(LIB_PATH)/mlx_linux
-LMLX_DIR_MACOS = $(LIB_PATH)/mlx_macos
+LGNL_DIR = $(LIB_PATH)/get_next_line
 
 # LIBS
 LFT = $(LFT_DIR)/$(LFT_NAME)
-LMLX = $(LMLX_DIR)/$(LMLX_NAME)
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 # Debug flags
 DBFLAGS += -g3 -fsanitize=address -v
 # LIBS FLAG
-IFLAGS += -I ./$(LFT_DIR)/incs -I ./$(LMLX_DIR) -I ./incs
+IFLAGS += -I ./$(LFT_DIR) -I ./incs -I ./$(LGNL_DIR)/includes
 
-LDFLAGS = -L ./
+LDFLAGS = -L ./$(LFT_DIR) -L./$(LGNL_DIR)
 
 # SOURCES
-SRC_FILES =	$(SRC_PATH)/main.c
+SRC_FILES =	$(SRC_PATH)/parser.c
+
+LDLIBS = -lft -lmlx -lgnl
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
 	CFLAGS += -D LINUX
 #	LDLIBS = -lft -lmlx_Linux
-	LDLIBS = -lft -l:libmlx_Linux.a
 	LDLIBS += -lXext -lX11 -lm -lz
-	LMLX_NAME = $(LMLX_NAME_LINUX)
-	LMLX_DIR = $(LMLX_DIR_LINUX)
 endif
 ifeq ($(UNAME_S),Darwin)
 	CFLAGS += -D OSX
 	CCFLAGS += -framework OpenGL -framework AppKit
-	LDLIBS = -lft -lmlx
-	LMLX_NAME = $(LMLX_MACOS)
-	LMLX_DIR = $(LMLX_DIR_MACOS)
+	LMLX_NAME = $(LMLX_DIR)/$(LMLX_NAME)
+	LMLX_DIR = $(LIB_PATH)/mlx
 endif
 
 all: $(NAME)
@@ -78,7 +74,6 @@ $(LMLX_NAME):
 
 clean:
 	$(MAKE) clean -sC $(LFT_DIR)
-	$(MAKE) clean -sC $(LMLX_DIR)
 	rm -rf $(LFT_NAME)
 	rm -rf $(LMLX_NAME)
 	rm -rf $(OBJ_PATH)
