@@ -10,25 +10,30 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <parser.h>
+#include "parsing/parser.h"
 #include <mlx.h>
 #include <libft.h>
-//#include <mlx.h>
+#include <validate.h>
 #include <keycodes.h>
 #include <types.h>
 #include <op_vec_double.h>
 #include <op_vec.h>
 
-int	hit_sphere(const t_point center, double radius, t_ray r) {
-	t_vec3 oc = min_vec(r.origin, center);
-	double a = dot(r.direction, r.direction);
-	double b = 2.0 * dot(oc, r.direction);
-	double c = dot(oc, oc) - radius * radius;
-	double discriminant = b * b - 4 * a * c;
-	return (discriminant > 0);
+int	hit_sphere(const t_point center, double radius, t_ray r)
+{
+	t_vec3	oc;
+	double	a;
+	double	b;
+	double	c;
+
+	oc = min_vec(r.origin, center);
+	a = dot(r.direction, r.direction);
+	b = 2.0 * dot(oc, r.direction);
+	c = dot(oc, oc) - radius * radius;
+	return (b * b - 4 * a * c > 0);
 }
 
-int ray_color(t_ray r)
+int	ray_color(t_ray r)
 {
 	t_point sphere = {0, 0, -1};
 	if (hit_sphere(sphere, 0.5, r))
@@ -41,16 +46,28 @@ int ray_color(t_ray r)
 int	main(int argc, char **argv)
 {
 	t_data	img;
+	t_list 	**head;
 
 	if (argc == 2)
     {
-        if (!parser(argc, argv))
-            ft_printf(1, "Error\nFile scene corrupted\n");
+		head = parser(argv[1]);
+		if (head == NULL)
+		{
+			ft_printf(2, "Error\nFile scene corrupted\n");
+			return (1);
+		}
+		else if (check_list_values(*head))
+		{
+			ft_printf(2, "Error\nInvalid value in scene\n");
+			ft_lstclear(head, free);
+			free(head);
+			return (1);
+		}
     }
-    else
+	else
     {
-        ft_printf(1, "Usage: ./miniRT (scene)\n");
-        return (0);
+        ft_printf(2, "Usage: ./miniRT (scene)\n");
+        return (1);
     }
     const double aspect_ratio = 16.0 / 9.0;
     const int img_width = 480;

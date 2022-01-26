@@ -24,7 +24,7 @@ void	skip_spaces(char **line);
 
 int		check_exist(char type, t_list **head);
 
-int		new_lst(t_list **head);
+int		new_elem(t_list **head);
 
 char	*chop_word(char **line, int (fn)(int));
 

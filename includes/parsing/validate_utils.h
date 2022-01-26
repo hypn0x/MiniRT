@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   op_vec_double.h                                    :+:      :+:    :+:   */
+/*   validate_utils.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/26 23:36:58 by msegrans          #+#    #+#             */
-/*   Updated: 2022/01/26 23:37:02 by msegrans         ###   ########.fr       */
+/*   Created: 2022/01/26 23:38:20 by msegrans          #+#    #+#             */
+/*   Updated: 2022/01/26 23:38:21 by msegrans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef OP_VEC_DOUBLE_H
-# define OP_VEC_DOUBLE_H
+#ifndef VALIDATE_UTILS_H
+# define VALIDATE_UTILS_H
 
-# include <types.h>
+# include "types.h"
 
-t_vec3	mult3(t_vec3 a, double n);
+int	check_range_double(double n, double lb, double hb);
 
-t_vec3	div3(t_vec3 a, double n);
+int	check_colour(t_colour c);
 
-t_vec3	plus3(t_vec3 a, double n);
+int	check_orientation(t_vec3 o);
 
-t_vec3	min3(t_vec3 a, double n);
+int	check_brightness(double b);
 
-#endif //OP_VEC_DOUBLE_H
+#endif //VALIDATE_UTILS_H

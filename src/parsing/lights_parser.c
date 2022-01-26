@@ -1,10 +1,25 @@
-//
-// Created by segransm on 1/26/22.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lights_parser.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/01/26 23:34:41 by msegrans          #+#    #+#             */
+/*   Updated: 2022/01/26 23:34:45 by msegrans         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include <libft.h>
 #include <types.h>
 #include <parse_utils.h>
+
+int	parsing_error(void *elem, char *error)
+{
+	ft_printf(2, "%s\n", error);
+	free(elem);
+	return (1);
+}
 
 int	add_ambient(char *line, t_list **head)
 {
@@ -17,14 +32,13 @@ int	add_ambient(char *line, t_list **head)
 	if (!elem)
 		return (1);
 	word = chop_word(&line, ft_isspace);
-	//todo: replace with custom atof && error checking
-	elem->brightness = ft_atof(word);
+	elem->brightness = atof(word);
 	parse_vec3(&line, &(elem->colour));
 	skip_spaces(&line);
-	if (*line) // still some content at the end of line
-		return (1);
-	if (new_lst(head))
-		return (1);
+	if (*line)
+		return (parsing_error(elem, "Error parsing A. Unknown char at EOL."));
+	if (new_elem(head))
+		return (parsing_error(elem, "Malloc failure."));
 	(*head)->content = elem;
 	(*head)->type = 'A';
 	return (0);
@@ -48,7 +62,7 @@ int	add_camera(char *line, t_list **head)
 	skip_spaces(&line);
 	if (*line) // still some content at the end of line
 		return (1);
-	if (new_lst(head))
+	if (new_elem(head))
 		return (1);
 	(*head)->content = elem;
 	(*head)->type = 'C';
@@ -68,11 +82,11 @@ int	add_light(char *line, t_list **head)
 	//todo: replace with custom atof && error checking
 	parse_vec3(&line, &(elem->coordinates));
 	word = chop_word(&line, ft_isspace);
-	elem->brightness = ft_atof(word);
+	elem->brightness = atof(word);
 	skip_spaces(&line);
 	if (*line) // still some content at the end of line
 		return (1);
-	if (new_lst(head))
+	if (new_elem(head))
 		return (1);
 	(*head)->content = elem;
 	(*head)->type = 'L';

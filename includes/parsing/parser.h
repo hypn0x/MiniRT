@@ -1,26 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   op_vec_double.h                                    :+:      :+:    :+:   */
+/*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
+/*   By: hsabir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/26 23:36:58 by msegrans          #+#    #+#             */
-/*   Updated: 2022/01/26 23:37:02 by msegrans         ###   ########.fr       */
+/*   Created: 2022/01/22 14:16:34 by hsabir            #+#    #+#             */
+/*   Updated: 2022/01/26 00:04:38 by msegrans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef OP_VEC_DOUBLE_H
-# define OP_VEC_DOUBLE_H
+#ifndef PARSER_H
+# define PARSER_H
 
-# include <types.h>
+# include <libft.h>
 
-t_vec3	mult3(t_vec3 a, double n);
+t_list	**parser(char *filename);
 
-t_vec3	div3(t_vec3 a, double n);
-
-t_vec3	plus3(t_vec3 a, double n);
-
-t_vec3	min3(t_vec3 a, double n);
-
-#endif //OP_VEC_DOUBLE_H
+#endif

@@ -1,6 +1,14 @@
-//
-// Created by segransm on 1/26/22.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/01/26 23:34:52 by msegrans          #+#    #+#             */
+/*   Updated: 2022/01/26 23:34:55 by msegrans         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include <libft.h>
 #include <types.h>
@@ -25,17 +33,13 @@ int	check_exist(char type, t_list **head)
 	return (0);
 }
 
-int	new_lst(t_list **head)
+int	new_elem(t_list **head)
 {
 	t_list	*elem;
 
 	elem = ft_lstnew(NULL);
 	if (!elem)
-	{
-		ft_lstclear(head, free); // todo: pass custom function to free?
-		free(head);
 		return (1);
-	}
 	ft_lstadd_front(head, elem);
 	return (0);
 }
@@ -58,7 +62,7 @@ char	*chop_word(char **line, int (fn)(int))
 
 int	is_comma(int c)
 {
-	return (c == ',');
+	return ((char)c == ',');
 }
 
 int	parse_vec3(char **line, t_vec3 *elem)
@@ -66,10 +70,10 @@ int	parse_vec3(char **line, t_vec3 *elem)
 	char	*word;
 
 	word = chop_word(line, is_comma);
-	elem->x = ft_atof(word);
+	elem->x = atof(word);
 	word = chop_word(line, is_comma);
-	elem->y = ft_atof(word);
+	elem->y = atof(word);
 	word = chop_word(line, ft_isspace);
-	elem->z = ft_atof(word);
+	elem->z = atof(word);
 	return (0);
 }

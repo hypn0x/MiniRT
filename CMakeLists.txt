@@ -13,10 +13,15 @@ link_directories(libs/libft)
 add_executable(
         miniRT
         src/main.c
-        src/parser.c
+        src/parsing/parser.c
         src/parsing/lights_parser.c
+        src/parsing/parse_utils.c
+        src/parsing/objects_parser.c
         src/vector/op_vec_double.c
         src/vector/op_vec.c
+        src/parsing/validate.c
+        src/parsing/validate_utils.c
+        src/hook_utils.c
 )
 
 TARGET_LINK_LIBRARIES(miniRT mlx)

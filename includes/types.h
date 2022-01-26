@@ -77,13 +77,13 @@ typedef struct s_cylinder
 
 typedef struct s_data
 {
-    void	*mlx;
-    void	*mlx_win;
-    void	*img;
-    int		*addr;
-    int		bbp;
-    int		line_len;
-    int		endian;
+	void	*mlx;
+	void	*mlx_win;
+	void	*img;
+	int		*addr;
+	int		bbp;
+	int		line_len;
+	int		endian;
 }	t_data;
 
 int	ft_exit(t_data *data);

@@ -1,18 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.h                                           :+:      :+:    :+:   */
+/*   validate.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hsabir <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/22 14:16:34 by hsabir            #+#    #+#             */
-/*   Updated: 2022/01/26 00:04:38 by msegrans         ###   ########.fr       */
+/*   Created: 2022/01/26 23:38:12 by msegrans          #+#    #+#             */
+/*   Updated: 2022/01/26 23:38:14 by msegrans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSER_H
-# define PARSER_H
+#ifndef VALIDATE_H
+# define VALIDATE_H
 
-int	parser(int argc, char **argv);
+# include <libft.h>
 
-#endif
+int	check_list_values(t_list *head);
+
+#endif //VALIDATE_H
