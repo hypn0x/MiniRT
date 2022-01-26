@@ -32,6 +32,19 @@ int	parse_line(char *line, t_list **head)
 	return (ret);
 }
 
+int check_ext(const char *filename)
+{
+    char *dot;
+
+    dot = ft_strchr(filename, '.');
+    if(!dot || dot == filename)
+        return (1);
+    if ((ft_strncmp(".rt", dot, 3) == 0) && ft_strlen(dot) == 3)
+        return (0);
+    else
+        return (1);
+}
+
 t_list	**parser(int argc, char **argv)
 {
 	char	*line;
@@ -44,8 +57,20 @@ t_list	**parser(int argc, char **argv)
 	head = malloc(sizeof(t_list *));
 	if (!head)
 		return (NULL);
+    if (check_ext(argv[1]))
+    {
+        ft_printf(1, "Error\nWrong file type : %s\n", argv[1]);
+        free(head);
+        exit (EXIT_FAILURE);
+    }
 	fd = open(argv[1], O_RDONLY);
-	line = get_next_line(fd);
+	if (fd < 0)
+    {
+        ft_printf(1, "Error\nThe scene doesn't exist : %s\n", argv[1]);
+        free(head);
+        exit (EXIT_FAILURE);
+    }
+    line = get_next_line(fd);
 	while (line)
 	{
 		if (*line)

@@ -6,7 +6,7 @@
 /*   By: hsabir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/22 14:19:03 by hsabir            #+#    #+#             */
-/*   Updated: 2022/01/22 18:03:23 by hsabir           ###   ########.fr       */
+/*   Updated: 2022/01/26 12:57:25 by 0xb1n4r          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,17 @@ int	main(int argc, char **argv)
 	void	*mlx_win;
 	t_data	img;
 
-	if (argc > 1)
+	if (argc == 2)
 	{
-		parser(argc, argv);
+		if (!parser(argc, argv))
+            ft_printf(1, "Error\nFile scene corrupted\n");
 		return (0);
 	}
+    else
+    {
+        ft_printf(1, "Usage: ./miniRT (scene)\n");
+        return (0);
+    }
 	const double aspect_ratio = 16.0 / 9.0;
 	const int img_width = 480;
 	const int img_height = (int)(img_width / aspect_ratio);
