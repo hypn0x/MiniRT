@@ -14,23 +14,18 @@
 #include <types.h>
 #include <parse_utils.h>
 
-int	parsing_error(void *elem, char *error)
-{
-	ft_printf(2, "%s\n", error);
-	free(elem);
-	return (1);
-}
-
+// todo: error checking once ft_atof is fixed
 int	add_ambient(char *line, t_list **head)
 {
 	t_ambient	*elem;
 	char		*word;
 
 	if (check_exist('A', head))
-		return (1);
+		return (parsing_error(NULL,
+				"Object A cannot be defined more than one time."));
 	elem = malloc(sizeof(t_ambient));
 	if (!elem)
-		return (1);
+		return (parsing_error(elem, "Malloc failure."));
 	word = chop_word(&line, ft_isspace);
 	elem->brightness = atof(word);
 	parse_vec3(&line, &(elem->colour));
@@ -50,20 +45,20 @@ int	add_camera(char *line, t_list **head)
 	char		*word;
 
 	if (check_exist('C', head))
-		return (1);
+		return (parsing_error(NULL,
+				"Object C cannot be defined more than one time."));
 	elem = malloc(sizeof(t_camera));
 	if (!elem)
-		return (1);
-	//todo: replace with custom atof && error checking
+		return (parsing_error(elem, "Malloc failure."));
 	parse_vec3(&line, &(elem->view_point));
 	parse_vec3(&line, &(elem->orientation));
 	word = chop_word(&line, ft_isspace);
 	elem->fov = ft_atoi(word);
 	skip_spaces(&line);
-	if (*line) // still some content at the end of line
-		return (1);
+	if (*line)
+		return (parsing_error(elem, "Error parsing C. Unknown char at EOL."));
 	if (new_elem(head))
-		return (1);
+		return (parsing_error(elem, "Malloc failure."));
 	(*head)->content = elem;
 	(*head)->type = 'C';
 	return (0);
@@ -75,19 +70,19 @@ int	add_light(char *line, t_list **head)
 	char		*word;
 
 	if (check_exist('L', head))
-		return (1);
+		return (parsing_error(NULL,
+				"Object L cannot be defined more than one time."));
 	elem = malloc(sizeof(t_light));
 	if (!elem)
-		return (1);
-	//todo: replace with custom atof && error checking
+		return (parsing_error(elem, "Malloc failure."));
 	parse_vec3(&line, &(elem->coordinates));
 	word = chop_word(&line, ft_isspace);
 	elem->brightness = atof(word);
 	skip_spaces(&line);
-	if (*line) // still some content at the end of line
-		return (1);
+	if (*line)
+		return (parsing_error(elem, "Error parsing L. Unknown char at EOL."));
 	if (new_elem(head))
-		return (1);
+		return (parsing_error(elem, "Malloc failure."));
 	(*head)->content = elem;
 	(*head)->type = 'L';
 	return (0);

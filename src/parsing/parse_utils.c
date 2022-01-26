@@ -77,3 +77,10 @@ int	parse_vec3(char **line, t_vec3 *elem)
 	elem->z = atof(word);
 	return (0);
 }
+
+int	parsing_error(void *elem, char *error)
+{
+	ft_printf(2, "%s\n", error);
+	free(elem);
+	return (1);
+}

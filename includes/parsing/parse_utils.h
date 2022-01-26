@@ -30,4 +30,6 @@ char	*chop_word(char **line, int (fn)(int));
 
 int		parse_vec3(char **line, t_vec3 *elem);
 
+int		parsing_error(void *elem, char *error);
+
 #endif //PARSE_UTILS_H
