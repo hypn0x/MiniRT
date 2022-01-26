@@ -6,7 +6,7 @@
 /*   By: hsabir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/22 14:19:03 by hsabir            #+#    #+#             */
-/*   Updated: 2022/01/26 14:01:34 by 0xb1n4r          ###   ########.fr       */
+/*   Updated: 2022/01/26 14:51:34 by 0xb1n4r          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,8 @@ int	main(int argc, char **argv)
             img.addr[px++] = ray_color(ray);
         }
     }
-    mlx_hook(img.mlx_win, 33, 1 << 17, ft_exit, &img);
-    mlx_key_hook(img.mlx_win, key_hook, &img);
-    mlx_put_image_to_window(img.mlx, img.mlx_win, img.img, 0, 0);
+    mlx_hook(img.mlx_win, 17, 1L, ft_exit, &img);
+    mlx_hook(img.mlx_win, 2, 1L, key_hook, &img);
     mlx_put_image_to_window(img.mlx, img.mlx_win, img.img, 0, 0);
     mlx_loop(img.mlx);
 }
