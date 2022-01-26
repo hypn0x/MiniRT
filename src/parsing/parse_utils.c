@@ -66,10 +66,10 @@ int	parse_vec3(char **line, t_vec3 *elem)
 	char	*word;
 
 	word = chop_word(line, is_comma);
-	elem->x = atof(word);
+	elem->x = ft_atof(word);
 	word = chop_word(line, is_comma);
-	elem->y = atof(word);
+	elem->y = ft_atof(word);
 	word = chop_word(line, ft_isspace);
-	elem->z = atof(word);
+	elem->z = ft_atof(word);
 	return (0);
 }

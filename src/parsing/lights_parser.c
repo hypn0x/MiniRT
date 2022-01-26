@@ -18,7 +18,7 @@ int	add_ambient(char *line, t_list **head)
 		return (1);
 	word = chop_word(&line, ft_isspace);
 	//todo: replace with custom atof && error checking
-	elem->brightness = atof(word);
+	elem->brightness = ft_atof(word);
 	parse_vec3(&line, &(elem->colour));
 	skip_spaces(&line);
 	if (*line) // still some content at the end of line
@@ -68,7 +68,7 @@ int	add_light(char *line, t_list **head)
 	//todo: replace with custom atof && error checking
 	parse_vec3(&line, &(elem->coordinates));
 	word = chop_word(&line, ft_isspace);
-	elem->brightness = atof(word);
+	elem->brightness = ft_atof(word);
 	skip_spaces(&line);
 	if (*line) // still some content at the end of line
 		return (1);

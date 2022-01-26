@@ -17,7 +17,7 @@ int	add_sphere(char *line, t_list **head)
 	//todo: replace with custom atof && error checking
 	parse_vec3(&line, &(elem->coordinates));
 	word = chop_word(&line, ft_isspace);
-	elem->diameter = atof(word);
+	elem->diameter = ft_atof(word);
 	parse_vec3(&line, &(elem->colour));
 	skip_spaces(&line);
 	if (*line) // still some content at the end of line
@@ -62,9 +62,9 @@ int	add_cylinder(char *line, t_list **head)
 	parse_vec3(&line, &(elem->coordinates));
 	parse_vec3(&line, &(elem->orientation));
 	word = chop_word(&line, ft_isspace);
-	elem->diameter = atof(word);
+	elem->diameter = ft_atof(word);
 	word = chop_word(&line, ft_isspace);
-	elem->height = atof(word);
+	elem->height = ft_atof(word);
 	parse_vec3(&line, &(elem->colour));
 	skip_spaces(&line);
 	if (*line) // still some content at the end of line
