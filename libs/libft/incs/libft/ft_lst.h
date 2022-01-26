@@ -15,9 +15,9 @@
 
 typedef struct s_list
 {
-  void		*content;
-  char		type;
-  struct s_list	*next;
+	void			*content;
+	char			type;
+	struct s_list	*next;
 }	t_list;
 
 t_list	*ft_lstnew(void *content);

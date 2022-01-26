@@ -39,7 +39,7 @@ int		parse_format(va_list ap, char *format, int fd);
 void	check_flags(va_list ap, char *format, t_options *option, int i);
 void	width_precision(va_list ap, char *format, t_options *option, int i);
 int		ft_print(va_list ap, t_options *option, int fd);
-int	    ft_print_c(int c, t_options *option, int fd);
+int		ft_print_c(int c, t_options *option, int fd);
 int		put_width_c(int width, int len, int zero, int fd);
 int		ft_print_str(char *str, t_options *option, int fd);
 int		put_width_str(char **buffer, t_options *option);

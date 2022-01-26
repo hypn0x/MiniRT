@@ -14,7 +14,7 @@
 # define FT_NBRS_H
 
 char	*ft_itoa(int n);
-int	ft_atoi(const char *str);
+int		ft_atoi(const char *str);
 double	ft_atof(const char *str);
 
 #endif

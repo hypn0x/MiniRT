@@ -46,10 +46,13 @@ void	zero_logic(t_options *option, char format)
  * Initialier nos option dabord et puis allouer la memoire a cette taille.
  * 	Si l'allocation de memoire echoue return -1.
  * Iterer tant qu'il y a une chaine de chars.
- * 	Afficher char par char tant qu'il y a pas de "%" et qu'on est pas a la fin de la chaine.
+ * 	Afficher char par char tant qu'il y a pas de "%" et qu'on est pas a
+ * 	la fin de la chaine.
  * 	Si l'index sur lequel on est, est un "%";
- * 		Initializer les option; [zero = 0, width = 0, precision = -1, spec = 0, nbr_base = 10, sign = 1,]
- * 		Tant que l'index suivant n'est pas la fin de la chaine de chars et que l'index sur lequel on est, n'est pas un des specifiers;
+ * 		Initializer les option; [zero = 0, width = 0, precision = -1,
+ * 		spec = 0, nbr_base = 10, sign = 1,]
+ * 		Tant que l'index suivant n'est pas la fin de la chaine de chars et
+ * 		que l'index sur lequel on est, n'est pas un des specifiers;
  * 			check_flag();
 */
 

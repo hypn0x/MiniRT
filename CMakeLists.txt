@@ -7,13 +7,14 @@ set(CMAKE_C_STANDARD 99)
 add_compile_options(-Wall -Werror -Wextra)
 add_link_options(-lXext -lX11 -lm -lbsd)
 
-include_directories(libs/libft/incs includes)
+include_directories(libs/libft/incs includes includes/parsing)
 link_directories(libs/libft)
 
 add_executable(
         miniRT
         src/main.c
         src/parser.c
+        src/parsing/lights_parser.c
 )
 
 TARGET_LINK_LIBRARIES(miniRT mlx)

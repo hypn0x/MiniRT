@@ -29,10 +29,10 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	char	*dst;
 
 	dst = data->addr + (y * data->line_len + x * (data->bbp / 8));
-	*(unsigned int*)dst = color;
+	*(unsigned int *)dst = color;
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	void	*mlx;
 	void	*mlx_win;

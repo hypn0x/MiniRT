@@ -12,7 +12,7 @@
 
 #include  "../../incs/libft.h"
 
-double a_pow(double base, double power)
+double	a_pow(double base, double power)
 {
 	double	mem;
 
@@ -24,7 +24,6 @@ double a_pow(double base, double power)
 	}
 	return (1 / base);
 }
-
 
 double	ft_atof(const char *str)
 {
