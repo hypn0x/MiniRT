@@ -6,53 +6,73 @@
 /*   By: hsabir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 16:57:43 by hsabir            #+#    #+#             */
-/*   Updated: 2022/01/25 17:51:52 by hsabir           ###   ########.fr       */
+/*   Updated: 2022/01/26 10:15:36 by penguin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include  "../../incs/libft.h"
 
-double	a_pow(double base, double power)
+static void		get_int(int tmp, t_atof *a)
 {
-	double	mem;
-
-	mem = base;
-	while (power < -1)
+	if (a->fraction == 1)
 	{
-		base = base * mem;
-		power++;
+		a->fract_part = a->fract_part * 10 + (tmp - '0');
+		a->div *= 10;
 	}
-	return (1 / base);
+	else
+		a->int_part = a->int_part * 10 + (tmp - '0');
 }
 
-double	ft_atof(const char *str)
+static void		get_sign(char **tmp, t_atof *atof)
 {
+	if (**tmp == '-')
+	{
+		if (atof->sign == -1)
+			atof->sign = 1;
+		else
+			atof->sign = -1;
+		(*tmp)++;
+	}
+	else if (**tmp == '+')
+		(*tmp)++;
+}
+
+static void		init_tmpuct(t_atof *atof)
+{
+	atof->fraction = 0;
+	atof->fract_part = 0;
+	atof->int_part = 0;
+	atof->div = 1;
+	atof->sign = 1;
+}
+
+double			ft_atof(const char *str)
+{
+	t_atof	a;
 	int		i;
-	int		j;
-	char	*c;
-	double	value;
-	int		a_point;
+	char	*tmp;
 
 	i = 0;
-	j = 0;
-	a_point = 0;
-	c = (char *)str;
-	while (c[i] != '\0')
+	if (!str || !*str)
+		return (0);
+	tmp = (char *)str;
+	init_tmpuct(&a);
+	get_sign(&tmp, &a);
+	while (tmp[i] != '\0')
 	{
-		if (str[i] != '.')
+		if (tmp[i] >= '0' && tmp[i] <= '9')
+			get_int(tmp[i], &a);
+		else if (tmp[i] == '.')
 		{
-			value = (value * 10) + (c[i] - '0');
-			if (a_point == 1)
-				--j;
+			if (a.fraction)
+				return (a.sign * (a.int_part + a.fract_part
+				/ a.div));
+			else
+				a.fraction = 1;
 		}
-		if (c[i] == '.')
-		{	
-			if (a_point == 1)
-				return (0);
-			a_point = 1;
-		}
+		else
+			return (a.sign * (a.int_part + a.fract_part / a.div));
 		i++;
 	}
-	value = value * a_pow(10, j); 
-	return (value);
+	return (a.sign * (a.int_part + a.fract_part / a.div));
 }
