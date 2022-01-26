@@ -6,7 +6,7 @@
 /*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 00:04:13 by msegrans          #+#    #+#             */
-/*   Updated: 2022/01/26 00:04:15 by msegrans         ###   ########.fr       */
+/*   Updated: 2022/01/26 13:47:34 by 0xb1n4r          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,19 @@ typedef struct s_cylinder
 	double		height;
 	t_colour	colour;
 }	t_cylinder;
+
+typedef struct s_data
+{
+    void	*mlx;
+    void	*mlx_win;
+    void	*img;
+    int		*addr;
+    int		bbp;
+    int		line_len;
+    int		endian;
+}	t_data;
+
+int	ft_exit(t_data *data);
+int	key_hook(int keycode, t_data *data);
 
 #endif //TYPES_H

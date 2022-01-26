@@ -6,7 +6,7 @@
 /*   By: hsabir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/22 14:19:03 by hsabir            #+#    #+#             */
-/*   Updated: 2022/01/26 12:57:25 by 0xb1n4r          ###   ########.fr       */
+/*   Updated: 2022/01/26 14:01:34 by 0xb1n4r          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,7 @@
 #include <mlx.h>
 #include <libft.h>
 //#include <mlx.h>
-
-typedef struct s_data
-{
-	void	*img;
-	int		*addr;
-	int		bbp;
-	int		line_len;
-	int		endian;
-}	t_data;
-
-//void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
-//{
-//	char	*dst;
-//
-//	dst = data->addr + (y * data->line_len + x * (data->bbp / 8));
-//	*(unsigned int *)dst = color;
-//}
-
+#include <keycodes.h>
 #include <types.h>
 #include <op_vec_double.h>
 #include <op_vec.h>
@@ -57,57 +40,56 @@ int ray_color(t_ray r)
 
 int	main(int argc, char **argv)
 {
-	void	*mlx;
-	void	*mlx_win;
 	t_data	img;
 
 	if (argc == 2)
-	{
-		if (!parser(argc, argv))
+    {
+        if (!parser(argc, argv))
             ft_printf(1, "Error\nFile scene corrupted\n");
-		return (0);
-	}
+    }
     else
     {
         ft_printf(1, "Usage: ./miniRT (scene)\n");
         return (0);
     }
-	const double aspect_ratio = 16.0 / 9.0;
-	const int img_width = 480;
-	const int img_height = (int)(img_width / aspect_ratio);
+    const double aspect_ratio = 16.0 / 9.0;
+    const int img_width = 480;
+    const int img_height = (int)(img_width / aspect_ratio);
+    double viewport_height = 2.0;
+    double viewport_width = aspect_ratio * viewport_height;
 
-	double viewport_height = 2.0;
-	double viewport_width = aspect_ratio * viewport_height;
+    t_vec3 focal_length = {0, 0, 1};
+    t_vec3 origin = {0, 0, 0};
+    t_vec3 horizontal = {viewport_width, 0, 0};
+    t_vec3 vertical = {0, viewport_height, 0};
 
-	t_vec3 focal_length = {0, 0, 1};
-	t_vec3 origin = {0, 0, 0};
-	t_vec3 horizontal = {viewport_width, 0, 0};
-	t_vec3 vertical = {0, viewport_height, 0};
+    t_vec3 lower_left_corner = min_vec(
+            min_vec(min_vec(origin, div3(horizontal, 2)), div3(vertical, 2)),
+            focal_length);
 
-	t_vec3 lower_left_corner = min_vec(
-		min_vec(min_vec(origin, div3(horizontal, 2)), div3(vertical, 2)),
-		focal_length);
+    img.mlx = mlx_init();
+    img.mlx_win = mlx_new_window(img.mlx, img_width, img_width, "Hello MiniRT!");
+    img.img = mlx_new_image(img.mlx, img_width, img_width);
+    img.addr = (int *)mlx_get_data_addr(img.img, &img.bbp, &img.line_len, &img.endian);
+    int px = 0;
+    for (int i = 0; i < img_width; i++)
+    {
+        for (int j = 0; j < img_width; j++)
+        {
+            double w = (double) i / img_width;
+            double h = (double) j / img_height;
 
-	mlx = mlx_init();
-	mlx_win = mlx_new_window(mlx, img_width, img_width, "Hello MiniRT!");
-	img.img = mlx_new_image(mlx, img_width, img_width);
-	img.addr = (int *)mlx_get_data_addr(img.img, &img.bbp, &img.line_len, &img.endian);
-	int px = 0;
-	for (int i = 0; i < img_width; i++)
-	{
-		for (int j = 0; j < img_width; j++)
-		{
-			double w = (double) i / img_width;
-			double h = (double) j / img_height;
-
-			t_ray ray;
-			ray.origin = origin;
-			ray.direction = min_vec(
-				plus_vec(plus_vec(lower_left_corner, mult3(horizontal, w)),
-						 mult3(vertical, h)), origin);
-			img.addr[px++] = ray_color(ray);
-		}
-	}
-	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
-	mlx_loop(mlx);
+            t_ray ray;
+            ray.origin = origin;
+            ray.direction = min_vec(
+                    plus_vec(plus_vec(lower_left_corner, mult3(horizontal, w)),
+                             mult3(vertical, h)), origin);
+            img.addr[px++] = ray_color(ray);
+        }
+    }
+    mlx_hook(img.mlx_win, 33, 1 << 17, ft_exit, &img);
+    mlx_key_hook(img.mlx_win, key_hook, &img);
+    mlx_put_image_to_window(img.mlx, img.mlx_win, img.img, 0, 0);
+    mlx_put_image_to_window(img.mlx, img.mlx_win, img.img, 0, 0);
+    mlx_loop(img.mlx);
 }
