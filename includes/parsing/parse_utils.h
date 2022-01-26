@@ -26,7 +26,7 @@ int		check_exist(char type, t_list **head);
 
 int		new_lst(t_list **head);
 
-char	*chop_word(char **line, int (fn)(char));
+char	*chop_word(char **line, int (fn)(int));
 
 int		parse_vec3(char **line, t_vec3 *elem);
 

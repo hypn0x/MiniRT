@@ -40,7 +40,7 @@ int	new_lst(t_list **head)
 	return (0);
 }
 
-char	*chop_word(char **line, int (*fn)(int))
+char	*chop_word(char **line, int (fn)(int))
 {
 	char	*word;
 
