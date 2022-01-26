@@ -6,7 +6,7 @@
 #    By: hsabir <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/22 13:45:33 by hsabir            #+#    #+#              #
-#    Updated: 2022/01/25 21:04:02 by penguin          ###   ########.fr        #
+#   Updated: 2022/01/26 11:34:08 by 0xb1n4r          ###   ########.fr       # #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ ifeq ($(UNAME), Linux)
 else
 	NPROC := $(shell sysctl -n hw.ncpu)
 	INC_FLAGS += -Ilibs/mlx
-    LIBS += -Llibs/mlx -framework OpenGL -framework Appkit
+    	LIBS += -Llibs/mlx -framework OpenGL -framework Appkit
 endif
 
 MAKEFLAGS += --output-sync=target
