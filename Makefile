@@ -47,8 +47,6 @@ OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 INC_DIRS := $(shell find $(INCLUDE_DIR) -type d)
 INC_FLAGS += $(addprefix -I,$(INC_DIRS))
 
-LIB    := libs/libft/libft.a
-
 CFLAGS += -Wall -Wextra -Werror
 CFLAGS += -std=c99 -pedantic
 #CFLAGS += -O2 -march=native
@@ -57,7 +55,10 @@ CFLAGS += -std=c99 -pedantic
 all:
 	@$(MAKE) -j$(NPROC) $(NAME)
 
-$(NAME): $(LIB) $(OBJS)
+$(NAME): $(OBJS)
+	@$(MAKE) -C libs/libft
+	@echo Libft done
+	@echo GNL done
 	@echo Linking $@
 	@$(CC) $(CFLAGS) $(INC_FLAGS) $(OBJS) $(LIBS) -o $(NAME)
 
@@ -65,11 +66,6 @@ $(BUILD_DIR)/%.c.o: %.c
 	@echo Compiling $@
 	@mkdir -p $(dir $@)
 	@$(CC) -c  $(CFLAGS) $(INC_FLAGS) $< -o $@
-
-$(LIB):
-	@$(MAKE) -C libs/libft
-	@echo Libft done
-	@echo GNL done
 
 clean:
 	@rm -rf $(BUILD_DIR)
