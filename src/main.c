@@ -6,7 +6,7 @@
 /*   By: hsabir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/22 14:19:03 by hsabir            #+#    #+#             */
-/*   Updated: 2022/01/26 14:51:34 by 0xb1n4r          ###   ########.fr       */
+/*   Updated: 2022/01/27 14:22:30 by hsabir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	hit_sphere(const t_point center, double radius, t_ray r)
 int	ray_color(t_ray r)
 {
 	t_point sphere = {0, 0, -1};
-	if (hit_sphere(sphere, 0.5, r))
+	if (hit_sphere(sphere, 0.2, r))
 		return (0xFFFFFF);
 	t_vec3 unit_direction = unit_vector(r.direction);
 	double t = 0.5 * (unit_direction.y + 1.0);

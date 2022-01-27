@@ -6,7 +6,7 @@
 /*   By: hsabir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 16:57:43 by hsabir            #+#    #+#             */
-/*   Updated: 2022/01/26 11:44:39 by 0xb1n4r          ###   ########.fr       */
+/*   Updated: 2022/01/27 14:58:56 by hsabir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,15 @@ static void	init_struct(t_atof *atof)
     atof->sign = 1;
 }
 
-double	ft_atof(const char *str)
+int	ft_atof(const char *str, double *n)
 {
     t_atof	a;
     int		i;
     char	*tmp;
+	int		cntr;
 
     i = 0;
+	cntr = 0;
     if (!str || !*str)
         return (0);
     tmp = (char *)str;
@@ -60,10 +62,13 @@ double	ft_atof(const char *str)
     get_sign(&tmp, &a);
     while (tmp[i] != '\0')
     {
+		if (!ft_isalnum(tmp[i]) && tmp[i] != '.')
+			return (1);
         if (tmp[i] >= '0' && tmp[i] <= '9')
             get_int(tmp[i], &a);
-        else if (tmp[i] == '.')
+        else if (tmp[i] == '.' && cntr <= 1)
         {
+			cntr++;
             if (a.fraction)
                 return (a.sign * (a.int_part + a.fract_part / a.div));
             else
@@ -73,5 +78,6 @@ double	ft_atof(const char *str)
             return (a.sign * (a.int_part + a.fract_part / a.div));
         i++;
     }
-    return (a.sign * (a.int_part + a.fract_part / a.div));
+	n = (a.sign * (a.int_part + a.fract_part / a.div));
+    return (0);
 }
