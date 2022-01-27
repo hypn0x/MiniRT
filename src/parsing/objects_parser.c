@@ -22,13 +22,16 @@ int	add_sphere(char *line, t_list **head)
 	elem = malloc(sizeof(t_sphere));
 	if (!elem)
 		return (parsing_error(elem, "Malloc failure."));
-	parse_vec3(&line, &(elem->coordinates));
+	if (parse_vec3(&line, &(elem->coordinates)))
+		return (parsing_error(elem, "sp: coordinates are invalid"));
 	word = chop_word(&line, ft_isspace);
-	elem->diameter = ft_atof(word);
-	parse_vec3(&line, &(elem->colour));
+	if (ft_atof(word, &(elem->diameter)))
+		return (parsing_error(elem, "sp: diameter is invalid"));
+	if (parse_vec3(&line, &(elem->colour)))
+		return (parsing_error(elem, "sp: colour is invalid"));
 	skip_spaces(&line);
 	if (*line)
-		return (parsing_error(elem, "Error parsing sp. Unknown char at EOL."));
+		return (parsing_error(elem, "sp: Garbage at EOL"));
 	if (new_elem(head))
 		return (parsing_error(elem, "Malloc failure."));
 	(*head)->content = elem;
@@ -43,12 +46,13 @@ int	add_plane(char *line, t_list **head)
 	elem = malloc(sizeof(t_plane));
 	if (!elem)
 		return (parsing_error(elem, "Malloc failure."));
-	parse_vec3(&line, &(elem->coordinates));
-	parse_vec3(&line, &(elem->orientation));
-	parse_vec3(&line, &(elem->colour));
+	if (parse_vec3(&line, &(elem->coordinates))
+		|| 	parse_vec3(&line, &(elem->orientation))
+		||	parse_vec3(&line, &(elem->colour)))
+		return (parsing_error(elem, "pl: coordinates, orientation or colour are invalid"));
 	skip_spaces(&line);
 	if (*line)
-		return (parsing_error(elem, "Error parsing pl. Unknown char at EOL."));
+		return (parsing_error(elem, "pl: Garbage at EOL"));
 	if (new_elem(head))
 		return (parsing_error(elem, "Malloc failure."));
 	(*head)->content = elem;
@@ -64,16 +68,20 @@ int	add_cylinder(char *line, t_list **head)
 	elem = malloc(sizeof(t_cylinder));
 	if (!elem)
 		return (parsing_error(elem, "Malloc failure."));
-	parse_vec3(&line, &(elem->coordinates));
-	parse_vec3(&line, &(elem->orientation));
+	if (parse_vec3(&line, &(elem->coordinates))
+		|| parse_vec3(&line, &(elem->orientation)))
+		return (parsing_error(elem, "cy: coordinates or orientation are invalid"));
 	word = chop_word(&line, ft_isspace);
-	elem->diameter = ft_atof(word);
+	if (ft_atof(word, &(elem->diameter)))
+		return (parsing_error(elem, "cy: diameter is invalid"));
 	word = chop_word(&line, ft_isspace);
-	elem->height = ft_atof(word);
-	parse_vec3(&line, &(elem->colour));
+	if (ft_atof(word, &(elem->height)))
+		return (parsing_error(elem, "cy: height is invalid"));
+	if (parse_vec3(&line, &(elem->colour)))
+		return (parsing_error(elem, "cy: colour is invalid"));
 	skip_spaces(&line);
 	if (*line)
-		return (parsing_error(elem, "Error parsing cy. Unknown char at EOL."));
+		return (parsing_error(elem, "cy: Garbage at EOL"));
 	if (new_elem(head))
 		return (parsing_error(elem, "Malloc failure."));
 	(*head)->content = elem;

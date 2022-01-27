@@ -56,7 +56,7 @@ all:
 	@$(MAKE) -j$(NPROC) $(NAME)
 
 $(NAME): $(OBJS)
-	@$(MAKE) -C libs/libft
+	@$(MAKE) -C libs/libft libft.a
 	@echo Libft done
 	@echo GNL done
 	@echo Linking $@

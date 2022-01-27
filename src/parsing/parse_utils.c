@@ -70,12 +70,13 @@ int	parse_vec3(char **line, t_vec3 *elem)
 	char	*word;
 
 	word = chop_word(line, is_comma);
-	elem->x = ft_atof(word);
+	if (ft_atof(word, &(elem->x)))
+		return (1);
 	word = chop_word(line, is_comma);
-	elem->y = ft_atof(word);
+	if (ft_atof(word, &(elem->y)))
+		return (1);
 	word = chop_word(line, ft_isspace);
-	elem->z = ft_atof(word);
-	return (0);
+	return (ft_atof(word, &(elem->z)));
 }
 
 int	parsing_error(void *elem, char *error)

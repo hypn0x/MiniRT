@@ -14,26 +14,26 @@
 #include <types.h>
 #include <parse_utils.h>
 
-// todo: error checking once ft_atof is fixed
 int	add_ambient(char *line, t_list **head)
 {
 	t_ambient	*elem;
 	char		*word;
 
 	if (check_exist('A', head))
-		return (parsing_error(NULL,
-				"Object A cannot be defined more than one time."));
+		return (parsing_error(NULL, "A: cannot be defined more than once"));
 	elem = malloc(sizeof(t_ambient));
 	if (!elem)
-		return (parsing_error(elem, "Malloc failure."));
+		return (parsing_error(elem, "Malloc failure"));
 	word = chop_word(&line, ft_isspace);
-	elem->brightness = ft_atof(word);
-	parse_vec3(&line, &(elem->colour));
+	if (ft_atof(word, &(elem->brightness)))
+		return (parsing_error(elem, "A: brightness is invalid"));
+	if (parse_vec3(&line, &(elem->colour)))
+		return (parsing_error(elem, "A: colour is invalid"));
 	skip_spaces(&line);
 	if (*line)
-		return (parsing_error(elem, "Error parsing A. Unknown char at EOL."));
+		return (parsing_error(elem, "A: Garbage at EOL"));
 	if (new_elem(head))
-		return (parsing_error(elem, "Malloc failure."));
+		return (parsing_error(elem, "Malloc failure"));
 	(*head)->content = elem;
 	(*head)->type = 'A';
 	return (0);
@@ -45,18 +45,18 @@ int	add_camera(char *line, t_list **head)
 	char		*word;
 
 	if (check_exist('C', head))
-		return (parsing_error(NULL,
-				"Object C cannot be defined more than one time."));
+		return (parsing_error(NULL, "C: cannot be defined more than once"));
 	elem = malloc(sizeof(t_camera));
 	if (!elem)
 		return (parsing_error(elem, "Malloc failure."));
-	parse_vec3(&line, &(elem->view_point));
-	parse_vec3(&line, &(elem->orientation));
+	if (parse_vec3(&line, &(elem->view_point)) || parse_vec3(&line, &(elem->orientation)))
+		return (parsing_error(elem, "C: viewpoint or orientation are invalid"));
 	word = chop_word(&line, ft_isspace);
-	elem->fov = ft_atoi(word);
+	if (ft_atof(word, &(elem->fov)))
+		return (parsing_error(elem, "C: fov is invalid"));
 	skip_spaces(&line);
 	if (*line)
-		return (parsing_error(elem, "Error parsing C. Unknown char at EOL."));
+		return (parsing_error(elem, "C: Garbage at EOL"));
 	if (new_elem(head))
 		return (parsing_error(elem, "Malloc failure."));
 	(*head)->content = elem;
@@ -70,17 +70,18 @@ int	add_light(char *line, t_list **head)
 	char		*word;
 
 	if (check_exist('L', head))
-		return (parsing_error(NULL,
-				"Object L cannot be defined more than one time."));
+		return (parsing_error(NULL, "L: cannot be defined more than once"));
 	elem = malloc(sizeof(t_light));
 	if (!elem)
 		return (parsing_error(elem, "Malloc failure."));
-	parse_vec3(&line, &(elem->coordinates));
+	if (parse_vec3(&line, &(elem->coordinates)))
+		return (parsing_error(elem, "L: coordinates are invalid"));
 	word = chop_word(&line, ft_isspace);
-	elem->brightness = ft_atof(word);
+	if (ft_atof(word, &(elem->brightness)))
+		return (parsing_error(elem, "L: brightness is invalid"));
 	skip_spaces(&line);
 	if (*line)
-		return (parsing_error(elem, "Error parsing L. Unknown char at EOL."));
+		return (parsing_error(elem, "Error parsing L. Garbage at EOL."));
 	if (new_elem(head))
 		return (parsing_error(elem, "Malloc failure."));
 	(*head)->content = elem;

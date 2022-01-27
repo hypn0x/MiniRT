@@ -78,6 +78,7 @@ t_list	**parser(char *filename)
 	head = malloc(sizeof(t_list *));
 	if (!head)
 		return (NULL);
+	*head = NULL;
 	line = get_next_line(fd);
 	while (line)
 	{
@@ -85,7 +86,7 @@ t_list	**parser(char *filename)
 		{
 			if (parse_line(line, head))
 			{
-				ft_printf(2, "Error\nCould not parse the file");
+				ft_printf(2, "Error\nCould not parse the file\n"); // todo: delete this message
 				ft_lstclear(head, free);
 				free(head);
 				free(line);

@@ -78,6 +78,6 @@ int	ft_atof(const char *str, double *n)
             return (a.sign * (a.int_part + a.fract_part / a.div));
         i++;
     }
-	n = (a.sign * (a.int_part + a.fract_part / a.div));
+	*n = (a.sign * (a.int_part + a.fract_part / a.div));
     return (0);
 }
