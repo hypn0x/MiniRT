@@ -4,11 +4,20 @@ project(miniRT C)
 set(CMAKE_VERBOSE_MAKEFILE on)
 set(CMAKE_C_STANDARD 99)
 
-add_compile_options(-Wall -Werror -Wextra)
-add_link_options(-lXext -lX11 -lm -lbsd)
+#add_compile_options(-Wall -Werror -Wextra)
+execute_process(COMMAND uname -s OUTPUT_VARIABLE OS)
 
-include_directories(libs/libft/incs includes includes/parsing includes/vector)
-link_directories(libs/libft)
+SET(LIBS mlx ft)
+if ($OS STREQUAL "Linux")
+    add_link_options(-lXext -lX11 -lm -lbsd)
+else ()
+    FIND_LIBRARY(OPENGL_LIBRARY OpenGL)
+    FIND_LIBRARY(APPKIT_LIBRARY AppKit)
+    SET(LIBS ${OPENGL_LIBRARY} ${APPKIT_LIBRARY})
+endif ()
+
+include_directories(libs/libft/incs includes includes/parsing includes/vector libs/mlx)
+link_directories(libs/libft libs/mlx)
 
 add_executable(
         miniRT
@@ -24,5 +33,4 @@ add_executable(
         src/hook_utils.c
 )
 
-TARGET_LINK_LIBRARIES(miniRT mlx)
-TARGET_LINK_LIBRARIES(miniRT ft)
+TARGET_LINK_LIBRARIES(miniRT ft mlx ${LIBS})
