@@ -144,14 +144,27 @@ double dot3(t_vec3 a, t_vec3 b)
         return (-d);
     return (0);
 }
-
-int cast_ray(t_light L, t_ambient A, t_vec3 hit_point, t_colour c)
+//void normalize(t_vec3 *v)
+//{
+//    double len = sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
+//    if (len > 0.0)
+//        v->x /= len; v->y /= len; v->z /= len;
+//}
+int cast_ray(t_light L, t_ambient A, t_vec3 hit_point, t_colour c, t_vec3 sc)
 {
+    int ret;
     double b;
+    t_vec3 Nhit;
     t_vec3 ln = unit_vector(L.coordinates);
-    hit_point = unit_vector(hit_point);
-    b = pow(dot3(ln, hit_point), L.brightness) + A.brightness;
-    return (rgb_to_int(mult3(c, (1.0 - b))));
+    //hit_point = unit_vector(hit_point);
+    //sc = unit_vector(sc);
+    Nhit = min_vec(hit_point, sc);
+    Nhit = unit_vector(Nhit);
+    b = pow(dot3(ln, Nhit), L.brightness) + A.brightness;
+    ret = rgb_to_int(mult3(c, (1.0 - b)));
+    if (ret < 0)
+        ret = 0;
+    return (ret);
 }
 
 int	ray_color(t_ray r, t_list **head)
@@ -183,7 +196,7 @@ int	ray_color(t_ray r, t_list **head)
 	}
 	if (hit_elem != NULL)
 	{
-		return (cast_ray(L, A, mult3(r.direction, distance), ((t_sphere *)hit_elem->content)->colour));
+		return (cast_ray(L, A, mult3(r.direction, distance), ((t_sphere *)hit_elem->content)->colour, ((t_sphere *)hit_elem->content)->coordinates));
 		//return (rgb_to_int(((t_sphere *)hit_elem->content)->colour));
 	}
 	return (0);
