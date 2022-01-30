@@ -193,7 +193,7 @@ int ray_color(t_ray r, t_list **head)
 	if (hit_elem != NULL)
 	{
 		return (cast_ray(L, A, plus_vec(r.origin, mult3(r.direction, distance)),
-						 ((t_sphere *) hit_elem->content)->colour));
+						 ((t_sphere *) hit_elem->content)->colour,  ((t_sphere *) hit_elem->content)->coordinates));
 //		return (rgb_to_int(((t_sphere *)hit_elem->content)->colour));
 	}
 	return (0);
