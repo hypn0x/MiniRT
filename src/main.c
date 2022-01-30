@@ -172,11 +172,39 @@ int ray_color(t_ray r, t_list **head)
 	}
 	if (hit_elem != NULL)
 	{
-		return (cast_ray(L, A, plus_vec(r.origin, mult3(r.direction, distance)),
-						 ((t_sphere *) hit_elem->content)->colour));
+		return (0xFFFFFF);
+//		return (cast_ray(L, A, plus_vec(r.origin, mult3(r.direction, distance)),
+//						 ((t_sphere *) hit_elem->content)->colour));
 //		return (rgb_to_int(((t_sphere *)hit_elem->content)->colour));
 	}
 	return (0);
+}
+
+#ifndef M_PI
+# define M_PI		3.14159265358979323846	/* pi */
+#endif
+#ifndef M_PI_2
+# define M_PI_2		1.57079632679489661923	/* pi/2 */
+#endif
+
+t_vec3	rotate_y_axis(double angle, t_vec3 v)
+{
+	t_vec3 r;
+
+	r.x = v.x * cos(angle) + v.z * sin(angle);
+	r.y = v.y;
+	r.z = -v.x * sin(angle) + v.z * cos(angle);
+	return (r);
+}
+
+t_vec3	rotate_x_axis(double angle, t_vec3 v)
+{
+	t_vec3 r;
+
+	r.x = v.x;
+	r.y = v.y * cos(angle) - v.z * sin(angle);
+	r.z = v.y * sin(angle) + v.z * cos(angle);
+	return (r);
 }
 
 int main(int argc, char **argv)
@@ -209,7 +237,6 @@ int main(int argc, char **argv)
 		{
 			camera = *((t_camera *) elem->content);
 //			previous->next = elem->next;
-
 		} else if (elem->type == 'L')
 		{
 			light = *((t_light *) elem->content);
@@ -237,23 +264,24 @@ int main(int argc, char **argv)
 	img.addr = (int *) mlx_get_data_addr(img.img, &img.bbp, &img.line_len,
 										 &img.endian);
 	int px = 0;
-	t_vec3 vert = camera.view_point;
-	vert.y = viewport_height;
-	t_vec3 horiz = camera.view_point;
-	horiz.x = viewport_width;
-	horiz = div3(mult3(horiz, viewport_width), img_width);
-	vert = div3(mult3(vert, viewport_height), img_height);
-	t_point px0 = {-viewport_width / 2, viewport_height / 2, -1};
+	// pi/2 is 90 degrees
+	t_vec3 horizontal = mult3(rotate_y_axis(M_PI_2, camera.orientation), viewport_width);
+	t_vec3 vertical = mult3(rotate_x_axis(M_PI_2, camera.orientation), viewport_height);
+	t_vec3 top_left_corner = plus_vec(
+		plus_vec(min_vec(camera.view_point, div3(horizontal, 2)), div3(vertical, 2)),
+		camera.orientation);
 	for (int y = 0; y < img_height; y++)
 	{
 		for (int x = 0; x < img_width; x++)
 		{
 			t_ray ray;
-			double p_x = (double)x + .5 / img_width;
-			double p_y = (double)y + .5 / img_height;
-			t_point pixel = plus_vec(plus_vec(px0, mult3(horiz, p_x)), mult3(vert, -p_y));
+			// adding .5 to get to the center of the pixel
+			double w = ((double)  x + .5) / img_width;
+			double h = ((double) y + .5) / img_height;
 
-			ray.direction = min_vec(pixel, camera.view_point);
+			ray.direction = min_vec(
+				plus_vec(plus_vec(top_left_corner, mult3(horizontal, w)),
+						 mult3(vertical, -h)), camera.view_point);
 			ray.origin = camera.view_point;
 			img.addr[px++] = ray_color(ray, head);
 		}
