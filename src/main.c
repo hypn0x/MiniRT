@@ -172,9 +172,8 @@ int ray_color(t_ray r, t_list **head)
 	}
 	if (hit_elem != NULL)
 	{
-		return (0xFFFFFF);
-//		return (cast_ray(L, A, plus_vec(r.origin, mult3(r.direction, distance)),
-//						 ((t_sphere *) hit_elem->content)->colour));
+		return (cast_ray(L, A, plus_vec(r.origin, mult3(r.direction, distance)),
+						 ((t_sphere *) hit_elem->content)->colour));
 //		return (rgb_to_int(((t_sphere *)hit_elem->content)->colour));
 	}
 	return (0);
@@ -212,10 +211,7 @@ int main(int argc, char **argv)
 	t_data img;
 	t_list **head;
 	t_camera camera;
-	t_light light;
-	t_ambient ambient;
 	t_list *elem;
-	t_list *previous;
 
 	if (argc != 2)
 		return (ft_printf(2, "Usage: ./miniRT (scene)\n"));
@@ -230,23 +226,10 @@ int main(int argc, char **argv)
 	}
 
 	elem = *head;
-	previous = NULL;
 	while (elem != NULL)
 	{
 		if (elem->type == 'C')
-		{
 			camera = *((t_camera *) elem->content);
-//			previous->next = elem->next;
-		} else if (elem->type == 'L')
-		{
-			light = *((t_light *) elem->content);
-//			previous->next = elem->next;
-		} else if (elem->type == 'A')
-		{
-			ambient = *((t_ambient *) elem->content);
-//			previous->next = elem->next;
-		}
-		previous = elem;
 		elem = elem->next;
 	}
 	// convert fov from degrees to radiant
