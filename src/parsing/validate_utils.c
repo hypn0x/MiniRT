@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include <types.h>
+#include <op_vec.h>
+#include <math.h>
 
 static int	check_range_vec(t_vec3 v, double lb, double hb)
 {
@@ -35,7 +37,7 @@ int	check_colour(t_colour c)
 
 int	check_orientation(t_vec3 o)
 {
-	return (check_range_vec(o, -1.0, 1.0));
+	return (check_range_vec(o, -1.0, 1.0) || fabs(len3(o) - 1) > 10e-7);
 }
 
 int	check_brightness(double b)

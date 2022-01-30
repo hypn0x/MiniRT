@@ -47,10 +47,11 @@ OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 INC_DIRS := $(shell find $(INCLUDE_DIR) -type d)
 INC_FLAGS += $(addprefix -I,$(INC_DIRS))
 
-CFLAGS += -Wall -Wextra -Werror
+#CFLAGS += -Wall -Wextra -Werror
 CFLAGS += -std=c99 -pedantic
 #CFLAGS += -O2 -march=native
-#CFLAGS += -g3 -fsanitize=address -v
+#CFLAGS += -g3
+#CFLAGS += -fsanitize=address -v
 
 all:
 	@$(MAKE) -j$(NPROC) $(NAME)

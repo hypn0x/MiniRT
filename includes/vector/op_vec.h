@@ -21,6 +21,8 @@ t_vec3	plus_vec(t_vec3 a, t_vec3 b);
 
 double	dot(t_vec3 a, t_vec3 b);
 
-t_vec3	unit_vector(t_vec3 a);
+double	len3(t_vec3 a);
+
+t_vec3	normalize(t_vec3 a);
 
 #endif //OP_VEC_H
