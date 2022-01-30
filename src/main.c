@@ -236,16 +236,16 @@ int	main(int argc, char **argv)
             focal_length);
 
     img.mlx = mlx_init();
-    img.mlx_win = mlx_new_window(img.mlx, img_width, img_width, "Hello MiniRT!");
-    img.img = mlx_new_image(img.mlx, img_width, img_width);
+    img.mlx_win = mlx_new_window(img.mlx, img_width, img_height, "Hello MiniRT!");
+    img.img = mlx_new_image(img.mlx, img_width, img_height);
     img.addr = (int *)mlx_get_data_addr(img.img, &img.bbp, &img.line_len, &img.endian);
     int px = 0;
-    for (int i = 0; i < img_width; i++)
+    for (int y = 0; y < img_height; y++)
     {
-        for (int j = 0; j < img_width; j++)
+        for (int x = 0; x < img_width; x++)
         {
-            double w = (double) i / img_width;
-            double h = (double) j / img_height;
+            double w = (double) x / img_width;
+            double h = (double) y / img_height;
 
             t_ray ray;
             ray.origin = origin;

@@ -8,12 +8,14 @@ set(CMAKE_C_STANDARD 99)
 execute_process(COMMAND uname -s OUTPUT_VARIABLE OS)
 
 SET(LIBS mlx ft)
+add_link_options(-lXext -lX11 -lm -lbsd)
+
 if ($OS STREQUAL "Linux")
     add_link_options(-lXext -lX11 -lm -lbsd)
 else ()
-    FIND_LIBRARY(OPENGL_LIBRARY OpenGL)
-    FIND_LIBRARY(APPKIT_LIBRARY AppKit)
-    SET(LIBS ${OPENGL_LIBRARY} ${APPKIT_LIBRARY})
+#    FIND_LIBRARY(OPENGL_LIBRARY OpenGL)
+#    FIND_LIBRARY(APPKIT_LIBRARY AppKit)
+#    SET(LIBS ${OPENGL_LIBRARY} ${APPKIT_LIBRARY})
 endif ()
 
 include_directories(libs/libft/incs includes includes/parsing includes/vector libs/mlx)
