@@ -231,8 +231,8 @@ int	main(int argc, char **argv)
     t_vec3 horizontal = {viewport_width, 0, 0};
     t_vec3 vertical = {0, viewport_height, 0};
 
-    t_vec3 lower_left_corner = min_vec(
-            min_vec(min_vec(origin, div3(horizontal, 2)), div3(vertical, 2)),
+    t_vec3 top_left_corner = min_vec(
+            plus_vec(min_vec(origin, div3(horizontal, 2)), div3(vertical, 2)),
             focal_length);
 
     img.mlx = mlx_init();
@@ -250,8 +250,8 @@ int	main(int argc, char **argv)
             t_ray ray;
             ray.origin = origin;
             ray.direction = min_vec(
-                    plus_vec(plus_vec(lower_left_corner, mult3(horizontal, w)),
-                             mult3(vertical, h)), origin);
+                    plus_vec(plus_vec(top_left_corner, mult3(horizontal, w)),
+                             mult3(vertical, -h)), origin);
             img.addr[px++] = ray_color(ray, head);
         }
     }
