@@ -47,9 +47,10 @@ int	add_plane(char *line, t_list **head)
 	if (!elem)
 		return (parsing_error(elem, "Malloc failure."));
 	if (parse_vec3(&line, &(elem->coordinates))
-		|| 	parse_vec3(&line, &(elem->orientation))
-		||	parse_vec3(&line, &(elem->colour)))
-		return (parsing_error(elem, "pl: coordinates, orientation or colour are invalid"));
+		|| parse_vec3(&line, &(elem->orientation))
+		|| parse_vec3(&line, &(elem->colour)))
+		return (parsing_error(elem,
+				"pl: coordinates, orientation or colour are invalid"));
 	skip_spaces(&line);
 	if (*line)
 		return (parsing_error(elem, "pl: Garbage at EOL"));
@@ -70,7 +71,7 @@ int	add_cylinder(char *line, t_list **head)
 		return (parsing_error(elem, "Malloc failure."));
 	if (parse_vec3(&line, &(elem->coordinates))
 		|| parse_vec3(&line, &(elem->orientation)))
-		return (parsing_error(elem, "cy: coordinates or orientation are invalid"));
+		return (parsing_error(elem, "cy: coordinates/orientation is invalid"));
 	word = chop_word(&line, ft_isspace);
 	if (ft_atof(word, &(elem->diameter)))
 		return (parsing_error(elem, "cy: diameter is invalid"));

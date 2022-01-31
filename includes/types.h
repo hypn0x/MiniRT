@@ -77,13 +77,21 @@ typedef struct s_cylinder
 
 typedef struct s_data
 {
-	void	*mlx;
-	void	*mlx_win;
-	void	*img;
-	int		*addr;
-	int		bbp;
-	int		line_len;
-	int		endian;
+	void		*mlx;
+	void		*mlx_win;
+	void		*img;
+	int			*addr;
+	int			bbp;
+	int			line_len;
+	int			endian;
+	double		viewport_width;
+	double		viewport_height;
+	t_vec3		horizontal;
+	t_vec3		vertical;
+	t_point		top_left_corner;
+	t_camera	camera;
+	t_light		light;
+	t_ambient	ambient;
 }	t_data;
 
 int	ft_exit(t_data *data);

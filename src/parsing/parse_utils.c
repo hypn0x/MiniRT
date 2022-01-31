@@ -19,20 +19,6 @@ void	skip_spaces(char **line)
 		(*line)++;
 }
 
-int	check_exist(char type, t_list **head)
-{
-	t_list	*elem;
-
-	elem = *head;
-	while (elem)
-	{
-		if (elem->type == type)
-			return (1);
-		elem = elem->next;
-	}
-	return (0);
-}
-
 int	new_elem(t_list **head)
 {
 	t_list	*elem;

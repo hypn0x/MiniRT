@@ -20,17 +20,17 @@
 #include "parsing/objects_parser.h"
 #include "parsing/lights_parser.h"
 
-int	parse_line(char *line, t_list **head)
+int	parse_line(char *line, t_list **head, t_camera *C, t_light *L, t_ambient *A)
 {
 	int	ret;
 
 	ret = 1;
 	if (line[0] == 'A' && ft_isspace(line[1]))
-		ret = add_ambient(line + 1, head);
+		ret = add_ambient(line + 1, A);
 	else if (line[0] == 'C' && ft_isspace(line[1]))
-		ret = add_camera(line + 1, head);
+		ret = add_camera(line + 1, C);
 	else if (line[0] == 'L' && ft_isspace(line[1]))
-		ret = add_light(line + 1, head);
+		ret = add_light(line + 1, L);
 	else if (!ft_strncmp("sp", line, 2) && ft_isspace(line[2]))
 		ret = add_sphere(line + 2, head);
 	else if (!ft_strncmp("pl", line, 2) && ft_isspace(line[2]))
@@ -68,12 +68,15 @@ int	open_file(char *filename)
 	return (fd);
 }
 
-t_list	**parser(char *filename)
+t_list	**parser(char *filename, t_camera *C, t_light *L, t_ambient *A)
 {
 	char	*line;
 	t_list	**head;
 	int		fd;
 
+	C->fov = -1;
+	A->brightness = -1;
+	L->brightness = -1;
 	fd = open_file(filename);
 	head = malloc(sizeof(t_list *));
 	if (!head)
@@ -84,9 +87,8 @@ t_list	**parser(char *filename)
 	{
 		if (*line)
 		{
-			if (parse_line(line, head))
+			if (parse_line(line, head, C, L, A))
 			{
-				ft_printf(2, "Error\nCould not parse the file\n"); // todo: delete this message
 				ft_lstclear(head, free);
 				free(head);
 				free(line);

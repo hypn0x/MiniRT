@@ -1,28 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lights_parser.h                                    :+:      :+:    :+:   */
+/*   constants.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/26 00:38:31 by msegrans          #+#    #+#             */
-/*   Updated: 2022/01/26 00:38:33 by msegrans         ###   ########.fr       */
+/*   Created: 2022/01/31 15:48:58 by msegrans          #+#    #+#             */
+/*   Updated: 2022/01/31 15:49:01 by msegrans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//
-// Created by segransm on 1/26/22.
-//
+#ifndef CONSTANTS_H
+# define CONSTANTS_H
 
-#ifndef LIGHTS_PARSER_H
-# define LIGHTS_PARSER_H
+# ifndef M_PI
+#  define M_PI		3.14159265358979323846	/* pi */
+# endif
+# ifndef M_PI_2
+#  define M_PI_2		1.57079632679489661923	/* pi/2 */
+# endif
+# define IMG_W 720
+# define ASPECT_RATIO (16.0 / 9.0)
+# define IMG_H (int)(IMG_W / ASPECT_RATIO)
 
-# include <libft.h>
-
-int	add_ambient(char *line, t_ambient *A);
-
-int	add_camera(char *line, t_camera *C);
-
-int	add_light(char *line, t_light *L);
-
-#endif //LIGHTS_PARSER_H
+#endif //CONSTANTS_H

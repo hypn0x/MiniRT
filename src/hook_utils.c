@@ -17,16 +17,16 @@
 
 int	ft_exit(t_data *data)
 {
-    mlx_destroy_image(data->mlx, data->img);
-    mlx_destroy_window(data->mlx, data->mlx_win);
-    //mlx_destroy_display(data->mlx); Linux variant
-    free(data->mlx);
-    exit(0);
+	mlx_destroy_image(data->mlx, data->img);
+	mlx_destroy_window(data->mlx, data->mlx_win);
+	//mlx_destroy_display(data->mlx); Linux variant
+	free(data->mlx);
+	exit(0);
 }
 
 int	key_hook(int keycode, t_data *data)
 {
-    if (keycode == K_ESC)
-        ft_exit(data);
-    return (0);
+	if (keycode == K_ESC)
+		ft_exit(data);
+	return (0);
 }

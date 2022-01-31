@@ -19,17 +19,25 @@ static int	check_objects_values(t_list *head)
 	while (head != NULL)
 	{
 		if (head->type == 'A')
+		{
+			if (((t_ambient *)head->content)->brightness == -1)
+				((t_ambient *)head->content)->brightness = 0;
 			if (check_brightness(((t_ambient *)head->content)->brightness)
 				|| check_colour(((t_ambient *)head->content)->colour))
 				return (1);
+		}
 		if (head->type == 'C')
 			if (check_orientation(((t_camera *)head->content)->orientation)
 				|| check_range_double(
 					((t_camera *)head->content)->fov, 0.0, 180.0))
 				return (2);
 		if (head->type == 'L')
+		{
+			if (((t_light *)head->content)->brightness == -1)
+				((t_light *)head->content)->brightness = 0;
 			if (check_brightness(((t_light *)head->content)->brightness))
 				return (3);
+		}
 	head = head->next;
 	}
 	return (0);

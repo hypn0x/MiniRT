@@ -14,7 +14,8 @@
 # define PARSER_H
 
 # include <libft.h>
+# include <types.h>
 
-t_list	**parser(char *filename);
+t_list	**parser(char *filename, t_camera *C, t_light *L, t_ambient *A);
 
 #endif
