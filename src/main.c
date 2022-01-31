@@ -6,7 +6,7 @@
 /*   By: hsabir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/22 14:19:03 by hsabir            #+#    #+#             */
-/*   Updated: 2022/01/27 14:22:30 by hsabir           ###   ########.fr       */
+/*   Updated: 2022/01/31 13:32:12 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,27 +144,20 @@ double dot3(t_vec3 a, t_vec3 b)
 		return (-d);
 	return (0);
 }
-//void normalize(t_vec3 *v)
-//{
-//    double len = sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
-//    if (len > 0.0)
-//        v->x /= len; v->y /= len; v->z /= len;
-//}
-int cast_ray(t_light L, t_ambient A, t_vec3 hit_point, t_colour c, t_vec3 sc)
+
+int cast_ray(t_light L, t_ambient A, t_vec3 hit_point, t_colour c, t_vec3 C)
 {
-	int ret;
-	double b;
-	t_vec3 Nhit;
-	t_vec3 ln = normalize(L.coordinates);
-	//hit_point = unit_vector(hit_point);
-	//sc = unit_vector(sc);
-	Nhit = min_vec(hit_point, sc);
-	Nhit = normalize(Nhit);
-	b = pow(dot3(ln, Nhit), L.brightness) + A.brightness;
-	ret = rgb_to_int(mult3(c, (1.0 - b)));
-	if (ret < 0)
-		ret = 0;
-	return (ret);
+   t_vec3 normal = min_vec(C, hit_point);
+   t_vec3 ld = min_vec(L.coordinates, hit_point);
+   ld = normalize(ld);
+//   hit_point = normalize(hit_point);
+   normal = normalize(normal);
+   double ref = dot(normal, ld);
+   double intencity = ref * A.brightness; //TODO maybe multiply by light ratio * L.brightness;
+   int ret = rgb_to_int(mult3(c, intencity));
+   if (ret < 0)
+       ret = 0;
+   return (ret);
 }
 
 int ray_color(t_ray r, t_list **head)
@@ -179,6 +172,10 @@ int ray_color(t_ray r, t_list **head)
 	elem = *head;
 	while (elem != NULL)
 	{
+        if (elem->type == 'L')
+            L = *((t_light *)elem->content);
+        if (elem->type == 'A')
+            A = *((t_ambient *)elem->content);
 		if (elem->type == 's')
 		{
 			t = hit_sphere(((t_sphere *) elem->content), r);
@@ -194,7 +191,7 @@ int ray_color(t_ray r, t_list **head)
 	{
 		return (cast_ray(L, A, plus_vec(r.origin, mult3(r.direction, distance)),
 						 ((t_sphere *) hit_elem->content)->colour,  ((t_sphere *) hit_elem->content)->coordinates));
-//		return (rgb_to_int(((t_sphere *)hit_elem->content)->colour));
+		//return (rgb_to_int(((t_sphere *)hit_elem->content)->colour));
 	}
 	return (0);
 }
@@ -262,7 +259,7 @@ int main(int argc, char **argv)
 
 	img.mlx = mlx_init();
 	img.mlx_win = mlx_new_window(img.mlx, img_width, img_height,
-								 "Hello MiniRT!");
+								 "MiniRT!");
 	img.img = mlx_new_image(img.mlx, img_width, img_height);
 	img.addr = (int *) mlx_get_data_addr(img.img, &img.bbp, &img.line_len,
 										 &img.endian);
