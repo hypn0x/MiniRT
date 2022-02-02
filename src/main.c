@@ -6,7 +6,7 @@
 /*   By: hsabir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/22 14:19:03 by hsabir            #+#    #+#             */
-/*   Updated: 2022/02/02 16:04:25 by                  ###   ########.fr       */
+/*   Updated: 2022/02/02 18:07:32 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,19 +74,16 @@ double	hit_sphere(const t_sphere *sphere, t_ray r)
 
 double plane_hit(t_plane *plane, t_ray r)
 {
-    double dn_dot;
-    double t;
-    t_vec3 normal;
-    t_vec3 tmp;
-    normal = (plane->orientation);
-    dn_dot = dot(r.direction, normal);
-    if (fabs(dn_dot) > 1e-6)
-    {
-        tmp = min_vec(r.direction, normal);
-        t = dot(tmp, normal) / dn_dot;
- 		return (t);
-    }
-    return (-1);
+    double denom;
+	denom = dot(plane->orientation, r.direction);
+	double t;
+	if (denom > 1e-6)
+	{
+		t_vec3 p0l0 = min_vec(plane->coordinates, r.origin);
+		t = dot(p0l0, plane->orientation);
+		return (t);
+	}
+	return (-1);
 }
 
 int	clip_colour(double c)
@@ -151,6 +148,7 @@ int	cast_ray2(t_light L, t_ambient A, t_vec3 hit_point, t_plane *pl)
 	double	intensity;
 	int		ret;
 
+	return (rgb_to_int(pl->colour));
 	normal = min_vec(pl->coordinates,hit_point);
 	ld = normalize(min_vec(L.coordinates, hit_point));
 	//hit_point = normalize(hit_point);
@@ -159,8 +157,9 @@ int	cast_ray2(t_light L, t_ambient A, t_vec3 hit_point, t_plane *pl)
 	intensity = -dot(normal, ld) * L.brightness;
 	ret = rgb_to_int(mult3(pl->colour, intensity));
 	if (ret <= 0) {
-		intensity = dot(normal, ld) * A.brightness;
-		ret = rgb_to_int(mult3(A.colour, intensity));
+//		intensity = dot(normal, ld) * A.brightness;
+//		ret = rgb_to_int(mult3(A.colour, intensity));
+		ret = 0;
 	}
 	return (ret);
 }
