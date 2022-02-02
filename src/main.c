@@ -25,6 +25,7 @@
 #include <ctype.h>
 #include <math.h>
 #include <constants.h>
+#include <rotate_vec.h>
 
 double	solve_quadratic(double a, double b, double c)
 {
@@ -71,36 +72,71 @@ double	hit_sphere(const t_sphere *sphere, t_ray r)
 	return (solve_quadratic(a, b, c));
 }
 
+int	clip_colour(double c)
+{
+	if (c < 0)
+		return (0);
+	if (c > 255)
+		return (255);
+	return ((int)c);
+}
+
 int	rgb_to_int(t_colour c)
 {
 	int	rgb;
 
-	rgb = (int) c.x;
-	rgb = (rgb << 8) + (int) c.y;
-	rgb = (rgb << 8) + (int) c.z;
+	rgb = clip_colour(c.x);
+	rgb = (rgb << 8) + clip_colour(c.y);
+	rgb = (rgb << 8) + clip_colour(c.z);
 	return (rgb);
 }
 
-int	cast_ray(t_light L, t_ambient A, t_vec3 hit_point, t_sphere *sp)
+int	get_ray_luminosity(t_light L, t_ambient A, t_vec3 hit_point, t_sphere *sp)
 {
 	t_vec3	normal;
 	t_vec3	ld;
 	double	intensity;
 	int		ret;
 
+	(void )A;
 	normal = min_vec(sp->coordinates, hit_point);
 	ld = normalize(min_vec(L.coordinates, hit_point));
 //   hit_point = normalize(hit_point);
 	normal = normalize(normal);
 	//TODO maybe multiply by light ratio * L.brightness;
-	intensity = dot(normal, ld) * A.brightness;
+	intensity = dot(normal, ld) * L.brightness;
 	ret = rgb_to_int(mult3(sp->colour, intensity));
 	if (ret < 0)
 		ret = 0;
 	return (ret);
 }
 
-int	ray_color(t_ray r, t_list **head, t_light L, t_ambient A)
+int	cast_ray(t_list **head, t_ray r, t_list *obj, t_data img)
+{
+	t_list	*elem;
+	double	t;
+
+	elem = *head;
+	if (elem == obj)
+		elem = elem->next;
+	t = -1;
+	while (elem != NULL)
+	{
+		if (elem == obj)
+		{
+			elem = elem->next;
+			continue ;
+		}
+		if (elem->type == 's')
+			t = hit_sphere(((t_sphere *) elem->content), r);
+		if (t > 0)
+			return (0); // todo: return ambient light?
+		elem = elem->next;
+	}
+	return (get_ray_luminosity(img.light, img.ambient, r.origin, obj->content));
+}
+
+int	ray_color(t_ray r, t_list **head, t_data img)
 {
 	double	distance;
 	double	t;
@@ -110,42 +146,31 @@ int	ray_color(t_ray r, t_list **head, t_light L, t_ambient A)
 	hit_elem = NULL;
 	distance = DBL_MAX;
 	elem = *head;
+	t = -1;
 	while (elem != NULL)
 	{
 		if (elem->type == 's')
 		{
 			t = hit_sphere(((t_sphere *) elem->content), r);
-			if (t >= 0 && t < distance)
-			{
-				distance = t;
-				hit_elem = elem;
-			}
+		}
+		if (t >= 0 && t < distance)
+		{
+			distance = t;
+			t = -1;
+			hit_elem = elem;
 		}
 		elem = elem->next;
 	}
 	if (hit_elem != NULL)
-		return (cast_ray(L, A, plus_vec(r.origin, mult3(r.direction, distance)), hit_elem->content));
+	{
+		r.origin = plus_vec(r.origin, mult3(r.direction, distance));
+		r.origin = plus_vec(r.origin, mult3(normalize(min_vec(r.origin, ((t_sphere *)hit_elem->content)->coordinates)), 1e-5));
+		r.direction = normalize(min_vec(img.light.coordinates, r.origin));
+		return (cast_ray(head, r, hit_elem, img));
+	}
+
+//		return (cast_ray(plus_vec(r.origin, mult3(r.direction, distance)), hit_elem->content, img));
 	return (0);
-}
-
-t_vec3	rotate_y_axis(double angle, t_vec3 v)
-{
-	t_vec3	r;
-
-	r.x = v.x * cos(angle) + v.z * sin(angle);
-	r.y = v.y;
-	r.z = -v.x * sin(angle) + v.z * cos(angle);
-	return (r);
-}
-
-t_vec3	rotate_x_axis(double angle, t_vec3 v)
-{
-	t_vec3	r;
-
-	r.x = v.x;
-	r.y = v.y * cos(angle) - v.z * sin(angle);
-	r.z = v.y * sin(angle) + v.z * cos(angle);
-	return (r);
 }
 
 void	init_image(t_data *img)
@@ -175,17 +200,18 @@ void	create_img(t_list **objects, t_data	*img)
 
 	y = -1;
 	ray.origin = img->camera.view_point;
+	ray.direction = img->top_left_corner;
 	px = 0;
 	while (++y < IMG_H)
 	{
 		x = -1;
 		while (++x < IMG_W)
 		{
-			ray.direction = min_vec(plus_vec(plus_vec(img->top_left_corner,
+			ray.direction = normalize(min_vec(plus_vec(plus_vec(img->top_left_corner,
 							mult3(img->horizontal, ((double) x + .5) / IMG_W)),
 						mult3(img->vertical, -((double) y + .5) / IMG_H)),
-					ray.origin);
-			img->addr[px++] = ray_color(ray, objects, img->light, img->ambient);
+					ray.origin));
+			img->addr[px++] = ray_color(ray, objects, *img);
 		}
 	}
 }
@@ -200,7 +226,7 @@ int	main(int argc, char **argv)
 	objects = parser(argv[1], &(img.camera), &(img.light), &(img.ambient));
 	if (objects == NULL)
 		return (ft_printf(2, "Error\nFile scene corrupted\n"));
-	else if (check_list_values(*objects))
+	else if (check_list_values(*objects, &(img.ambient), &(img.light), &(img.camera)))
 	{
 		ft_lstclear(objects, free);
 		free(objects);
