@@ -6,7 +6,7 @@
 /*   By: hsabir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/22 14:19:03 by hsabir            #+#    #+#             */
-/*   Updated: 2022/01/31 13:32:12 by                  ###   ########.fr       */
+/*   Updated: 2022/02/02 16:04:25 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,23 @@ double	hit_sphere(const t_sphere *sphere, t_ray r)
 	return (solve_quadratic(a, b, c));
 }
 
+double plane_hit(t_plane *plane, t_ray r)
+{
+    double dn_dot;
+    double t;
+    t_vec3 normal;
+    t_vec3 tmp;
+    normal = (plane->orientation);
+    dn_dot = dot(r.direction, normal);
+    if (fabs(dn_dot) > 1e-6)
+    {
+        tmp = min_vec(r.direction, normal);
+        t = dot(tmp, normal) / dn_dot;
+ 		return (t);
+    }
+    return (-1);
+}
+
 int	clip_colour(double c)
 {
 	if (c < 0)
@@ -93,22 +110,11 @@ int	rgb_to_int(t_colour c)
 
 int	get_ray_luminosity(t_light L, t_ambient A, t_vec3 hit_point, t_sphere *sp)
 {
-	t_vec3	normal;
-	t_vec3	ld;
-	double	intensity;
-	int		ret;
+	t_colour c = {0, 0, 0};
 
-	(void )A;
-	normal = min_vec(sp->coordinates, hit_point);
-	ld = normalize(min_vec(L.coordinates, hit_point));
-//   hit_point = normalize(hit_point);
-	normal = normalize(normal);
-	//TODO maybe multiply by light ratio * L.brightness;
-	intensity = dot(normal, ld) * L.brightness;
-	ret = rgb_to_int(mult3(sp->colour, intensity));
-	if (ret < 0)
-		ret = 0;
-	return (ret);
+	c = plus_vec(c, mult3(sp->colour, A.brightness));
+	c = plus_vec(c, mult3(sp->colour, L.brightness)); // todo: add dot
+	return (rgb_to_int(c));
 }
 
 int	cast_ray(t_list **head, t_ray r, t_list *obj, t_data img)
@@ -129,6 +135,8 @@ int	cast_ray(t_list **head, t_ray r, t_list *obj, t_data img)
 		}
 		if (elem->type == 's')
 			t = hit_sphere(((t_sphere *) elem->content), r);
+		else if (elem->type == 'p')
+			t = plane_hit(((t_plane *) elem->content), r);
 		if (t > 0)
 			return (0); // todo: return ambient light?
 		elem = elem->next;
@@ -136,8 +144,28 @@ int	cast_ray(t_list **head, t_ray r, t_list *obj, t_data img)
 	return (get_ray_luminosity(img.light, img.ambient, r.origin, obj->content));
 }
 
-int	ray_color(t_ray r, t_list **head, t_data img)
+int	cast_ray2(t_light L, t_ambient A, t_vec3 hit_point, t_plane *pl)
 {
+	t_vec3	normal;
+	t_vec3	ld;
+	double	intensity;
+	int		ret;
+
+	normal = min_vec(pl->coordinates,hit_point);
+	ld = normalize(min_vec(L.coordinates, hit_point));
+	//hit_point = normalize(hit_point);
+	normal = normalize(normal);
+	//TODO maybe multiply by light ratio * L.brightness;
+	intensity = -dot(normal, ld) * L.brightness;
+	ret = rgb_to_int(mult3(pl->colour, intensity));
+	if (ret <= 0) {
+		intensity = dot(normal, ld) * A.brightness;
+		ret = rgb_to_int(mult3(A.colour, intensity));
+	}
+	return (ret);
+}
+
+int ray_color(t_ray r, t_list **head, t_data img) {
 	double	distance;
 	double	t;
 	t_list	*elem;
@@ -147,12 +175,11 @@ int	ray_color(t_ray r, t_list **head, t_data img)
 	distance = DBL_MAX;
 	elem = *head;
 	t = -1;
-	while (elem != NULL)
-	{
+	while (elem != NULL) {
 		if (elem->type == 's')
-		{
 			t = hit_sphere(((t_sphere *) elem->content), r);
-		}
+		else if (elem->type == 'p')
+			t = plane_hit(((t_plane *) elem->content), r);
 		if (t >= 0 && t < distance)
 		{
 			distance = t;
@@ -161,15 +188,18 @@ int	ray_color(t_ray r, t_list **head, t_data img)
 		}
 		elem = elem->next;
 	}
-	if (hit_elem != NULL)
-	{
-		r.origin = plus_vec(r.origin, mult3(r.direction, distance));
-		r.origin = plus_vec(r.origin, mult3(normalize(min_vec(r.origin, ((t_sphere *)hit_elem->content)->coordinates)), 1e-5));
-		r.direction = normalize(min_vec(img.light.coordinates, r.origin));
-		return (cast_ray(head, r, hit_elem, img));
-	}
+	if (hit_elem != NULL) {
+		if (hit_elem->type == 's') {
+			r.origin = plus_vec(r.origin, mult3(r.direction, distance));
+			r.origin = plus_vec(r.origin,
+								mult3(normalize(min_vec(r.origin, ((t_sphere *) hit_elem->content)->coordinates)),
+									  1e-5));
+			r.direction = normalize(min_vec(img.light.coordinates, r.origin));
+			return (cast_ray(head, r, hit_elem, img));
+		} else
+			return (cast_ray2(img.light, img.ambient, plus_vec(r.origin, mult3(r.direction, distance)), hit_elem->content));
 
-//		return (cast_ray(plus_vec(r.origin, mult3(r.direction, distance)), hit_elem->content, img));
+	}
 	return (0);
 }
 
@@ -184,7 +214,7 @@ void	init_image(t_data *img)
 	img->viewport_width = tan(img->camera.fov / 2) * 2;
 	img->viewport_height = img->viewport_width / ASPECT_RATIO;
 	// pi/2 is 90 degrees
-	img->horizontal = mult3(rotate_y_axis(M_PI_2, img->camera.orientation), img->viewport_width);
+	img->horizontal = mult3(rotate_y_axis(-M_PI_2, img->camera.orientation), img->viewport_width);
 	img->vertical = mult3(rotate_x_axis(M_PI_2, img->camera.orientation), img->viewport_height);
 	img->top_left_corner = plus_vec(plus_vec(min_vec(img->camera.view_point, div3(img->horizontal, 2)), div3(img->vertical, 2)), img->camera.orientation);
 	mlx_hook(img->mlx_win, 17, 1L, ft_exit, img);

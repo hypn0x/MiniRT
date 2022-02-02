@@ -5,8 +5,7 @@ set(CMAKE_VERBOSE_MAKEFILE on)
 set(CMAKE_C_STANDARD 99)
 add_compile_options(-Wall -Werror -Wextra)
 
-SET(OPENGL_LIBRARY "")
-SET(APPKIT_LIBRARY "")
+INCLUDE_DIRECTORIES(/System/Library/Frameworks)
 
 SET(LIBS mlx ft)
 
