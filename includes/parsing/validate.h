@@ -15,6 +15,6 @@
 
 # include <libft.h>
 
-int	check_list_values(t_list *head);
+int	check_list_values(t_list *head, t_ambient *A, t_light *L, t_camera *C);
 
 #endif //VALIDATE_H
