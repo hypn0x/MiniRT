@@ -27,49 +27,23 @@
 #include <constants.h>
 #include <rotate_vec.h>
 
-double	solve_quadratic(double a, double b, double c)
-{
-	double	d;
-	double	t0;
-	double	t1;
-	double	q;
-
-	d = b * b - 4 * a * c;
-	if (d < 0)
-		return (-1);
-	if (d == 0)
-		return (-0.5 * b / a);
-	if (b > 0)
-		q = -0.5 * (b + sqrt(d));
-	else
-		q = -0.5 * (b - sqrt(d));
-	t0 = q / a;
-	t1 = c / q;
-	if (t0 > t1)
-	{
-		q = t1;
-		t1 = t0;
-		t0 = q;
-	}
-	if (t0 < 0)
-		return (t1);
-	return (t0);
-}
-
 double	hit_sphere(const t_sphere *sphere, t_ray r)
 {
-	t_vec3	oc;
-	double	radius;
-	double	a;
-	double	b;
-	double	c;
-
-	radius = sphere->diameter / 2;
-	oc = min_vec(r.origin, sphere->coordinates);
-	a = dot(r.direction, r.direction);
-	b = 2.0 * dot(r.direction, oc);
-	c = dot(oc, oc) - radius * radius;
-	return (solve_quadratic(a, b, c));
+	double b = 2 * dot(r.direction, min_vec(r.origin, sphere->coordinates));
+	double c = pow(len3(min_vec(r.origin, sphere->coordinates)), 2) - pow(sphere->diameter / 2, 2);
+	double delta = pow(b, 2) - 4 * c;
+	if (delta > 0)
+	{
+		double t1 = (-b + sqrt(delta)) / 2;
+		double t2 = (-b - sqrt(delta)) / 2;
+		if (t1 > 0 && t2 > 0)
+		{
+			if (t1 < t2)
+				return (t1);
+			return (t2);
+		}
+	}
+	return (-1);
 }
 
 double plane_hit(t_plane *plane, t_ray r)
@@ -123,24 +97,24 @@ int	cast_ray(t_list **head, t_ray r, t_list *obj, t_data img)
 	double	t;
 
 	elem = *head;
-	if (elem == obj)
-		elem = elem->next;
-	t = -1;
-	while (elem != NULL)
-	{
-		if (elem == obj)
-		{
-			elem = elem->next;
-			continue ;
-		}
-		if (elem->type == 's')
-			t = hit_sphere(((t_sphere *) elem->content), r);
-		else if (elem->type == 'p')
-			t = plane_hit(((t_plane *) elem->content), r);
-		if (t > 0)
-			return (0); // todo: return ambient light?
-		elem = elem->next;
-	}
+//	if (elem == obj)
+//		elem = elem->next;
+//	t = -1;
+//	while (elem != NULL)
+//	{
+//		if (elem == obj)
+//		{
+//			elem = elem->next;
+//			continue ;
+//		}
+//		if (elem->type == 's')
+//			t = hit_sphere(((t_sphere *) elem->content), r);
+//		else if (elem->type == 'p')
+//			t = plane_hit(((t_plane *) elem->content), r);
+//		if (t > 0)
+//			return (0); // todo: return ambient light?
+//		elem = elem->next;
+//	}
 	return (get_ray_luminosity(img.light, img.ambient, r.origin, obj->content));
 }
 
@@ -215,8 +189,8 @@ void	init_image(t_data *img)
 	img->viewport_height = img->viewport_width / ASPECT_RATIO;
 	// pi/2 is 90 degrees
 	img->horizontal = mult3(rotate_y_axis(-M_PI_2, img->camera.orientation), img->viewport_width);
-	img->vertical = mult3(rotate_x_axis(M_PI_2, img->camera.orientation), img->viewport_height);
-	img->top_left_corner = plus_vec(plus_vec(min_vec(img->camera.view_point, div3(img->horizontal, 2)), div3(img->vertical, 2)), img->camera.orientation);
+	img->vertical = mult3(rotate_x_axis(-M_PI_2, img->camera.orientation), img->viewport_height);
+	img->top_left_corner = plus_vec(min_vec(min_vec(img->camera.view_point, div3(img->horizontal, 2)), div3(img->vertical, 2)), img->camera.orientation);
 	mlx_hook(img->mlx_win, 17, 1L, ft_exit, img);
 	mlx_hook(img->mlx_win, 2, 1L, key_hook, img);
 }
@@ -238,10 +212,16 @@ void	create_img(t_list **objects, t_data	*img)
 		while (++x < IMG_W)
 		{
 			ray.direction = normalize(min_vec(plus_vec(plus_vec(img->top_left_corner,
-							mult3(img->horizontal, ((double) x + .5) / IMG_W)),
-						mult3(img->vertical, -((double) y + .5) / IMG_H)),
+							mult3(img->horizontal, ((double) x) / IMG_W)),
+						mult3(img->vertical, ((double) y) / IMG_H)),
 					ray.origin));
-			img->addr[px++] = ray_color(ray, objects, *img);
+			img->addr[y * IMG_W + x] = ray_color(ray, objects, *img);
+			if (img->addr[px - 1] != 0)
+			{
+				printf("%d/%d\n", y, IMG_H);
+				printf("[%f, %f, %f]  ", ray.origin.x, ray.origin.y, ray.origin.z);
+				printf("[%f, %f, %f]  \n", ray.direction.x, ray.direction.y, ray.direction.z);
+			}
 		}
 	}
 }
