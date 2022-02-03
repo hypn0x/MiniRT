@@ -6,7 +6,7 @@
 /*   By: hsabir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/22 14:19:03 by hsabir            #+#    #+#             */
-/*   Updated: 2022/02/02 16:04:25 by                  ###   ########.fr       */
+/*   Updated: 2022/02/03 19:36:49 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,12 +144,18 @@ int ray_color(t_ray r, t_list **head, t_data img) {
 		elem = elem->next;
 	}
 	if (hit_elem != NULL) {
-		if (hit_elem->type == 's') {
+
+		if (hit_elem->type == 's')
+		{
 			obj.coordinates = ((t_sphere *) hit_elem->content)->coordinates;
 			obj.colour = ((t_sphere *) hit_elem->content)->colour;
 		}
-		else
-			return (0xFF00FF);
+		else if (hit_elem->type == 'p')
+		{
+			obj.coordinates = ((t_plane *) hit_elem->content)->coordinates;
+			obj.colour = ((t_plane *) hit_elem->content)->colour;
+		}
+
 		obj.intersection = plus_vec(r.origin, mult3(r.direction, distance));
 		obj.normal_to_surface = normalize(min_vec(obj.intersection, ((t_sphere *) hit_elem->content)->coordinates));
 		r.origin = plus_vec(obj.intersection,mult3(obj.normal_to_surface,1e-5));
