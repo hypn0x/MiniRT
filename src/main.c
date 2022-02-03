@@ -91,7 +91,7 @@ int	get_ray_luminosity(t_data img, t_object obj, t_ray r)
 	if (img.light.brightness == 0)
 		return (rgb_to_int(c));
 	c = plus_vec(c, mult3(obj.colour, img.light.brightness * dot(r.direction, obj.normal_to_surface)));
-	c = plus_vec(c, mult3(specular, pow(img.light.brightness * dot(obj.normal_to_surface, normalize(plus_vec(r.direction, normalize(min_vec(img.camera.view_point, obj.intersection))))), 25.0)));
+	c = plus_vec(c, mult3(specular, pow(img.light.brightness * dot(obj.normal_to_surface, normalize(plus_vec(r.direction, normalize(min_vec(img.camera.view_point, obj.intersection))))), 4 * len3(min_vec(img.light.coordinates, obj.intersection)))));
 	return (rgb_to_int(c));
 }
 
