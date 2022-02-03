@@ -6,7 +6,7 @@
 /*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 00:04:13 by msegrans          #+#    #+#             */
-/*   Updated: 2022/01/26 13:47:34 by 0xb1n4r          ###   ########.fr       */
+/*   Updated: 2022/02/03 19:29:04 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,14 @@ typedef struct s_cylinder
 	double		height;
 	t_colour	colour;
 }	t_cylinder;
+
+typedef struct s_object
+{
+	t_point		coordinates;
+	t_colour	colour;
+	t_vec3		normal_to_surface;
+	t_vec3		intersection;
+}	t_object;
 
 typedef struct s_data
 {
