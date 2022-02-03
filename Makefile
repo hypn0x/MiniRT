@@ -6,7 +6,7 @@
 #    By: hsabir <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/22 13:45:33 by hsabir            #+#    #+#              #
-#   Updated: 2022/01/26 11:34:08 by 0xb1n4r          ###   ########.fr       # #
+#   Updated: 2022/02/02 15:41:15 by                  ###   ########.fr       # #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,7 @@ OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 INC_DIRS := $(shell find $(INCLUDE_DIR) -type d)
 INC_FLAGS += $(addprefix -I,$(INC_DIRS))
 
-CFLAGS += -Wall -Wextra -Werror
+#CFLAGS += -Wall -Wextra -Werror
 CFLAGS += -std=c99 -pedantic
 #CFLAGS += -O2 -march=native
 #CFLAGS += -g3
