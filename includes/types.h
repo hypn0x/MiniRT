@@ -75,6 +75,14 @@ typedef struct s_cylinder
 	t_colour	colour;
 }	t_cylinder;
 
+typedef struct s_object
+{
+	t_point		coordinates;
+	t_colour	colour;
+	t_vec3		normal_to_surface;
+	t_vec3		intersection;
+}	t_object;
+
 typedef struct s_data
 {
 	void		*mlx;
