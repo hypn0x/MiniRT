@@ -204,12 +204,6 @@ void	create_img(t_list **objects, t_data	*img)
 						mult3(img->vertical, ((double) y) / IMG_H)),
 					ray.origin));
 			img->addr[y * IMG_W + x] = ray_color(ray, objects, *img);
-			if (img->addr[px - 1] != 0)
-			{
-				printf("%d/%d\n", y, IMG_H);
-				printf("[%f, %f, %f]  ", ray.origin.x, ray.origin.y, ray.origin.z);
-				printf("[%f, %f, %f]  \n", ray.direction.x, ray.direction.y, ray.direction.z);
-			}
 		}
 	}
 }
