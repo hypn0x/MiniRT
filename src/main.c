@@ -109,7 +109,7 @@ int	cast_ray(t_list **head, t_ray r, t_data img, t_object obj)
 			t = hit_sphere(((t_sphere *) elem->content), r);
 		else if (elem->type == 'p')
 			t = plane_hit(((t_plane *) elem->content), r);
-		if (t != -1)
+		if (t > 0)
 		{
 			img.light.brightness = 0;
 			return (get_ray_luminosity(img, obj, r));
