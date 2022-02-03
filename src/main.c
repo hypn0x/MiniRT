@@ -144,6 +144,7 @@ int ray_color(t_ray r, t_list **head, t_data img) {
 		elem = elem->next;
 	}
 	if (hit_elem != NULL) {
+
 		if (hit_elem->type == 's')
 		{
 			obj.coordinates = ((t_sphere *) hit_elem->content)->coordinates;
@@ -154,6 +155,7 @@ int ray_color(t_ray r, t_list **head, t_data img) {
 			obj.coordinates = ((t_plane *) hit_elem->content)->coordinates;
 			obj.colour = ((t_plane *) hit_elem->content)->colour;
 		}
+
 		obj.intersection = plus_vec(r.origin, mult3(r.direction, distance));
 		obj.normal_to_surface = normalize(min_vec(obj.intersection, ((t_sphere *) hit_elem->content)->coordinates));
 		r.origin = plus_vec(obj.intersection,mult3(obj.normal_to_surface,1e-5));
