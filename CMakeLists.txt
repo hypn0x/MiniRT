@@ -17,7 +17,7 @@ else ()
     SET(LIBS ${LIBS} Xext X11 m bsd)
 endif ()
 
-include_directories(libs/libft/incs includes includes/parsing includes/vector libs/mlx)
+include_directories(libs/libft/incs includes includes/parsing includes/vector includes/utils libs/mlx)
 link_directories(libs/libft libs/mlx)
 
 add_executable(
@@ -32,6 +32,7 @@ add_executable(
         src/parsing/validate.c
         src/parsing/validate_utils.c
         src/hook_utils.c
-        src/vector/rotate_vec.c includes/vector/rotate_vec.h)
+        src/vector/rotate_vec.c
+        src/utils/random.c)
 
 TARGET_LINK_LIBRARIES(miniRT ${LIBS})

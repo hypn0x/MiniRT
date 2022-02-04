@@ -22,22 +22,19 @@
 
 int	parse_line(char *line, t_list **head, t_camera *C, t_light *L, t_ambient *A)
 {
-	int	ret;
-
-	ret = 1;
 	if (line[0] == 'A' && ft_isspace(line[1]))
-		ret = add_ambient(line + 1, A);
+		return (add_ambient(line + 1, A));
 	else if (line[0] == 'C' && ft_isspace(line[1]))
-		ret = add_camera(line + 1, C);
+		return (add_camera(line + 1, C));
 	else if (line[0] == 'L' && ft_isspace(line[1]))
-		ret = add_light(line + 1, L);
+		return (add_light(line + 1, L));
 	else if (!ft_strncmp("sp", line, 2) && ft_isspace(line[2]))
-		ret = add_sphere(line + 2, head);
+		return (add_sphere(line + 2, head));
 	else if (!ft_strncmp("pl", line, 2) && ft_isspace(line[2]))
-		ret = add_plane(line + 2, head);
+		return (add_plane(line + 2, head));
 	else if (!ft_strncmp("cy", line, 2) && ft_isspace(line[2]))
-		ret = add_cylinder(line + 2, head);
-	return (ret);
+		return (add_cylinder(line + 2, head));
+	return (1);
 }
 
 int	check_ext(const char *filename)
@@ -68,6 +65,19 @@ int	open_file(char *filename)
 	return (fd);
 }
 
+void	remove_comments(char *line)
+{
+	while (*line)
+	{
+		if (*line == '#')
+		{
+			*line = 0;
+			return ;
+		}
+		line++;
+	}
+}
+
 t_list	**parser(char *filename, t_camera *C, t_light *L, t_ambient *A)
 {
 	char	*line;
@@ -87,6 +97,7 @@ t_list	**parser(char *filename, t_camera *C, t_light *L, t_ambient *A)
 	{
 		if (*line)
 		{
+			remove_comments(line);
 			if (parse_line(line, head, C, L, A))
 			{
 				ft_lstclear(head, free);

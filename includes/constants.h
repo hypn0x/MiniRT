@@ -19,8 +19,10 @@
 # ifndef M_PI_2
 #  define M_PI_2		1.57079632679489661923	/* pi/2 */
 # endif
-# define IMG_W 1080
+# define IMG_W 1440
 # define ASPECT_RATIO (16.0 / 9.0)
 # define IMG_H (int)(IMG_W / ASPECT_RATIO)
-
+# ifndef SUPERSAMPLING
+#  define SUPERSAMPLING 4
+# endif
 #endif //CONSTANTS_H

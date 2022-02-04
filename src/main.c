@@ -26,12 +26,15 @@
 #include <math.h>
 #include <constants.h>
 #include <rotate_vec.h>
+#include <random.h>
 
 double	hit_sphere(const t_sphere *sphere, t_ray r)
 {
+	double radius = sphere->diameter / 2;
 	double b = 2 * dot(r.direction, min_vec(r.origin, sphere->coordinates));
-	double c = pow(len3(min_vec(r.origin, sphere->coordinates)), 2) - pow(sphere->diameter / 2, 2);
-	double delta = pow(b, 2) - 4 * c;
+	double len = len3(min_vec(r.origin, sphere->coordinates));
+	double c = (len * len) - (radius * radius);
+	double delta = b * b - 4 * c;
 	if (delta > 0)
 	{
 		double t1 = (-b + sqrt(delta)) / 2;
@@ -82,21 +85,21 @@ int	rgb_to_int(t_colour c)
 	return (rgb);
 }
 
-int	get_ray_luminosity(t_data img, t_object obj, t_ray r)
+t_colour	get_ray_luminosity(t_data img, t_object obj, t_ray r)
 {
 	t_colour c = {0, 0, 0};
 	t_colour specular = {255, 255, 255};
 
 	c = plus_vec(c, mult3(obj.colour, img.ambient.brightness));
 	if (img.light.brightness == 0)
-		return (rgb_to_int(c));
+		return (c);
 	c = plus_vec(c, mult3(obj.colour, img.light.brightness * dot(r.direction, obj.normal_to_surface)));
-	c = plus_vec(c, mult3(specular, pow(img.light.brightness * dot(obj.normal_to_surface, normalize(plus_vec(r.direction, normalize(min_vec(img.camera.view_point, obj.intersection))))), 4 * len3(min_vec(img.light.coordinates, obj.intersection)))));
-	return (rgb_to_int(c));
+	c = plus_vec(c, mult3(specular, pow(img.light.brightness * dot(obj.normal_to_surface, normalize(plus_vec(r.direction, min_vec(img.camera.view_point, obj.intersection)))), 4 * len3(min_vec(img.light.coordinates, obj.intersection)))));
+	return (c);
 }
 
 
-int	cast_ray(t_list **head, t_ray r, t_data img, t_object obj)
+t_colour	cast_ray(t_list **head, t_ray r, t_data img, t_object obj)
 {
 	t_list	*elem;
 	double	t;
@@ -119,7 +122,7 @@ int	cast_ray(t_list **head, t_ray r, t_data img, t_object obj)
 	return (get_ray_luminosity(img, obj, r));
 }
 
-int ray_color(t_ray r, t_list **head, t_data img) {
+t_colour ray_color(t_ray r, t_list **head, t_data img) {
 	double		distance;
 	double		t;
 	t_list		*elem;
@@ -162,7 +165,8 @@ int ray_color(t_ray r, t_list **head, t_data img) {
 		r.direction = normalize(min_vec(img.light.coordinates, r.origin));
 		return (cast_ray(head, r, img, obj));
 	}
-	return (0);
+	t_colour c = {0, 0, 0};
+	return (c);
 }
 
 void	init_image(t_data *img)
@@ -183,7 +187,9 @@ void	init_image(t_data *img)
 	mlx_hook(img->mlx_win, 2, 1L, key_hook, img);
 }
 
-void	create_img(t_list **objects, t_data	*img)
+#include <fcntl.h>
+#include <unistd.h>
+void	create_img(t_list **objects, t_data	*img, int fd)
 {
 	int		y;
 	int		x;
@@ -199,11 +205,28 @@ void	create_img(t_list **objects, t_data	*img)
 		x = -1;
 		while (++x < IMG_W)
 		{
-			ray.direction = normalize(min_vec(plus_vec(plus_vec(img->top_left_corner,
-							mult3(img->horizontal, ((double) x) / IMG_W)),
-						mult3(img->vertical, ((double) y) / IMG_H)),
-					ray.origin));
-			img->addr[y * IMG_W + x] = ray_color(ray, objects, *img);
+			if (SUPERSAMPLING == 0)
+			{
+				ray.direction = normalize(min_vec(plus_vec(plus_vec(img->top_left_corner,
+																	mult3(img->horizontal, ((double) x + .5) / IMG_W)),
+														   mult3(img->vertical, ((double) y + .5) / IMG_H)),
+												  ray.origin));
+				img->addr[y * IMG_W + x] = rgb_to_int(ray_color(ray, objects, *img));
+			}
+			else
+			{
+				t_colour	val = {0, 0, 0};
+				px = -1;
+				while (++px < SUPERSAMPLING)
+				{
+					ray.direction = normalize(min_vec(plus_vec(plus_vec(img->top_left_corner,
+																		mult3(img->horizontal, ((double) x + rnd(fd)) / IMG_W)),
+															   mult3(img->vertical, ((double) y + rnd(fd)) / IMG_H)),
+													  ray.origin));
+					val = plus_vec(val, ray_color(ray, objects, *img));
+				}
+				img->addr[y * IMG_W + x] = rgb_to_int(div3(val, SUPERSAMPLING));
+			}
 		}
 	}
 }
@@ -212,6 +235,7 @@ int	main(int argc, char **argv)
 {
 	t_list		**objects;
 	t_data		img;
+	int			fd;
 
 	if (argc != 2)
 		return (ft_printf(2, "Usage: ./miniRT (scene)\n"));
@@ -225,7 +249,9 @@ int	main(int argc, char **argv)
 		return (ft_printf(2, "Error\nInvalid value in scene\n"));
 	}
 	init_image(&img);
-	create_img(objects, &img);
+	fd = open("/dev/urandom", O_NONBLOCK);
+	create_img(objects, &img, fd);
 	mlx_put_image_to_window(img.mlx, img.mlx_win, img.img, 0, 0);
 	mlx_loop(img.mlx);
+	close(fd);
 }
