@@ -6,7 +6,7 @@
 /*   By: hsabir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/22 14:19:03 by hsabir            #+#    #+#             */
-/*   Updated: 2022/02/03 19:36:49 by                  ###   ########.fr       */
+/*   Updated: 2022/02/07 20:09:04 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,44 +27,7 @@
 #include <constants.h>
 #include <rotate_vec.h>
 #include <random.h>
-
-double	hit_sphere(const t_sphere *sphere, t_ray r)
-{
-	double radius = sphere->diameter / 2;
-	double b = 2 * dot(r.direction, min_vec(r.origin, sphere->coordinates));
-	double len = len3(min_vec(r.origin, sphere->coordinates));
-	double c = (len * len) - (radius * radius);
-	double delta = b * b - 4 * c;
-	if (delta > 0)
-	{
-		double t1 = (-b + sqrt(delta)) / 2;
-		double t2 = (-b - sqrt(delta)) / 2;
-		if (t1 > 0 && t2 > 0)
-		{
-			if (t1 < t2)
-				return (t1);
-			return (t2);
-		}
-	}
-	return (-1);
-}
-
-double plane_hit(t_plane *plane, t_ray r)
-{
-    double dn_dot;
-    double t;
-    t_vec3 normal;
-    t_vec3 tmp;
-    normal = (plane->orientation);
-    dn_dot = dot(r.direction, normal);
-    if (fabs(dn_dot) > 1e-6)
-    {
-        tmp = min_vec(r.direction, normal);
-        t = dot(tmp, normal) / dn_dot;
- 		return (t);
-    }
-    return (-1);
-}
+#include <hit_objs.h>
 
 int	clip_colour(double c)
 {
@@ -111,7 +74,9 @@ t_colour	cast_ray(t_list **head, t_ray r, t_data img, t_object obj)
 		if (elem->type == 's')
 			t = hit_sphere(((t_sphere *) elem->content), r);
 		else if (elem->type == 'p')
-			t = plane_hit(((t_plane *) elem->content), r);
+			t = hit_plane(((t_plane *) elem->content), r);
+		else if (elem->type == 'c')
+			t = hit_cylinder(((t_cylinder *) elem->content), r);
 		if (t > 0)
 		{
 			img.light.brightness = 0;
@@ -137,7 +102,13 @@ t_colour ray_color(t_ray r, t_list **head, t_data img) {
 		if (elem->type == 's')
 			t = hit_sphere(((t_sphere *) elem->content), r);
 		else if (elem->type == 'p')
-			t = plane_hit(((t_plane *) elem->content), r);
+			t = hit_plane(((t_plane *) elem->content), r);
+		else if (elem->type == 'c')
+		{
+			t = hit_cylinder(((t_cylinder *) elem->content), r);
+//			if (t > 0)
+//				return (((t_cylinder *) elem->content)->colour);
+		}
 		if (t >= 0 && t < distance)
 		{
 			distance = t;
@@ -157,6 +128,11 @@ t_colour ray_color(t_ray r, t_list **head, t_data img) {
 		{
 			obj.coordinates = ((t_plane *) hit_elem->content)->coordinates;
 			obj.colour = ((t_plane *) hit_elem->content)->colour;
+		}
+		else if (hit_elem->type == 'c')
+		{
+			obj.coordinates = ((t_cylinder *) hit_elem->content)->coordinates;
+			obj.colour = ((t_cylinder *) hit_elem->content)->colour;
 		}
 
 		obj.intersection = plus_vec(r.origin, mult3(r.direction, distance));

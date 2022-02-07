@@ -17,12 +17,13 @@ else ()
     SET(LIBS ${LIBS} Xext X11 m bsd)
 endif ()
 
-include_directories(libs/libft/incs includes includes/parsing includes/vector includes/utils libs/mlx)
+include_directories(libs/libft/incs includes includes/hit_objs.h includes/parsing includes/vector includes/utils libs/mlx)
 link_directories(libs/libft libs/mlx)
 
 add_executable(
         miniRT
         src/main.c
+        src/hit_objs.c
         src/parsing/parser.c
         src/parsing/lights_parser.c
         src/parsing/parse_utils.c
