@@ -17,6 +17,8 @@
 #ifndef TYPES_H
 # define TYPES_H
 
+# include <libft.h>
+
 typedef struct s_vec3
 {
 	double	x;

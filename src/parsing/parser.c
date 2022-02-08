@@ -12,11 +12,9 @@
 
 #include "libft.h"
 #include <fcntl.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "types.h"
-#include "parsing/parse_utils.h"
 #include "parsing/objects_parser.h"
 #include "parsing/lights_parser.h"
 

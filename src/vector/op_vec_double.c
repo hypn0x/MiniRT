@@ -44,7 +44,7 @@ t_vec3	min3(t_vec3 a, double n)
 	return (a);
 }
 
-void	var_exchange(double *a, double *b)
+void	swap_vars(double *a, double *b)
 {
 	double buffer;
 

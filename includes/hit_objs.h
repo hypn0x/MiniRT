@@ -7,6 +7,8 @@
 
 # include <types.h>
 
+
+t_colour	cast_ray(t_list **head, t_ray r, t_data img, t_object obj);
 double	hit_sphere(const t_sphere *sphere, t_ray r);
 double	hit_plane(t_plane *plane, t_ray r);
 double	hit_cylinder(t_cylinder *cylinder, t_ray r);

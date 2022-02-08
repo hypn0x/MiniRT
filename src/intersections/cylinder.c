@@ -1,50 +1,11 @@
 //
-// Created by Hajar Sabir on 2/7/22.
+// Created by Hajar Sabir on 2/8/22.
 //
 
 #include <hit_objs.h>
 #include <op_vec.h>
 #include <op_vec_double.h>
 #include <math.h>
-#include "parsing/objects_parser.h"
-
-double	hit_sphere(const t_sphere *sphere, t_ray r)
-{
-	double radius = sphere->diameter / 2;
-	double b = 2 * dot(r.direction, min_vec(r.origin, sphere->coordinates));
-	double len = len3(min_vec(r.origin, sphere->coordinates));
-	double c = (len * len) - (radius * radius);
-	double delta = b * b - 4 * c;
-	if (delta > 0)
-	{
-		double t1 = (-b + sqrt(delta)) / 2;
-		double t2 = (-b - sqrt(delta)) / 2;
-		if (t1 > 0 && t2 > 0)
-		{
-			if (t1 < t2)
-				return (t1);
-			return (t2);
-		}
-	}
-	return (-1);
-}
-
-double hit_plane(t_plane *plane, t_ray r)
-{
-	double dn_dot;
-	double t;
-	t_vec3 normal;
-	t_vec3 tmp;
-	normal = (plane->orientation);
-	dn_dot = dot(r.direction, normal);
-	if (fabs(dn_dot) > 1e-6)
-	{
-		tmp = min_vec(r.direction, normal);
-		t = dot(tmp, normal) / dn_dot;
-		return (t);
-	}
-	return (-1);
-}
 
 t_vec3 		get_cylinder_normal(t_vec3 point, t_cylinder cylinder)
 {
@@ -53,7 +14,7 @@ t_vec3 		get_cylinder_normal(t_vec3 point, t_cylinder cylinder)
 
 	ctp = min_vec(point, cylinder.coordinates);
 	normal = min_vec(ctp, mult3(cylinder.orientation,
-										dot(cylinder.orientation, ctp)));
+								dot(cylinder.orientation, ctp)));
 	normal = normalize(normal);
 	return (normal);
 }
@@ -94,12 +55,11 @@ int			solve_quadratic(t_vec3 vec, double *x0, double *x1)
 		*x1 = vec.z / q;
 	}
 	if (*x0 > *x1)
-		var_exchange(x0, x1);
+		swap_vars(x0, x1);
 	return (1);
 }
 
-int	cylinder_root(double *t0, double *t1, t_cylinder *cylinder,
-							 t_ray ray)
+int	cylinder_root(double *t0, double *t1, t_cylinder *cylinder, t_ray ray)
 {
 	t_vec3 	a_sqrt;
 	t_vec3 	right;
@@ -108,13 +68,13 @@ int	cylinder_root(double *t0, double *t1, t_cylinder *cylinder,
 	double	z;
 
 	a_sqrt = min_vec(ray.direction,
-					   mult3(cylinder->orientation,
-								   dot(ray.direction, cylinder->orientation)));
+					 mult3(cylinder->orientation,
+						   dot(ray.direction, cylinder->orientation)));
 	x = dot(a_sqrt, a_sqrt);
 	right = min_vec(min_vec(ray.origin, cylinder->coordinates),
-					  mult3(cylinder->orientation,
-								  dot(min_vec(ray.origin, cylinder->coordinates),
-											  cylinder->orientation)));
+					mult3(cylinder->orientation,
+						  dot(min_vec(ray.origin, cylinder->coordinates),
+							  cylinder->orientation)));
 	y = 2 * dot(a_sqrt, right);
 	z = dot(right, right) - (cylinder->diameter / 2 * cylinder->diameter / 2);
 	if (!solve_quadratic(new_vec(x, y, z), t0, t1))
