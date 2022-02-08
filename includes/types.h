@@ -6,7 +6,7 @@
 /*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 00:04:13 by msegrans          #+#    #+#             */
-/*   Updated: 2022/02/03 19:29:04 by                  ###   ########.fr       */
+/*   Updated: 2022/02/07 20:49:31 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 
 #ifndef TYPES_H
 # define TYPES_H
+
+# include <libft.h>
 
 typedef struct s_vec3
 {

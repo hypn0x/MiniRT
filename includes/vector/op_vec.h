@@ -6,7 +6,7 @@
 /*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 23:37:05 by msegrans          #+#    #+#             */
-/*   Updated: 2022/01/26 23:37:10 by msegrans         ###   ########.fr       */
+/*   Updated: 2022/02/07 20:50:11 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,7 @@ double	dot(t_vec3 a, t_vec3 b);
 double	len3(t_vec3 a);
 
 t_vec3	normalize(t_vec3 a);
+
+t_vec3 	cross_prod(t_vec3 a, t_vec3 b);
 
 #endif //OP_VEC_H

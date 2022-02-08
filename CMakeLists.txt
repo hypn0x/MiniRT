@@ -17,12 +17,20 @@ else ()
     SET(LIBS ${LIBS} Xext X11 m bsd)
 endif ()
 
-include_directories(libs/libft/incs includes includes/parsing includes/vector includes/utils libs/mlx)
+include_directories(libs/libft/incs includes includes/hit_objs.h includes/parsing includes/vector
+        includes/rendering/colors.h includes/utils libs/mlx)
 link_directories(libs/libft libs/mlx)
 
 add_executable(
         miniRT
         src/main.c
+        src/intersections/hit_objs.c
+        src/intersections/cylinder.c
+        src/intersections/plane.c
+        src/intersections/sphere.c
+        src/rendering/colors_utils.c
+        src/rendering/colors.c
+        src/rendering/mlx_img.c
         src/parsing/parser.c
         src/parsing/lights_parser.c
         src/parsing/parse_utils.c
