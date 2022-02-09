@@ -17,6 +17,7 @@ NAME = libft.a
 # ****************************** #
 
 CC = gcc
+CFLAGS := ${CFLAGS}
 CFLAGS += -Wall -Wextra -Werror
 CFLAGS += -std=c99 -pedantic
 CFLAGS += -O3 -march=native
@@ -101,6 +102,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@ar $(ARFLAGS) $@ $^
+	@echo libft done
 
 $(OBJS_PATH)/%.o: $(SRCS_PATH)/%.c | $(OBJS_DIRS)
 	@$(CC) $(CFLAGS) -c $< -o $@ -I $(INCS_PATH)

@@ -46,7 +46,7 @@ static void	init_struct(t_atof *atof)
     atof->sign = 1;
 }
 
-int	ft_atof(const char *str, double *n)
+int	ft_atof(const char *str, float *n)
 {
     t_atof	a;
     int		i;

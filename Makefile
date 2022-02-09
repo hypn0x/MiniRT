@@ -10,8 +10,6 @@
 #                                                                              #
 # **************************************************************************** #
 
-
-
 SHELL = /bin/sh
 
 CFLAGS := ${CFLAGS}
@@ -54,12 +52,11 @@ CFLAGS += -g3
 #CFLAGS += -fsanitize=address -v
 
 all:
+	@$(MAKE) -j$(NPROC) -C libs/mlx 2> /dev/null > /dev/null
+	@$(MAKE) -j$(NPROC) -C libs/libft libft.a > /dev/null
 	@$(MAKE) -j$(NPROC) $(NAME)
 
 $(NAME): $(OBJS)
-	@$(MAKE) -C libs/libft libft.a
-	@echo Libft done
-	@echo GNL done
 	@echo Linking $@
 	@$(CC) $(CFLAGS) $(INC_FLAGS) $(OBJS) $(LIBS) -o $(NAME)
 
@@ -77,9 +74,10 @@ fclean:
 	@rm -rf $(BUILD_DIR)
 	@rm -f $(NAME)
 	@$(MAKE) -C libs/libft fclean
+	@$(MAKE) -C libs/mlx clean > /dev/null
 	@echo Fclean done
 
 re: fclean
-	@$(MAKE) -j$(NPROC) $(NAME)
+	@$(MAKE)
 
 .PHONY: all clean fclean re

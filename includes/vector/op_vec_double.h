@@ -15,15 +15,15 @@
 
 # include <types.h>
 
-t_vec3	mult3(t_vec3 a, double n);
+t_vec3	mult3(t_vec3 a, float n);
 
-t_vec3	div3(t_vec3 a, double n);
+t_vec3	div3(t_vec3 a, float n);
 
-t_vec3	plus3(t_vec3 a, double n);
+t_vec3	plus3(t_vec3 a, float n);
 
-t_vec3	min3(t_vec3 a, double n);
+t_vec3	min3(t_vec3 a, float n);
 
-void		swap_vars(double *a, double *b);
-t_vec3 	new_vec(double a, double b, double c);
+void		swap_vars(float *a, float *b);
+t_vec3 	new_vec(float a, float b, float c);
 
 #endif //OP_VEC_DOUBLE_H

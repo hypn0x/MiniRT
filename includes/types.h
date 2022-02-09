@@ -21,9 +21,9 @@
 
 typedef struct s_vec3
 {
-	double	x;
-	double	y;
-	double	z;
+	float	x;
+	float	y;
+	float	z;
 }	t_vec3;
 
 typedef t_vec3	t_point;
@@ -37,7 +37,7 @@ typedef struct s_ray
 
 typedef struct s_ambient
 {
-	double		brightness;
+	float		brightness;
 	t_colour	colour;
 }	t_ambient;
 
@@ -45,19 +45,19 @@ typedef struct s_camera
 {
 	t_point	view_point;
 	t_vec3	orientation;
-	double	fov;
+	float	fov;
 }	t_camera;
 
 typedef struct s_light
 {
 	t_point	coordinates;
-	double	brightness;
+	float	brightness;
 }	t_light;
 
 typedef struct s_sphere
 {
 	t_point		coordinates;
-	double		diameter;
+	float		diameter;
 	t_colour	colour;
 }	t_sphere;
 
@@ -72,8 +72,8 @@ typedef struct s_cylinder
 {
 	t_point		coordinates;
 	t_vec3		orientation;
-	double		diameter;
-	double		height;
+	float		diameter;
+	float		height;
 	t_colour	colour;
 }	t_cylinder;
 
@@ -94,8 +94,8 @@ typedef struct s_data
 	int			bbp;
 	int			line_len;
 	int			endian;
-	double		viewport_width;
-	double		viewport_height;
+	float		viewport_width;
+	float		viewport_height;
 	t_vec3		horizontal;
 	t_vec3		vertical;
 	t_point		top_left_corner;

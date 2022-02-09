@@ -10,8 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h>
-#include <unistd.h>
 #include "parsing/parser.h"
 #include <mlx.h>
 #include <libft.h>
@@ -24,7 +22,6 @@ int	main(int argc, char **argv)
 {
 	t_list		**objects;
 	t_data		img;
-	int			fd;
 
 	if (argc != 2)
 		return (ft_printf(2, "Usage: ./miniRT (scene)\n"));
@@ -38,9 +35,7 @@ int	main(int argc, char **argv)
 		return (ft_printf(2, "Error\nInvalid value in scene\n"));
 	}
 	init_image(&img);
-	fd = open("/dev/urandom", O_NONBLOCK);
-	create_img(objects, &img, fd);
+	create_img(objects, &img);
 	mlx_put_image_to_window(img.mlx, img.mlx_win, img.img, 0, 0);
 	mlx_loop(img.mlx);
-	close(fd);
 }

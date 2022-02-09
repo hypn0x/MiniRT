@@ -12,7 +12,7 @@
 
 #include <types.h>
 
-t_vec3	mult3(t_vec3 a, double n)
+t_vec3	mult3(t_vec3 a, float n)
 {
 	a.x *= n;
 	a.y *= n;
@@ -20,7 +20,7 @@ t_vec3	mult3(t_vec3 a, double n)
 	return (a);
 }
 
-t_vec3	div3(t_vec3 a, double n)
+t_vec3	div3(t_vec3 a, float n)
 {
 	a.x /= n;
 	a.y /= n;
@@ -28,7 +28,7 @@ t_vec3	div3(t_vec3 a, double n)
 	return (a);
 }
 
-t_vec3	plus3(t_vec3 a, double n)
+t_vec3	plus3(t_vec3 a, float n)
 {
 	a.x += n;
 	a.y += n;
@@ -36,7 +36,7 @@ t_vec3	plus3(t_vec3 a, double n)
 	return (a);
 }
 
-t_vec3	min3(t_vec3 a, double n)
+t_vec3	min3(t_vec3 a, float n)
 {
 	a.x -= n;
 	a.y -= n;
@@ -44,16 +44,16 @@ t_vec3	min3(t_vec3 a, double n)
 	return (a);
 }
 
-void	swap_vars(double *a, double *b)
+void	swap_vars(float *a, float *b)
 {
-	double buffer;
+	float buffer;
 
 	buffer = *a;
 	*a = *b;
 	*b = buffer;
 }
 
-t_vec3 	new_vec(double a, double b, double c)
+t_vec3 	new_vec(float a, float b, float c)
 {
 	t_vec3 vec;
 

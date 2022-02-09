@@ -10,7 +10,7 @@
 t_colour	cast_ray(t_list **head, t_ray r, t_data img, t_object obj)
 {
 	t_list	*elem;
-	double	t;
+	float	t;
 
 	elem = *head;
 	t = -1;

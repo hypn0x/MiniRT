@@ -5,6 +5,6 @@
 #ifndef RANDOM_H
 # define RANDOM_H
 
-double rnd(int fd);
+float rnd(int fd);
 
 #endif //RANDOM_H

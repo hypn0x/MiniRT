@@ -7,8 +7,8 @@
 
 #include "types.h"
 
-t_vec3	rotate_y_axis(double angle, t_vec3 v);
+t_vec3	rotate_y_axis(float angle, t_vec3 v);
 
-t_vec3	rotate_x_axis(double angle, t_vec3 v);
+t_vec3	rotate_x_axis(float angle, t_vec3 v);
 
 #endif //MINIRT_ROTATE_VEC_H

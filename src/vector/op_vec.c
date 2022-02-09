@@ -30,14 +30,14 @@ t_vec3	plus_vec(t_vec3 a, t_vec3 b)
 	return (a);
 }
 
-double	dot(t_vec3 a, t_vec3 b)
+float	dot(t_vec3 a, t_vec3 b)
 {
 	return (a.x * b.x + a.y * b.y + a.z * b.z);
 }
 
-double	len3(t_vec3 a)
+float	len3(t_vec3 a)
 {
-	return (sqrt(dot(a, a)));
+	return (sqrtf(dot(a, a)));
 }
 
 t_vec3	normalize(t_vec3 a)
@@ -45,7 +45,7 @@ t_vec3	normalize(t_vec3 a)
 	return (div3(a, len3(a)));
 }
 
-t_vec3 	cross_prod(t_vec3 a, t_vec3 b)
+t_vec3 	cross_prod(t_vec3 a, t_vec3 b) // todo: use math op for double
 {
 	t_vec3 	new;
 

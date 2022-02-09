@@ -15,8 +15,8 @@
 
 typedef struct	s_atof
 {
-	double	int_part;
-	double	fract_part;
+	float	int_part;
+	float	fract_part;
 	int	div;
 	int	sign;
 	int	fraction;
@@ -24,6 +24,6 @@ typedef struct	s_atof
 
 char	*ft_itoa(int n);
 int		ft_atoi(const char *str);
-int		ft_atof(const char *str, double *n);
+int		ft_atof(const char *str, float *n);
 
 #endif

@@ -24,36 +24,38 @@ void	init_image(t_data *img)
 	img->camera.fov = img->camera.fov * M_PI / 180;
 	img->viewport_width = tan(img->camera.fov / 2) * 2;
 	img->viewport_height = img->viewport_width / ASPECT_RATIO;
-	// pi/2 is 90 degrees
-	img->horizontal = mult3(rotate_y_axis(-M_PI_2, img->camera.orientation), img->viewport_width);
-	img->vertical = mult3(rotate_x_axis(-M_PI_2, img->camera.orientation), img->viewport_height);
-	img->top_left_corner = plus_vec(min_vec(min_vec(img->camera.view_point, div3(img->horizontal, 2)), div3(img->vertical, 2)), img->camera.orientation);
+	t_vec3 y = {0, 1, 0};
+	img->horizontal = cross_prod(img->camera.orientation, y);
+	img->vertical = mult3(cross_prod(img->camera.orientation, img->horizontal), img->viewport_height);
+	img->horizontal = mult3(img->horizontal, img->viewport_width);
+	img->top_left_corner = min_vec(plus_vec(min_vec(min_vec(img->camera.view_point, div3(img->horizontal, 2)), div3(img->vertical, 2)), img->camera.orientation), img->camera.view_point);
+	img->vertical = div3(img->vertical, IMG_H); // todo: fix case where cross prod = 0
+	img->horizontal = div3(img->horizontal, IMG_W);
 	mlx_hook(img->mlx_win, 17, 1L, ft_exit, img);
 	mlx_hook(img->mlx_win, 2, 1L, key_hook, img);
 }
 
-int	get_pixel_value(t_ray  ray, t_data img, int fd, t_list **objects)
+int	get_pixel_value(t_ray  ray, t_data img, t_list **objects)
 {
 	t_colour	val = {0, 0, 0};
-	double	distance;
-	int px = -1;
-	while (++px < SUPERSAMPLING)
-	{
-		ray.direction = normalize(plus_vec(plus_vec(ray.direction,mult3(img.horizontal,  rnd(fd) / IMG_W)),mult3(img.vertical, rnd(fd) / IMG_H)));
-//		ray.direction = normalize(ray.direction);
-		t_list *hit_elem = ray_color(ray, objects, &distance);
-		val = plus_vec(val, create_obj(hit_elem, ray, img, distance, objects));
-	}
-	return (rgb_to_int(div3(val, SUPERSAMPLING)));
+	float	distance;
+
+	ray.direction = normalize(ray.direction);
+	t_list *hit_elem = ray_color(ray, objects, &distance);
+	val = plus_vec(val, create_obj(hit_elem, ray, img, distance, objects));
+	return (rgb_to_int(div3(val, 1)));
 }
 
-void create_img(t_list **objects, t_data *img, int fd)
+void create_img(t_list **objects, t_data *img)
 {
 	int y;
 	int x;
+	int px;
 	t_ray ray;
+	t_vec3 horiz = mult3(img->horizontal, IMG_W);
 
 	y = -1;
+	px = 0;
 	ray.origin = img->camera.view_point;
 	ray.direction = img->top_left_corner;
 	while (++y < IMG_H)
@@ -61,10 +63,10 @@ void create_img(t_list **objects, t_data *img, int fd)
 		x = -1;
 		while (++x < IMG_W)
 		{
-			ray.direction = plus_vec(ray.direction,  mult3(img->horizontal,1.0 / IMG_W));
-			img->addr[y * IMG_W + x] = get_pixel_value(ray, *img, fd, objects);
+			ray.direction = plus_vec(ray.direction,  img->horizontal);
+			img->addr[px++] = get_pixel_value(ray, *img, objects);
 		}
-		ray.direction = plus_vec(ray.direction,  mult3(img->vertical,1.0 / IMG_H));
-		ray.direction = min_vec(ray.direction,  img->horizontal);
+		ray.direction = plus_vec(ray.direction,  img->vertical);
+		ray.direction = min_vec(ray.direction,  horiz);
 	}
 }

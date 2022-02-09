@@ -10,6 +10,6 @@
 
 void	init_image(t_data *img);
 
-void	create_img(t_list **objects, t_data	*img, int fd);
+void	create_img(t_list **objects, t_data	*img);
 
 #endif //MINIRT_MLX_IMG_H
