@@ -32,6 +32,8 @@ t_colour	get_ray_luminosity(t_data img, t_object obj, t_ray r)
 	t_colour c = {0, 0, 0};
 	t_colour specular = {255, 255, 255};
 
+	specular = mult3(specular, img.light.brightness);
+
 	c = plus_vec(c, mult3(obj.colour, img.ambient.brightness));
 	if (img.light.brightness == 0)
 		return (c);

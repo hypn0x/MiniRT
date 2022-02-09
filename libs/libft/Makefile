@@ -17,7 +17,11 @@ NAME = libft.a
 # ****************************** #
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -std=c99 -pedantic
+CFLAGS += -Wall -Wextra -Werror
+CFLAGS += -std=c99 -pedantic
+CFLAGS += -O3 -march=native
+CFLAGS += -g3
+#CFLAGS += -fsanitize=address -v
 ARFLAGS = -rcs
 
 # **************** #
@@ -96,21 +100,21 @@ OBJS = $(addprefix $(OBJS_PATH)/, $(OBJS_NAME));
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	ar $(ARFLAGS) $@ $^
+	@ar $(ARFLAGS) $@ $^
 
 $(OBJS_PATH)/%.o: $(SRCS_PATH)/%.c | $(OBJS_DIRS)
-	$(CC) $(CFLAGS) -c $< -o $@ -I $(INCS_PATH)
+	@$(CC) $(CFLAGS) -c $< -o $@ -I $(INCS_PATH)
 
 $(OBJS_DIRS): | $(OBJS_PATH)
-	mkdir -p $(OBJS_DIRS) 2> /dev/null
+	@mkdir -p $(OBJS_DIRS)
 
 $(OBJS_PATH):
-	mkdir -p $(OBJS_PATH) 2> /dev/null
+	@mkdir -p $(OBJS_PATH)
 
 clean:
-	rm -rf $(OBJS_PATH)
+	@rm -rf $(OBJS_PATH)
 
 fclean: clean
-	rm -rf $(NAME)
+	@rm -rf $(NAME)
 
 re: fclean all

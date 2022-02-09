@@ -37,7 +37,7 @@ double	dot(t_vec3 a, t_vec3 b)
 
 double	len3(t_vec3 a)
 {
-	return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z));
+	return (sqrt(dot(a, a)));
 }
 
 t_vec3	normalize(t_vec3 a)

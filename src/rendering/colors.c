@@ -12,56 +12,59 @@
 
 
 
-t_colour ray_color(t_ray r, t_list **head, t_data img) {
-	double		distance;
-	double		t;
-	t_list		*elem;
-	t_list		*hit_elem;
-	t_object	obj;
+t_list *ray_color(t_ray r, t_list **head, double *distance)
+{
+	double t;
+	t_list *elem;
+	t_list *hit_elem;
 
 	hit_elem = NULL;
-	distance = DBL_MAX;
+	*distance = DBL_MAX;
 	elem = *head;
-	t = -1;
-	while (elem != NULL) {
+	while (elem != NULL)
+	{
+		t = -1;
 		if (elem->type == 's')
 			t = hit_sphere(((t_sphere *) elem->content), r);
 		else if (elem->type == 'p')
 			t = hit_plane(((t_plane *) elem->content), r);
 		else if (elem->type == 'c')
-		{
 			t = hit_cylinder(((t_cylinder *) elem->content), r);
-//			if (t > 0)
-//				return (((t_cylinder *) elem->content)->colour);
-		}
-		if (t >= 0 && t < distance)
+		if (t >= 0 && t < *distance)
 		{
-			distance = t;
-			t = -1;
+			*distance = t;
 			hit_elem = elem;
 		}
 		elem = elem->next;
 	}
-	if (hit_elem != NULL) {
+	return (hit_elem);
+}
 
+t_colour create_obj(t_list *hit_elem, t_ray r, t_data img, double distance, t_list **head)
+{
+	t_object obj;
+
+	if (hit_elem != NULL)
+	{
+		obj.intersection = plus_vec(r.origin, mult3(r.direction, distance));
 		if (hit_elem->type == 's')
 		{
 			obj.coordinates = ((t_sphere *) hit_elem->content)->coordinates;
 			obj.colour = ((t_sphere *) hit_elem->content)->colour;
+			obj.normal_to_surface = normalize(min_vec(obj.intersection, obj.coordinates));
 		}
 		else if (hit_elem->type == 'p')
 		{
 			obj.coordinates = ((t_plane *) hit_elem->content)->coordinates;
 			obj.colour = ((t_plane *) hit_elem->content)->colour;
+			obj.normal_to_surface = ((t_plane *) hit_elem->content)->orientation;
 		}
 		else if (hit_elem->type == 'c')
 		{
 			obj.coordinates = ((t_cylinder *) hit_elem->content)->coordinates;
 			obj.colour = ((t_cylinder *) hit_elem->content)->colour;
+			obj.normal_to_surface = normalize(min_vec(obj.intersection, obj.coordinates));
 		}
-
-		obj.intersection = plus_vec(r.origin, mult3(r.direction, distance));
-		obj.normal_to_surface = normalize(min_vec(obj.intersection, ((t_sphere *) hit_elem->content)->coordinates));
 		r.origin = plus_vec(obj.intersection,mult3(obj.normal_to_surface,1e-5));
 		r.direction = normalize(min_vec(img.light.coordinates, r.origin));
 		return (cast_ray(head, r, img, obj));

@@ -32,45 +32,39 @@ void	init_image(t_data *img)
 	mlx_hook(img->mlx_win, 2, 1L, key_hook, img);
 }
 
-
-void	create_img(t_list **objects, t_data	*img, int fd)
+int	get_pixel_value(t_ray  ray, t_data img, int fd, t_list **objects)
 {
-	int		y;
-	int		x;
-	t_ray	ray;
-	int		px;
+	t_colour	val = {0, 0, 0};
+	double	distance;
+	int px = -1;
+	while (++px < SUPERSAMPLING)
+	{
+		ray.direction = normalize(plus_vec(plus_vec(ray.direction,mult3(img.horizontal,  rnd(fd) / IMG_W)),mult3(img.vertical, rnd(fd) / IMG_H)));
+//		ray.direction = normalize(ray.direction);
+		t_list *hit_elem = ray_color(ray, objects, &distance);
+		val = plus_vec(val, create_obj(hit_elem, ray, img, distance, objects));
+	}
+	return (rgb_to_int(div3(val, SUPERSAMPLING)));
+}
+
+void create_img(t_list **objects, t_data *img, int fd)
+{
+	int y;
+	int x;
+	t_ray ray;
 
 	y = -1;
 	ray.origin = img->camera.view_point;
 	ray.direction = img->top_left_corner;
-	px = 0;
 	while (++y < IMG_H)
 	{
 		x = -1;
 		while (++x < IMG_W)
 		{
-			if (SUPERSAMPLING == 0)
-			{
-				ray.direction = normalize(min_vec(plus_vec(plus_vec(img->top_left_corner,
-																	mult3(img->horizontal, ((double) x + .5) / IMG_W)),
-														   mult3(img->vertical, ((double) y + .5) / IMG_H)),
-												  ray.origin));
-				img->addr[y * IMG_W + x] = rgb_to_int(ray_color(ray, objects, *img));
-			}
-			else
-			{
-				t_colour	val = {0, 0, 0};
-				px = -1;
-				while (++px < SUPERSAMPLING)
-				{
-					ray.direction = normalize(min_vec(plus_vec(plus_vec(img->top_left_corner,
-																		mult3(img->horizontal, ((double) x + rnd(fd)) / IMG_W)),
-															   mult3(img->vertical, ((double) y + rnd(fd)) / IMG_H)),
-													  ray.origin));
-					val = plus_vec(val, ray_color(ray, objects, *img));
-				}
-				img->addr[y * IMG_W + x] = rgb_to_int(div3(val, SUPERSAMPLING));
-			}
+			ray.direction = plus_vec(ray.direction,  mult3(img->horizontal,1.0 / IMG_W));
+			img->addr[y * IMG_W + x] = get_pixel_value(ray, *img, fd, objects);
 		}
+		ray.direction = plus_vec(ray.direction,  mult3(img->vertical,1.0 / IMG_H));
+		ray.direction = min_vec(ray.direction,  img->horizontal);
 	}
 }
