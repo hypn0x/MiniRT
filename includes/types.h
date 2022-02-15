@@ -50,8 +50,9 @@ typedef struct s_camera
 
 typedef struct s_light
 {
-	t_point	coordinates;
-	float	brightness;
+	t_point		coordinates;
+	float		brightness;
+	t_colour	colour;
 }	t_light;
 
 typedef struct s_sphere

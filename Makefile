@@ -52,7 +52,7 @@ CFLAGS += -g3
 #CFLAGS += -fsanitize=address -v
 
 all:
-	@$(MAKE) -j$(NPROC) -C libs/mlx 2> /dev/null > /dev/null
+	@#$(MAKE) -j$(NPROC) -C libs/mlx 2> /dev/null > /dev/null
 	@$(MAKE) -j$(NPROC) -C libs/libft libft.a > /dev/null
 	@$(MAKE) -j$(NPROC) $(NAME)
 
@@ -74,7 +74,7 @@ fclean:
 	@rm -rf $(BUILD_DIR)
 	@rm -f $(NAME)
 	@$(MAKE) -C libs/libft fclean
-	@$(MAKE) -C libs/mlx clean > /dev/null
+	@#$(MAKE) -C libs/mlx clean > /dev/null
 	@echo Fclean done
 
 re: fclean

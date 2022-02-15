@@ -56,7 +56,7 @@ int	ft_atof(const char *str, float *n)
     i = 0;
 	cntr = 0;
     if (!str || !*str)
-        return (0);
+        return (1);
     tmp = (char *)str;
     init_struct(&a);
     get_sign(&tmp, &a);

@@ -60,6 +60,8 @@ int	add_light(char *line, t_light *L)
 	word = chop_word(&line, ft_isspace);
 	if (ft_atof(word, &(L->brightness)))
 		return (parsing_error(NULL, "L: brightness is invalid"));
+	if (parse_vec3(&line, &(L->colour)))
+		return (parsing_error(NULL, "L: colours are invalid"));
 	skip_spaces(&line);
 	if (*line)
 		return (parsing_error(NULL, "Error parsing L. Garbage at EOL."));

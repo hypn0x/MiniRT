@@ -9,8 +9,6 @@
 #include <op_vec.h>
 #include <math.h>
 #include <constants.h>
-#include <rotate_vec.h>
-#include <random.h>
 #include "../includes/rendering/colors.h"
 
 
@@ -21,8 +19,8 @@ void	init_image(t_data *img)
 	img->img = mlx_new_image(img->mlx, IMG_W, IMG_H);
 	img->addr = (int *) mlx_get_data_addr(img->img, &(img->bbp), &(img->line_len), &(img->endian));
 	// convert fov from degrees to radiant
-	img->camera.fov = img->camera.fov * M_PI / 180;
-	img->viewport_width = tan(img->camera.fov / 2) * 2;
+	img->camera.fov = img->camera.fov * (float)M_PI / 180.0f;
+	img->viewport_width = tanf(img->camera.fov / 2) * 2;
 	img->viewport_height = img->viewport_width / ASPECT_RATIO;
 	t_vec3 y = {0, 1, 0};
 	img->horizontal = cross_prod(img->camera.orientation, y);

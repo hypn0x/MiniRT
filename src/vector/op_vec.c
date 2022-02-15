@@ -30,6 +30,14 @@ t_vec3	plus_vec(t_vec3 a, t_vec3 b)
 	return (a);
 }
 
+t_vec3	mult_vec(t_vec3 a, t_vec3 b)
+{
+	a.x *= b.x;
+	a.y *= b.y;
+	a.z *= b.z;
+	return (a);
+}
+
 float	dot(t_vec3 a, t_vec3 b)
 {
 	return (a.x * b.x + a.y * b.y + a.z * b.z);

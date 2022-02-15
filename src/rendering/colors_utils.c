@@ -30,14 +30,17 @@ int	rgb_to_int(t_colour c)
 t_colour	get_ray_luminosity(t_data img, t_object obj, t_ray r)
 {
 	t_colour c = {0, 0, 0};
-	t_colour specular = {255, 255, 255};
+	t_colour ambient_colour;
+	t_colour light_colour;
 
-	specular = mult3(specular, img.light.brightness);
 
-	c = plus_vec(c, mult3(obj.colour, img.ambient.brightness));
+	ambient_colour = mult3(img.ambient.colour, img.ambient.brightness / 255.0f);
+	light_colour = mult3(img.light.colour, img.ambient.brightness);
+
+	c = plus_vec(c, mult_vec(obj.colour, ambient_colour));
 	if (img.light.brightness == 0)
 		return (c);
-	c = plus_vec(c, mult3(obj.colour, img.light.brightness * dot(r.direction, obj.normal_to_surface)));
-	c = plus_vec(c, mult3(specular, powf(img.light.brightness * dot(obj.normal_to_surface, normalize(plus_vec(r.direction, min_vec(img.camera.view_point, obj.intersection)))), 4 * len3(min_vec(img.light.coordinates, obj.intersection)))));
+	c = plus_vec(c, mult_vec(obj.colour,mult3(light_colour, dot(r.direction, obj.normal_to_surface) / 255.0f)));
+	c = plus_vec(c, mult3(light_colour, powf(img.light.brightness * dot(obj.normal_to_surface, normalize(plus_vec(r.direction, min_vec(img.camera.view_point, obj.intersection)))), 4 * len3(min_vec(img.light.coordinates, obj.intersection)))));
 	return (c);
 }

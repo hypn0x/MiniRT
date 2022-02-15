@@ -21,9 +21,6 @@
 
 int	parse_line(char *line, t_list **head, t_camera *C, t_light *L, t_ambient *A)
 {
-	skip_spaces(&line);
-	if (line[0] == 0)
-		return (0);
 	if (line[0] == 'A' && ft_isspace(line[1]))
 		return (add_ambient(line + 1, A));
 	if (line[0] == 'C' && ft_isspace(line[1]))
@@ -98,9 +95,10 @@ t_list	**parser(char *filename, t_camera *C, t_light *L, t_ambient *A)
 	int i = 0;
 	while (line)
 	{
+		remove_comments(line);
+		skip_spaces(&line);
 		if (*line)
 		{
-			remove_comments(line);
 			if (parse_line(line, head, C, L, A))
 			{
 				ft_printf(2, "Line number : %d \n", i);
