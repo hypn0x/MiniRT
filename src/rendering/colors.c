@@ -82,10 +82,10 @@ t_colour create_obj(t_list *hit_elem, t_ray r, t_data img, float distance, t_lis
 			obj.coordinates = ((t_cylinder *) hit_elem->content)->coordinates;
 			obj.colour = ((t_cylinder *) hit_elem->content)->colour;
 			obj.normal_to_surface = normalize(min_vec(obj.intersection, obj.coordinates));
-			obj.distance_to_light = len3(min_vec(img.light.coordinates, r.origin));
 			r.origin = obj.intersection;
 			r.direction = normalize(min_vec(img.light.coordinates, r.origin));
 		}
+		obj.distance_to_light = len3(min_vec(img.light.coordinates, r.origin));
 		return (cast_ray(head, r, img, obj, hit_elem));
 	}
 	t_colour c = {0, 0, 0};
