@@ -6,7 +6,7 @@
 #    By: hsabir <marvin@42lausanne.ch>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/08 09:06:42 by hsabir            #+#    #+#              #
-#   Updated: 2022/01/26 11:34:09 by 0xb1n4r          ###   ########.fr       # #
+#   Updated: 2022/02/15 17:09:37 by                  ###   ########.fr       # #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,12 @@ NAME = libft.a
 # ****************************** #
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -std=c99 -pedantic
+CFLAGS := ${CFLAGS}
+CFLAGS += -Wall -Wextra -Werror
+CFLAGS += -std=c99 -pedantic
+CFLAGS += -O3 -march=native
+CFLAGS += -g3
+#CFLAGS += -fsanitize=address -v
 ARFLAGS = -rcs
 
 # **************** #
@@ -96,21 +101,22 @@ OBJS = $(addprefix $(OBJS_PATH)/, $(OBJS_NAME));
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	ar $(ARFLAGS) $@ $^
+	@ar $(ARFLAGS) $@ $^
+	@echo libft done
 
 $(OBJS_PATH)/%.o: $(SRCS_PATH)/%.c | $(OBJS_DIRS)
-	$(CC) $(CFLAGS) -c $< -o $@ -I $(INCS_PATH)
+	@$(CC) $(CFLAGS) -c $< -o $@ -I $(INCS_PATH)
 
 $(OBJS_DIRS): | $(OBJS_PATH)
-	mkdir -p $(OBJS_DIRS) 2> /dev/null
+	@mkdir -p $(OBJS_DIRS)
 
 $(OBJS_PATH):
-	mkdir -p $(OBJS_PATH) 2> /dev/null
+	@mkdir -p $(OBJS_PATH)
 
 clean:
-	rm -rf $(OBJS_PATH)
+	@rm -rf $(OBJS_PATH)
 
 fclean: clean
-	rm -rf $(NAME)
+	@rm -rf $(NAME)
 
 re: fclean all

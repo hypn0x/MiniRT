@@ -6,15 +6,16 @@
 /*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 23:34:59 by msegrans          #+#    #+#             */
-/*   Updated: 2022/02/03 19:29:35 by                  ###   ########.fr       */
+/*   Updated: 2022/02/15 17:09:37 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <types.h>
 #include <op_vec.h>
 #include <math.h>
+#include <float.h>
 
-static int	check_range_vec(t_vec3 v, double lb, double hb)
+static int	check_range_vec(t_vec3 v, float lb, float hb)
 {
 	if (v.x < lb || v.x > hb)
 		return (1);
@@ -25,22 +26,22 @@ static int	check_range_vec(t_vec3 v, double lb, double hb)
 	return (0);
 }
 
-int	check_range_double(double n, double lb, double hb)
+int	check_range(float n, float lb, float hb)
 {
 	return (n < lb || n > hb);
 }
 
 int	check_colour(t_colour c)
 {
-	return (check_range_vec(c, 0.0, 255.0));
+	return (check_range_vec(c, 0.0f, 255.0f));
 }
 
 int	check_orientation(t_vec3 o)
 {
-	return (check_range_vec(o, -1.0, 1.0) || fabs(len3(o) - 1) > 10e-7);
+	return (check_range_vec(o, -1.0f, 1.0f) || !islessgreater(fabsf(len3(o)), 0.0) );
 }
 
-int	check_brightness(double b)
+int	check_brightness(float b)
 {
-	return (check_range_double(b, 0.0, 1.0));
+	return (check_range(b, 0.0f, 1.0f));
 }

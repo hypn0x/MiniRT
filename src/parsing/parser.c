@@ -6,7 +6,7 @@
 /*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 23:34:49 by msegrans          #+#    #+#             */
-/*   Updated: 2022/01/26 23:34:52 by msegrans         ###   ########.fr       */
+/*   Updated: 2022/02/15 17:09:37 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,21 @@
 #include "types.h"
 #include "parsing/objects_parser.h"
 #include "parsing/lights_parser.h"
+#include <parse_utils.h>
 
 int	parse_line(char *line, t_list **head, t_camera *C, t_light *L, t_ambient *A)
 {
 	if (line[0] == 'A' && ft_isspace(line[1]))
 		return (add_ambient(line + 1, A));
-	else if (line[0] == 'C' && ft_isspace(line[1]))
+	if (line[0] == 'C' && ft_isspace(line[1]))
 		return (add_camera(line + 1, C));
-	else if (line[0] == 'L' && ft_isspace(line[1]))
+	if (line[0] == 'L' && ft_isspace(line[1]))
 		return (add_light(line + 1, L));
-	else if (!ft_strncmp("sp", line, 2) && ft_isspace(line[2]))
+	if (!ft_strncmp("sp", line, 2) && ft_isspace(line[2]))
 		return (add_sphere(line + 2, head));
-	else if (!ft_strncmp("pl", line, 2) && ft_isspace(line[2]))
+	if (!ft_strncmp("pl", line, 2) && ft_isspace(line[2]))
 		return (add_plane(line + 2, head));
-	else if (!ft_strncmp("cy", line, 2) && ft_isspace(line[2]))
+	if (!ft_strncmp("cy", line, 2) && ft_isspace(line[2]))
 		return (add_cylinder(line + 2, head));
 	return (1);
 }
@@ -91,13 +92,16 @@ t_list	**parser(char *filename, t_camera *C, t_light *L, t_ambient *A)
 		return (NULL);
 	*head = NULL;
 	line = get_next_line(fd);
+	int i = 0;
 	while (line)
 	{
+		remove_comments(line);
+		skip_spaces(&line);
 		if (*line)
 		{
-			remove_comments(line);
 			if (parse_line(line, head, C, L, A))
 			{
+				ft_printf(2, "Line number : %d \n", i);
 				ft_lstclear(head, free);
 				free(head);
 				free(line);
@@ -105,6 +109,7 @@ t_list	**parser(char *filename, t_camera *C, t_light *L, t_ambient *A)
 				exit (EXIT_FAILURE);
 			}
 		}
+		i++;
 		free(line);
 		line = get_next_line(fd);
 	}

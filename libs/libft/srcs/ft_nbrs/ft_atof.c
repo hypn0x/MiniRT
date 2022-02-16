@@ -6,7 +6,7 @@
 /*   By: hsabir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 16:57:43 by hsabir            #+#    #+#             */
-/*   Updated: 2022/01/27 14:58:56 by hsabir           ###   ########.fr       */
+/*   Updated: 2022/02/15 17:09:37 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static void	init_struct(t_atof *atof)
     atof->sign = 1;
 }
 
-int	ft_atof(const char *str, double *n)
+int	ft_atof(const char *str, float *n)
 {
     t_atof	a;
     int		i;
@@ -56,7 +56,7 @@ int	ft_atof(const char *str, double *n)
     i = 0;
 	cntr = 0;
     if (!str || !*str)
-        return (0);
+        return (1);
     tmp = (char *)str;
     init_struct(&a);
     get_sign(&tmp, &a);

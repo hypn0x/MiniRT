@@ -6,7 +6,7 @@
 /*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 00:12:31 by msegrans          #+#    #+#             */
-/*   Updated: 2022/02/07 20:39:59 by                  ###   ########.fr       */
+/*   Updated: 2022/02/15 17:09:37 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,22 @@ t_vec3	plus_vec(t_vec3 a, t_vec3 b)
 	return (a);
 }
 
-double	dot(t_vec3 a, t_vec3 b)
+t_vec3	mult_vec(t_vec3 a, t_vec3 b)
+{
+	a.x *= b.x;
+	a.y *= b.y;
+	a.z *= b.z;
+	return (a);
+}
+
+float	dot(t_vec3 a, t_vec3 b)
 {
 	return (a.x * b.x + a.y * b.y + a.z * b.z);
 }
 
-double	len3(t_vec3 a)
+float	len3(t_vec3 a)
 {
-	return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z));
+	return (sqrtf(dot(a, a)));
 }
 
 t_vec3	normalize(t_vec3 a)
@@ -45,7 +53,7 @@ t_vec3	normalize(t_vec3 a)
 	return (div3(a, len3(a)));
 }
 
-t_vec3 	cross_prod(t_vec3 a, t_vec3 b)
+t_vec3 	cross_prod(t_vec3 a, t_vec3 b) // todo: use math op for double
 {
 	t_vec3 	new;
 

@@ -3,7 +3,7 @@ project(miniRT C)
 
 set(CMAKE_VERBOSE_MAKEFILE on)
 set(CMAKE_C_STANDARD 99)
-#add_compile_options(-Wall -Werror -Wextra)
+add_compile_options(-Wall -Werror -Wextra)
 
 INCLUDE_DIRECTORIES(/System/Library/Frameworks)
 
@@ -17,8 +17,8 @@ else ()
     SET(LIBS ${LIBS} Xext X11 m bsd)
 endif ()
 
-include_directories(libs/libft/incs includes includes/hit_objs.h includes/parsing includes/vector
-        includes/rendering/colors.h includes/utils libs/mlx)
+include_directories(libs/libft/incs includes includes/parsing includes/vector
+        includes/rendering/ includes/utils libs/mlx)
 link_directories(libs/libft libs/mlx)
 
 add_executable(

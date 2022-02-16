@@ -8,7 +8,7 @@
 #include <op_vec.h>
 #include <math.h>
 
-int	clip_colour(double c)
+int	clip_colour(float c)
 {
 	if (c < 0)
 		return (0);
@@ -29,13 +29,19 @@ int	rgb_to_int(t_colour c)
 
 t_colour	get_ray_luminosity(t_data img, t_object obj, t_ray r)
 {
-	t_colour c = {0, 0, 0};
-	t_colour specular = {255, 255, 255};
+	t_colour c;
+	t_colour ambient_colour;
+	t_colour light_colour;
 
-	c = plus_vec(c, mult3(obj.colour, img.ambient.brightness));
+	//todo: no need to calculate this every time
+	ambient_colour = mult3(img.ambient.colour, img.ambient.brightness / 255.0f);
+	light_colour = mult3(img.light.colour, img.light.brightness / 255.0f);
+
+	c = mult_vec(obj.colour, ambient_colour);
 	if (img.light.brightness == 0)
 		return (c);
-	c = plus_vec(c, mult3(obj.colour, img.light.brightness * dot(r.direction, obj.normal_to_surface)));
-	c = plus_vec(c, mult3(specular, pow(img.light.brightness * dot(obj.normal_to_surface, normalize(plus_vec(r.direction, min_vec(img.camera.view_point, obj.intersection)))), 4 * len3(min_vec(img.light.coordinates, obj.intersection)))));
+	c = plus_vec(c, mult_vec(obj.colour, mult3(light_colour, dot(r.direction, obj.normal_to_surface))));
+	float brightness = img.light.brightness * fabsf(dot(obj.normal_to_surface, normalize(plus_vec(r.direction, min_vec(img.camera.view_point, obj.intersection)))));
+	c = plus_vec(c, mult3(light_colour, powf(brightness, 4 * len3(min_vec(img.light.coordinates, obj.intersection))) * 255.0f));
 	return (c);
 }

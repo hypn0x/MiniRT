@@ -6,11 +6,9 @@
 #    By: hsabir <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/22 13:45:33 by hsabir            #+#    #+#              #
-#   Updated: 2022/02/03 19:29:04 by                  ###   ########.fr       # #
+#   Updated: 2022/02/15 17:09:37 by                  ###   ########.fr       # #
 #                                                                              #
 # **************************************************************************** #
-
-
 
 SHELL = /bin/sh
 
@@ -47,19 +45,18 @@ OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 INC_DIRS := $(shell find $(INCLUDE_DIR) -type d)
 INC_FLAGS += $(addprefix -I,$(INC_DIRS))
 
-#CFLAGS += -Wall -Wextra -Werror
+CFLAGS += -Wall -Wextra -Werror
 CFLAGS += -std=c99 -pedantic
-#CFLAGS += -O2 -march=native
-#CFLAGS += -g3
+CFLAGS += -O3 -march=native
+CFLAGS += -g3
 #CFLAGS += -fsanitize=address -v
 
 all:
+	@#$(MAKE) -j$(NPROC) -C libs/mlx 2> /dev/null > /dev/null
+	@$(MAKE) -j$(NPROC) -C libs/libft libft.a > /dev/null
 	@$(MAKE) -j$(NPROC) $(NAME)
 
 $(NAME): $(OBJS)
-	@$(MAKE) -C libs/libft libft.a
-	@echo Libft done
-	@echo GNL done
 	@echo Linking $@
 	@$(CC) $(CFLAGS) $(INC_FLAGS) $(OBJS) $(LIBS) -o $(NAME)
 
@@ -77,9 +74,10 @@ fclean:
 	@rm -rf $(BUILD_DIR)
 	@rm -f $(NAME)
 	@$(MAKE) -C libs/libft fclean
+	@#$(MAKE) -C libs/mlx clean > /dev/null
 	@echo Fclean done
 
 re: fclean
-	@$(MAKE) -j$(NPROC) $(NAME)
+	@$(MAKE)
 
 .PHONY: all clean fclean re

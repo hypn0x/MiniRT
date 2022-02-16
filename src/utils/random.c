@@ -2,11 +2,11 @@
 // Created by segransm on 2/3/22.
 //
 
-#include <fcntl.h>
 #include <limits.h>
 #include <unistd.h>
 #include <constants.h>
 #include <stdio.h>
+
 double rnd(int fd)
 {
 	static int				i;
