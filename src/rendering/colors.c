@@ -64,6 +64,8 @@ t_colour create_obj(t_list *hit_elem, t_ray r, t_data img, float distance, t_lis
 			obj.coordinates = ((t_sphere *) hit_elem->content)->coordinates;
 			obj.colour = ((t_sphere *) hit_elem->content)->colour;
 			obj.normal_to_surface = normalize(min_vec(obj.intersection, obj.coordinates));
+			r.origin = obj.intersection;
+			r.direction = normalize(min_vec(img.light.coordinates, r.origin));
 		}
 		else if (hit_elem->type == 'p')
 		{
@@ -73,15 +75,16 @@ t_colour create_obj(t_list *hit_elem, t_ray r, t_data img, float distance, t_lis
 			r.direction = normalize(min_vec(img.light.coordinates, obj.intersection));
 			if (dot(r.direction, obj.normal_to_surface) < 0)
 				obj.normal_to_surface = mult3(obj.normal_to_surface, -1);
+			r.origin = obj.intersection;
 		}
 		else if (hit_elem->type == 'c')
 		{
 			obj.coordinates = ((t_cylinder *) hit_elem->content)->coordinates;
 			obj.colour = ((t_cylinder *) hit_elem->content)->colour;
 			obj.normal_to_surface = normalize(min_vec(obj.intersection, obj.coordinates));
+			r.origin = obj.intersection;
+			r.direction = normalize(min_vec(img.light.coordinates, r.origin));
 		}
-		r.origin = obj.intersection;
-		r.direction = normalize(min_vec(img.light.coordinates, r.origin));
 		return (cast_ray(head, r, img, obj, hit_elem));
 	}
 	t_colour c = {0, 0, 0};

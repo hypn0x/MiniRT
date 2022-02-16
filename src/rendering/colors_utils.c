@@ -42,6 +42,6 @@ t_colour	get_ray_luminosity(t_data img, t_object obj, t_ray r)
 		return (c);
 	c = plus_vec(c, mult_vec(obj.colour, mult3(light_colour, dot(r.direction, obj.normal_to_surface))));
 	float brightness = img.light.brightness * fabsf(dot(obj.normal_to_surface, normalize(plus_vec(r.direction, min_vec(img.camera.view_point, obj.intersection)))));
-	c = plus_vec(c, mult3(light_colour, powf(brightness, 4 * len3(min_vec(img.light.coordinates, obj.intersection)))));
+	c = plus_vec(c, mult3(light_colour, powf(brightness, 4 * len3(min_vec(img.light.coordinates, obj.intersection))) * 255.0f));
 	return (c);
 }
