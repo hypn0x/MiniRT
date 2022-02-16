@@ -7,7 +7,7 @@
 #include <hit_objs.h>
 #include "../includes/rendering/colors.h"
 
-t_colour	cast_ray(t_list **head, t_ray r, t_data img, t_object obj)
+t_colour	cast_ray(t_list **head, t_ray r, t_data img, t_object obj, t_list *hit_elem)
 {
 	t_list	*elem;
 	float	t;
@@ -16,6 +16,11 @@ t_colour	cast_ray(t_list **head, t_ray r, t_data img, t_object obj)
 	t = -1;
 	while (elem != NULL)
 	{
+		if (elem == hit_elem)
+		{
+			elem = elem->next;
+			continue ;
+		}
 		if (elem->type == 's')
 			t = hit_sphere(((t_sphere *) elem->content), r);
 		else if (elem->type == 'p')

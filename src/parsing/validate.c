@@ -46,6 +46,6 @@ int	check_list_values(t_list *head, t_ambient *A, t_light *L, t_camera *C)
 		|| check_colour(A->colour)
 		|| check_brightness(L->brightness)
 		|| check_orientation(C->orientation)
-//		|| check_range(C->fov, 0.0f, 180.0f)
+		|| check_range(C->fov, 0.0f, 180.0f)
 		|| check_objects_values(head));
 }

@@ -41,8 +41,6 @@ int	get_pixel_value(t_ray  ray, t_data img, t_list **objects)
 	ray.direction = normalize(ray.direction);
 	t_list *hit_elem = ray_color(ray, objects, &distance);
 	val = plus_vec(val, create_obj(hit_elem, ray, img, distance, objects));
-	if (val.x <= 0 && val.y <= 0 && val.z <= 0)
-		ft_printf(2, "aaaaaa");
 	return (rgb_to_int(div3(val, 1)));
 }
 
