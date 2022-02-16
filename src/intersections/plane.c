@@ -47,11 +47,11 @@ float hit_plane(t_plane *plane, t_ray r)
 	float t;
 
 	dn_dot = dot(plane->orientation, r.direction);
-	if (fabsf(dn_dot) > 1e-6)
+	if (dn_dot > 1e-6f && dn_dot < 1e-6f)
 	{
 		t_vec3 p0l0 = min_vec(plane->coordinates, r.origin);
 		t = dot(p0l0, plane->orientation) / dn_dot;
-		if (fabsf(t) > 0)
+		if (t >= 0)
 			return (t);
 	}
 	return (-1);

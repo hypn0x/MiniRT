@@ -27,7 +27,7 @@ t_colour	cast_ray(t_list **head, t_ray r, t_data img, t_object obj, t_list *hit_
 			t = hit_plane(((t_plane *) elem->content), r);
 		else if (elem->type == 'c')
 			t = hit_cylinder(((t_cylinder *) elem->content), r);
-		if (t > 0)
+		if (t > 0 && t < obj.distance_to_light)
 		{
 			img.light.brightness = 0;
 			return (get_ray_luminosity(img, obj, r));

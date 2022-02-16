@@ -84,6 +84,7 @@ typedef struct s_object
 	t_colour	colour;
 	t_vec3		normal_to_surface;
 	t_vec3		intersection;
+	double		distance_to_light;
 }	t_object;
 
 typedef struct s_data
