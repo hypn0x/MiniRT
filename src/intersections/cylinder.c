@@ -7,17 +7,17 @@
 #include <op_vec_double.h>
 #include <math.h>
 
-t_vec3 		get_cylinder_normal(t_vec3 point, t_cylinder cylinder)
-{
-	t_vec3 ctp;
-	t_vec3 normal;
-
-	ctp = min_vec(point, cylinder.coordinates);
-	normal = min_vec(ctp, mult3(cylinder.orientation,
-								dot(cylinder.orientation, ctp)));
-	normal = normalize(normal);
-	return (normal);
-}
+//t_vec3 		get_cylinder_normal(t_vec3 point, t_cylinder cylinder)
+//{
+//	t_vec3 ctp;
+//	t_vec3 normal;
+//
+//	ctp = min_vec(point, cylinder.coordinates);
+//	normal = min_vec(ctp, mult3(cylinder.orientation,
+//								dot(cylinder.orientation, ctp)));
+//	normal = normalize(normal);
+//	return (normal);
+//}
 
 void		check_t(float *t, t_cylinder *cylinder, t_ray ray)
 {

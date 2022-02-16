@@ -30,7 +30,7 @@ t_list *ray_color(t_ray r, t_list **head, float *distance)
 			t = hit_plane(((t_plane *) elem->content), r);
 		else if (elem->type == 'c')
 			t = hit_cylinder(((t_cylinder *) elem->content), r);
-		if (t >= 0 && t < *distance)
+		if (t >= 0 && t <= *distance)
 		{
 			*distance = t;
 			hit_elem = elem;
@@ -38,6 +38,18 @@ t_list *ray_color(t_ray r, t_list **head, float *distance)
 		elem = elem->next;
 	}
 	return (hit_elem);
+}
+
+t_vec3 		get_cylinder_normal(t_vec3 point, t_cylinder cylinder)
+{
+	t_vec3 ctp;
+	t_vec3 normal;
+
+	ctp = min_vec(point, cylinder.coordinates);
+	normal = min_vec(ctp, mult3(cylinder.orientation,
+								dot(cylinder.orientation, ctp)));
+	normal = normalize(normal);
+	return (normal);
 }
 
 t_colour create_obj(t_list *hit_elem, t_ray r, t_data img, float distance, t_list **head)
@@ -65,7 +77,7 @@ t_colour create_obj(t_list *hit_elem, t_ray r, t_data img, float distance, t_lis
 			obj.colour = ((t_cylinder *) hit_elem->content)->colour;
 			obj.normal_to_surface = normalize(min_vec(obj.intersection, obj.coordinates));
 		}
-		r.origin = plus_vec(obj.intersection,mult3(obj.normal_to_surface,1e-3f));
+		r.origin = plus_vec(obj.intersection,mult3(obj.normal_to_surface,1e-4f));
 		r.direction = normalize(min_vec(img.light.coordinates, r.origin));
 		return (cast_ray(head, r, img, obj));
 	}
