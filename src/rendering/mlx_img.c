@@ -38,7 +38,7 @@ int	get_pixel_value(t_ray ray, t_data img, t_list **objects)
 
 	ray.direction = normalize(ray.direction);
 	hit_elem = ray_color(ray, objects, &distance);
-	val = plus_vec(val, create_obj(hit_elem, ray, img, distance, objects));
+	val = create_obj(hit_elem, ray, img, distance, objects);
 	return (rgb_to_int(div3(val, 1)));
 }
 
