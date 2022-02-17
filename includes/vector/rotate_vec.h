@@ -2,13 +2,13 @@
 // Created by segransm on 1/31/22.
 //
 
-#ifndef MINIRT_ROTATE_VEC_H
-#define MINIRT_ROTATE_VEC_H
+#ifndef ROTATE_VEC_H
+# define ROTATE_VEC_H
 
-#include "types.h"
+# include "types.h"
 
 t_vec3	rotate_y_axis(float angle, t_vec3 v);
 
 t_vec3	rotate_x_axis(float angle, t_vec3 v);
 
-#endif //MINIRT_ROTATE_VEC_H
+#endif //ROTATE_VEC_H

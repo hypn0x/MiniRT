@@ -92,7 +92,6 @@ t_list	**parser(char *filename, t_camera *C, t_light *L, t_ambient *A)
 		return (NULL);
 	*head = NULL;
 	line = get_next_line(fd);
-	int i = 0;
 	while (line)
 	{
 		remove_comments(line);
@@ -101,7 +100,6 @@ t_list	**parser(char *filename, t_camera *C, t_light *L, t_ambient *A)
 		{
 			if (parse_line(line, head, C, L, A))
 			{
-				ft_printf(2, "Line number : %d \n", i);
 				ft_lstclear(head, free);
 				free(head);
 				free(line);
@@ -109,7 +107,6 @@ t_list	**parser(char *filename, t_camera *C, t_light *L, t_ambient *A)
 				exit (EXIT_FAILURE);
 			}
 		}
-		i++;
 		free(line);
 		line = get_next_line(fd);
 	}

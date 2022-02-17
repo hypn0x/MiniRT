@@ -13,7 +13,6 @@
 #include <types.h>
 #include <op_vec.h>
 #include <math.h>
-#include <float.h>
 
 static int	check_range_vec(t_vec3 v, float lb, float hb)
 {
@@ -38,7 +37,8 @@ int	check_colour(t_colour c)
 
 int	check_orientation(t_vec3 o)
 {
-	return (check_range_vec(o, -1.0f, 1.0f) || !islessgreater(fabsf(len3(o)), 0.0) );
+	return (check_range_vec(o, -1.0f, 1.0f)
+		|| isgreaterequal(len3(o) - 1, 1e-6));
 }
 
 int	check_brightness(float b)

@@ -27,6 +27,6 @@ float	len3(t_vec3 a);
 
 t_vec3	normalize(t_vec3 a);
 
-t_vec3 	cross_prod(t_vec3 a, t_vec3 b);
+t_vec3	cross_prod(t_vec3 a, t_vec3 b);
 
 #endif //OP_VEC_H

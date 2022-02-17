@@ -7,22 +7,10 @@
 #include <op_vec_double.h>
 #include <math.h>
 
-//t_vec3 		get_cylinder_normal(t_vec3 point, t_cylinder cylinder)
-//{
-//	t_vec3 ctp;
-//	t_vec3 normal;
-//
-//	ctp = min_vec(point, cylinder.coordinates);
-//	normal = min_vec(ctp, mult3(cylinder.orientation,
-//								dot(cylinder.orientation, ctp)));
-//	normal = normalize(normal);
-//	return (normal);
-//}
-
-void		check_t(float *t, t_cylinder *cylinder, t_ray ray)
+void	check_t(float *t, t_cylinder *cylinder, t_ray ray)
 {
-	t_vec3 q;
-	t_vec3 p2;
+	t_vec3	q;
+	t_vec3	p2;
 
 	p2 = plus_vec(cylinder->coordinates, mult3(cylinder->orientation, cylinder->height));
 	q = plus_vec(ray.origin, mult3(ray.direction, *t));
@@ -32,10 +20,10 @@ void		check_t(float *t, t_cylinder *cylinder, t_ray ray)
 		*t = -1;
 }
 
-int			solve_quadratic(t_vec3 vec, float *x0, float *x1)
+int	solve_quadratic(t_vec3 vec, float *x0, float *x1)
 {
-	float discr;
-	float q;
+	float	discr;
+	float	q;
 
 	discr = powf(vec.y, 2) - 4 * vec.x * vec.z;
 	if (discr < 0)
@@ -61,20 +49,20 @@ int			solve_quadratic(t_vec3 vec, float *x0, float *x1)
 
 int	cylinder_root(float *t0, float *t1, t_cylinder *cylinder, t_ray ray)
 {
-	t_vec3 	a_sqrt;
-	t_vec3 	right;
+	t_vec3	a_sqrt;
+	t_vec3	right;
 	float	x;
 	float	y;
 	float	z;
 
 	a_sqrt = min_vec(ray.direction,
-					 mult3(cylinder->orientation,
-						   dot(ray.direction, cylinder->orientation)));
+			mult3(cylinder->orientation,
+				dot(ray.direction, cylinder->orientation)));
 	x = dot(a_sqrt, a_sqrt);
 	right = min_vec(min_vec(ray.origin, cylinder->coordinates),
-					mult3(cylinder->orientation,
-						  dot(min_vec(ray.origin, cylinder->coordinates),
-							  cylinder->orientation)));
+			mult3(cylinder->orientation,
+				dot(min_vec(ray.origin, cylinder->coordinates),
+					cylinder->orientation)));
 	y = 2 * dot(a_sqrt, right);
 	z = dot(right, right) - (cylinder->diameter / 2 * cylinder->diameter / 2);
 	if (!solve_quadratic(new_vec(x, y, z), t0, t1))
@@ -82,10 +70,10 @@ int	cylinder_root(float *t0, float *t1, t_cylinder *cylinder, t_ray ray)
 	return (1);
 }
 
-float hit_cylinder(t_cylinder *cylinder, t_ray ray)
+float	hit_cylinder(t_cylinder *cylinder, t_ray ray)
 {
-	float t0;
-	float t1;
+	float	t0;
+	float	t1;
 
 	if (!cylinder_root(&t0, &t1, cylinder, ray))
 		return (-1);

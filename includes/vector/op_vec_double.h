@@ -23,7 +23,7 @@ t_vec3	plus3(t_vec3 a, float n);
 
 t_vec3	min3(t_vec3 a, float n);
 
-void		swap_vars(float *a, float *b);
+void	swap_vars(float *a, float *b);
 t_vec3 	new_vec(float a, float b, float c);
 
 #endif //OP_VEC_DOUBLE_H

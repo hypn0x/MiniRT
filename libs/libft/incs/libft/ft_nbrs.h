@@ -13,13 +13,13 @@
 #ifndef FT_NBRS_H
 # define FT_NBRS_H
 
-typedef struct	s_atof
+typedef struct s_atof
 {
 	float	int_part;
 	float	fract_part;
-	int	div;
-	int	sign;
-	int	fraction;
+	int		div;
+	int		sign;
+	int		fraction;
 }	t_atof;
 
 char	*ft_itoa(int n);

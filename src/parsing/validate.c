@@ -16,22 +16,20 @@
 
 static int	check_objects_values(t_list *head)
 {
-	return (0);
 	while (head != NULL)
 	{
 		if (head->type == 's')
-			if (check_orientation(((t_camera *)head->content)->orientation)
-				|| check_range(
-					((t_camera *)head->content)->fov, 0.0f, 180.0f))
-				return (2);
+			if (check_colour(((t_sphere *)head->content)->colour))
+				return (1);
 		if (head->type == 'p')
-		{
-			if (((t_light *)head->content)->brightness == -1)
-				((t_light *)head->content)->brightness = 0;
-			if (check_brightness(((t_light *)head->content)->brightness))
-				return (3);
-		}
-	head = head->next;
+			if (check_colour(((t_plane *)head->content)->colour)
+				|| check_orientation(((t_plane *)head->content)->orientation))
+				return (2);
+		if (head->type == 'c')
+			if (check_colour(((t_cylinder *)head->content)->colour)
+				|| check_orientation(((t_cylinder *)head->content)->orientation))
+				return (2);
+		head = head->next;
 	}
 	return (0);
 }
@@ -45,6 +43,7 @@ int	check_list_values(t_list *head, t_ambient *A, t_light *L, t_camera *C)
 	return (check_brightness(A->brightness)
 		|| check_colour(A->colour)
 		|| check_brightness(L->brightness)
+		|| check_colour(L->colour)
 		|| check_orientation(C->orientation)
 		|| check_range(C->fov, 0.0f, 180.0f)
 		|| check_objects_values(head));

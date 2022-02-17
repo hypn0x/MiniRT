@@ -53,9 +53,9 @@ t_vec3	normalize(t_vec3 a)
 	return (div3(a, len3(a)));
 }
 
-t_vec3 	cross_prod(t_vec3 a, t_vec3 b) // todo: use math op for double
+t_vec3	cross_prod(t_vec3 a, t_vec3 b)
 {
-	t_vec3 	new;
+	t_vec3	new;
 
 	new.x = a.y * b.z - a.z * b.y;
 	new.y = a.z * b.x - a.x * b.z;

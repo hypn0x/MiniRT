@@ -10,13 +10,11 @@
 #include <float.h>
 #include <hit_objs.h>
 
-
-
-t_list *ray_color(t_ray r, t_list **head, float *distance)
+t_list	*ray_color(t_ray r, t_list **head, float *distance)
 {
-	float t;
-	t_list *elem;
-	t_list *hit_elem;
+	float	t;
+	t_list	*elem;
+	t_list	*hit_elem;
 
 	hit_elem = NULL;
 	*distance = DBL_MAX;
@@ -40,21 +38,9 @@ t_list *ray_color(t_ray r, t_list **head, float *distance)
 	return (hit_elem);
 }
 
-t_vec3 		get_cylinder_normal(t_vec3 point, t_cylinder cylinder)
+t_colour	create_obj(t_list *hit_elem, t_ray r, t_data img, float distance, t_list **head)
 {
-	t_vec3 ctp;
-	t_vec3 normal;
-
-	ctp = min_vec(point, cylinder.coordinates);
-	normal = min_vec(ctp, mult3(cylinder.orientation,
-								dot(cylinder.orientation, ctp)));
-	normal = normalize(normal);
-	return (normal);
-}
-
-t_colour create_obj(t_list *hit_elem, t_ray r, t_data img, float distance, t_list **head)
-{
-	t_object obj;
+	t_object	obj;
 
 	if (hit_elem != NULL)
 	{
@@ -88,6 +74,5 @@ t_colour create_obj(t_list *hit_elem, t_ray r, t_data img, float distance, t_lis
 		obj.distance_to_light = len3(min_vec(img.light.coordinates, r.origin));
 		return (cast_ray(head, r, img, obj, hit_elem));
 	}
-	t_colour c = {0, 0, 0};
-	return (c);
+	return (new_vec(0.0f, 0.0f, 0.0f));
 }

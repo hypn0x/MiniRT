@@ -8,20 +8,25 @@
 
 float	hit_sphere(const t_sphere *sphere, t_ray r)
 {
-	float radius = sphere->diameter / 2;
-	float b = 2 * dot(r.direction, min_vec(r.origin, sphere->coordinates));
-	float len = len3(min_vec(r.origin, sphere->coordinates));
-	float c = (len * len) - (radius * radius);
-	float delta = b * b - 4 * c;
-	if (delta >= 0)
+	float	rd;
+	float	b;
+	float	lt1;
+	float	ct2;
+
+	rd = sphere->diameter / 2;
+	b = 2 * dot(r.direction, min_vec(r.origin, sphere->coordinates));
+	lt1 = len3(min_vec(r.origin, sphere->coordinates));
+	ct2 = (lt1 * lt1) - (rd * rd);
+	rd = b * b - 4 * ct2;
+	if (rd >= 0)
 	{
-		float t1 = (-b + sqrtf(delta)) / 2;
-		float t2 = (-b - sqrtf(delta)) / 2;
-		if (t1 > 0 && t2 > 0)
+		lt1 = (-b + sqrtf(rd)) / 2;
+		ct2 = (-b - sqrtf(rd)) / 2;
+		if (lt1 > 0 && ct2 > 0)
 		{
-			if (t1 < t2)
-				return (t1);
-			return (t2);
+			if (lt1 < ct2)
+				return (lt1);
+			return (ct2);
 		}
 	}
 	return (-1);
