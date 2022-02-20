@@ -71,5 +71,5 @@ t_colour	create_obj(t_list *hit_elem, t_ray r, t_data img, float distance, t_lis
 		obj.distance_to_light = len3(min_vec(img.light.coordinates, r.origin));
 		return (cast_ray(head, r, img, obj));
 	}
-	return (new_vec(0.0f, 0.0f, 0.0f));
+	return (new_vec(.0f, 0.0f, 0.0f));
 }
