@@ -27,7 +27,8 @@ static int	check_objects_values(t_list *head)
 				return (2);
 		if (head->type == 'c')
 			if (check_colour(((t_cylinder *)head->content)->colour)
-				|| check_orientation(((t_cylinder *)head->content)->orientation))
+				|| check_orientation
+				(((t_cylinder *)head->content)->orientation))
 				return (2);
 		head = head->next;
 	}
