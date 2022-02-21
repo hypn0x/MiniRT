@@ -44,15 +44,6 @@ t_vec3	min3(t_vec3 a, float n)
 	return (a);
 }
 
-void	swap_vars(float *a, float *b)
-{
-	float	buffer;
-
-	buffer = *a;
-	*a = *b;
-	*b = buffer;
-}
-
 t_vec3	new_vec(float a, float b, float c)
 {
 	t_vec3	vec;

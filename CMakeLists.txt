@@ -26,6 +26,7 @@ add_executable(
         src/main.c
         src/intersections/hit_objs.c
         src/intersections/cylinder.c
+        src/intersections/cylinder_caps.c
         src/intersections/plane.c
         src/intersections/sphere.c
         src/rendering/colors_utils.c

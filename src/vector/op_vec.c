@@ -6,7 +6,7 @@
 /*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 00:12:31 by msegrans          #+#    #+#             */
-/*   Updated: 2022/02/18 14:02:21 by                  ###   ########.fr       */
+/*   Updated: 2022/02/21 14:26:03 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,13 @@ t_vec3	cross_prod(t_vec3 a, t_vec3 b)
 	new.y = a.z * b.x - a.x * b.z;
 	new.z = a.x * b.y - a.y * b.x;
 	return (new);
+}
+
+
+t_vec3 	vec_unit(t_vec3 vec)
+{
+	float	len;
+
+	len = sqrtf(len3(vec));
+	return (div3(vec, len));
 }
