@@ -59,7 +59,7 @@ float	hit_cylinder_cap(t_cylinder *cy, t_ray ray, float t)
 		{
 			len = len3(min_vec(cy->cap[i]->coordinates,
 							   plus_vec(ray.origin, mult3(ray.direction, tp))));
-			if (len <= pow(cy->diameter / 2, 2))
+			if (len <= powf(cy->diameter / 2, 2))
 				return (tp);
 		}
 	}
@@ -77,10 +77,7 @@ void	check_t(float *t, t_cylinder *cylinder, t_ray ray)
 
 	p2 = plus_vec(cylinder->coordinates, mult3(cylinder->orientation, cylinder->height));
 	q = plus_vec(ray.origin, mult3(ray.direction, *t));
-	if (dot(cylinder->orientation, min_vec(q, cylinder->coordinates)) <= 0)
-		*t = (hit_cylinder_cap(cylinder, ray, *t));
-	else if (dot(cylinder->orientation, min_vec(q, p2)) >= 0)
-		*t = -1;
+	*t = (hit_cylinder_cap(cylinder, ray, *t));
 }
 
 int	solve_quadratic(t_vec3 vec, float *x0, float *x1)
@@ -148,9 +145,9 @@ float	hit_cylinder(t_cylinder *cylinder, t_ray ray)
 									mult3(cylinder->orientation, -1), cylinder->colour);
 	if (!cylinder_root(&t0, &t1, cylinder, ray))
 		return (-1);
-	if (t0 > 0)
-		check_t(&t0, cylinder, ray);
-	if (t1 > 0)
+//	if (t0 > 0)
+	check_t(&t0, cylinder, ray);
+//	if (t1 > 0)
 		check_t(&t1, cylinder, ray);
 	if (t0 < 0 && t1 < 0)
 		return (-1);

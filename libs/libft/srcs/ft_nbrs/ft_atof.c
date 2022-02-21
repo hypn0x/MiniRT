@@ -6,7 +6,7 @@
 /*   By: hsabir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 16:57:43 by hsabir            #+#    #+#             */
-/*   Updated: 2022/02/18 14:02:21 by                  ###   ########.fr       */
+/*   Updated: 2022/02/21 12:02:01 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,38 +46,47 @@ static void	init_struct(t_atof *atof)
 	atof->sign = 1;
 }
 
-int	ft_atof(const char *str, float *n)
+float	do_while(t_atof *a, char *tmp)
 {
-	t_atof	a;
 	int		i;
-	char	*tmp;
 	int		cntr;
 
 	i = 0;
 	cntr = 0;
-	if (!str || !*str)
-		return (1);
-	tmp = (char *)str;
-	init_struct(&a);
-	get_sign(&tmp, &a);
 	while (tmp[i] != '\0')
 	{
 		if (!ft_isalnum(tmp[i]) && tmp[i] != '.')
 			return (1);
 		if (tmp[i] >= '0' && tmp[i] <= '9')
-			get_int(tmp[i], &a);
+			get_int(tmp[i], a);
 		else if (tmp[i] == '.' && cntr <= 1)
 		{
 			cntr++;
-			if (a.fraction)
-				return (a.sign * (a.int_part + a.fract_part / a.div));
+			if (a->fraction)
+				return (a->sign * (a->int_part + a->fract_part / a->div));
 			else
-				a.fraction = 1;
+				a->fraction = 1;
 		}
 		else
-			return (a.sign * (a.int_part + a.fract_part / a.div));
+			return (a->sign * (a->int_part + a->fract_part / a->div));
 		i++;
 	}
-	*n = (a.sign * (a.int_part + a.fract_part / a.div));
+	return (0);
+}
+
+int	ft_atof(const char *str, float *n)
+{
+	t_atof	a;
+	char	*tmp;
+	float	fn;
+
+	if (!str || !*str)
+		return (1);
+	tmp = (char *)str;
+	init_struct(&a);
+	get_sign(&tmp, &a);
+	fn = do_while(&a, tmp);
+	if (!fn)
+		*n = (a.sign * (a.int_part + a.fract_part / a.div));
 	return (0);
 }
