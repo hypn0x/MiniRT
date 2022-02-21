@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   colors.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By:  <>                                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/21 14:54:07 by                   #+#    #+#             */
+/*   Updated: 2022/02/21 14:54:07 by                  ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 //
 // Created by Hajar Sabir on 2/8/22.
 //
@@ -66,7 +78,7 @@ t_colour	create_obj(t_list *hit_elem, t_ray r, t_data img, float distance, t_lis
 			obj.colour = ((t_cylinder *) hit_elem->content)->colour;
 			obj.normal_to_surface = normalize(min_vec(obj.intersection, obj.coordinates));
 		}
-		r.origin = plus_vec(obj.intersection,mult3(obj.normal_to_surface,1e-3f));
+		r.origin = plus_vec(obj.intersection,mult3(obj.normal_to_surface,(float)1e-3));
 		r.direction = normalize(min_vec(img.light.coordinates, r.origin));
 		obj.distance_to_light = len3(min_vec(img.light.coordinates, r.origin));
 		return (cast_ray(head, r, img, obj));
