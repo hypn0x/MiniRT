@@ -68,6 +68,8 @@ float	hit_cylinder(t_cylinder *cylinder, t_ray ray)
 	float	t0;
 	float	t1;
 
+	if (cylinder->diameter > 2 && cylinder->orientation.z == 1)
+		cylinder->diameter = 2;
 	create_caps(cylinder);
 	if (!cylinder_root(&t0, &t1, cylinder, ray))
 		return (-1);

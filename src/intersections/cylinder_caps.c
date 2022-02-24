@@ -6,7 +6,7 @@
 /*   By:  <>                                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 14:33:05 by                   #+#    #+#             */
-/*   Updated: 2022/02/21 14:37:24 by                  ###   ########.fr       */
+/*   Updated: 2022/02/24 10:27:54 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ float	hit_cylinder_cap(t_cylinder *cy, t_ray ray, float t)
 	i = -1;
 	while (++i < 2)
 	{
-		tp = hit_cap(cy->cap[i], ray);
+		tp = hit_plane(cy->cap[i], ray);
 		if (tp != -1 && dot(cy->cap[i]->orientation, ray.direction) <= 0)
 		{
 			len = len3(min_vec(cy->cap[i]->coordinates,
@@ -64,6 +64,11 @@ void	check_t(float *t, t_cylinder *cylinder, t_ray ray)
 	p2 = plus_vec(cylinder->coordinates,
 			mult3(cylinder->orientation, cylinder->height));
 	q = plus_vec(ray.origin, mult3(ray.direction, *t));
+	if (dot(cylinder->orientation, min_vec(q, cylinder->coordinates)) <= 0)
+//		*t = (hit_cylinder_cap(cylinder, ray, *t));
+		*t = -1;
+	if (dot(cylinder->orientation, min_vec(q, p2)) >= 0)
+		*t = -1;//(hit_cylinder_cap(cylinder, ray, *t));
 	*t = (hit_cylinder_cap(cylinder, ray, *t));
 }
 
