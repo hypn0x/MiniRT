@@ -25,4 +25,6 @@ int	add_plane(char *line, t_list **head);
 
 int	add_cylinder(char *line, t_list **head);
 
+int	add_triangle(char *line, t_list **head);
+
 #endif //OBJECTS_PARSER_H

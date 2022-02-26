@@ -29,6 +29,7 @@ add_executable(
         src/intersections/cylinder_caps.c
         src/intersections/plane.c
         src/intersections/sphere.c
+        src/intersections/triangle.c
         src/rendering/colors_utils.c
         src/rendering/colors.c
         src/rendering/mlx_img.c
@@ -43,6 +44,7 @@ add_executable(
         src/parsing/error.c
         src/hook_utils.c
         src/vector/rotate_vec.c
-        src/utils/random.c)
+        src/utils/random.c
+)
 
 TARGET_LINK_LIBRARIES(miniRT ${LIBS})
