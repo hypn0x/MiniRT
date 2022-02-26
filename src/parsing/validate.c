@@ -30,6 +30,9 @@ static int	check_objects_values(t_list *head)
 				|| check_orientation
 				(((t_cylinder *)head->content)->orientation))
 				return (2);
+		if (head->type == 't')
+			if (check_colour(((t_triangle *)head->content)->colour))
+				return (2);
 		head = head->next;
 	}
 	return (0);

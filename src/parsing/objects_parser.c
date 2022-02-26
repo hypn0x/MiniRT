@@ -6,7 +6,7 @@
 /*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 23:34:45 by msegrans          #+#    #+#             */
-/*   Updated: 2022/02/26 11:58:36 by                  ###   ########.fr       */
+/*   Updated: 2022/02/26 12:16:32 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,5 +109,5 @@ int	add_triangle(char *line, t_list **head)
 		return (parsing_error(elem, "Malloc failure"));
 	(*head)->content = elem;
 	(*head)->type = 't';
-	return (1);
+	return (0);
 }

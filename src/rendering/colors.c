@@ -6,7 +6,7 @@
 /*   By:  <>                                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 14:54:07 by                   #+#    #+#             */
-/*   Updated: 2022/02/21 14:54:07 by                  ###   ########.fr       */
+/*   Updated: 2022/02/26 12:58:14 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ t_list	*ray_color(t_ray r, t_list **head, float *distance)
 			t = hit_plane(((t_plane *) elem->content), r);
 		else if (elem->type == 'c')
 			t = hit_cylinder(((t_cylinder *) elem->content), r);
+		else if (elem->type == 't')
+			t = hit_triangle(((t_triangle *) elem->content), r);
 		if (t >= 0 && t <= *distance)
 		{
 			*distance = t;
@@ -76,6 +78,11 @@ t_colour	create_obj(t_list *hit_elem, t_ray r, t_data img, float distance, t_lis
 		{
 			obj.coordinates = ((t_cylinder *) hit_elem->content)->coordinates;
 			obj.colour = ((t_cylinder *) hit_elem->content)->colour;
+			obj.normal_to_surface = normalize(min_vec(obj.intersection, obj.coordinates));
+		}
+		else if (hit_elem->type == 't')
+		{
+			obj.colour = ((t_triangle *) hit_elem->content)->colour;
 			obj.normal_to_surface = normalize(min_vec(obj.intersection, obj.coordinates));
 		}
 		r.origin = plus_vec(obj.intersection,mult3(obj.normal_to_surface,(float)1e-3));
