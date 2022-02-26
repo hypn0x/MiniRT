@@ -19,30 +19,41 @@
 #include <hit_objs.h>
 #include <math.h>
 #include <colors.h>
+#include "op_vec.h"
 
 t_colour	cast_ray(t_list **head, t_ray r, t_data img, t_object obj)
 {
 	t_list	*elem;
+	t_list	*L;
+	t_light	*light;
 	float	t;
+	float	distance_to_light;
 
-	elem = *head;
-	t = -1;
-	while (elem != NULL)
+	L = img.light;
+	while (L)
 	{
-		if (elem->type == 's')
-			t = hit_sphere(((t_sphere *) elem->content), r);
-		else if (elem->type == 'p')
-			t = hit_plane(((t_plane *) elem->content), r);
-		else if (elem->type == 'c')
-			t = hit_cylinder(((t_cylinder *) elem->content), r);
-		else if (elem->type == 't')
-			t = hit_triangle(((t_triangle *)elem->content), r);
-		if (t > 0 && t < obj.distance_to_light - (float)1e-5)
+		light = L->content;
+		elem = *head;
+		t = -1;
+		distance_to_light = len3(min_vec(light->coordinates, r.origin));
+		while (elem != NULL)
 		{
-			img.light.brightness = 0;
-			return (get_ray_luminosity(img, obj, r));
+			if (elem->type == 's')
+				t = hit_sphere(((t_sphere *) elem->content), r);
+			else if (elem->type == 'p')
+				t = hit_plane(((t_plane *) elem->content), r);
+			else if (elem->type == 'c')
+				t = hit_cylinder(((t_cylinder *) elem->content), r);
+			else if (elem->type == 't')
+				t = hit_triangle(((t_triangle *)elem->content), r);
+			if (t > 0 && t < distance_to_light - (float)1e-5)
+			{
+				light->brightness = -light->brightness;
+				break ;
+			}
+			elem = elem->next;
 		}
-		elem = elem->next;
+		L = L->next;
 	}
 	return (get_ray_luminosity(img, obj, r));
 }

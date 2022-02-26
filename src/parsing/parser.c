@@ -19,7 +19,7 @@
 #include "parsing/lights_parser.h"
 #include <parse_utils.h>
 
-int	parse_line(char *line, t_list **head, t_camera *C, t_light *L, t_ambient *A)
+int	parse_line(char *line, t_list **head, t_camera *C, t_list **L, t_ambient *A)
 {
 	if (line[0] == 'A' && ft_isspace(line[1]))
 		return (add_ambient(line + 1, A));
@@ -79,7 +79,7 @@ void	remove_comments(char *line)
 	}
 }
 
-t_list	**parser(char *filename, t_camera *C, t_light *L, t_ambient *A)
+t_list	**parser(char *filename, t_camera *C, t_list **L, t_ambient *A)
 {
 	char	*line;
 	t_list	**head;
@@ -87,7 +87,6 @@ t_list	**parser(char *filename, t_camera *C, t_light *L, t_ambient *A)
 
 	C->fov = -1;
 	A->brightness = -1;
-	L->brightness = -1;
 	fd = open_file(filename);
 	head = malloc(sizeof(t_list *));
 	if (!head)

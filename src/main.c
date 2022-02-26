@@ -25,6 +25,7 @@ int	main(int argc, char **argv)
 
 	if (argc != 2)
 		return (ft_printf(2, "Usage: ./miniRT (scene)\n"));
+	img.light = NULL;
 	objects = parser(argv[1], &(img.camera), &(img.light), &(img.ambient));
 	if (objects == NULL)
 		return (ft_printf(2, "Error\nFile scene corrupted\n"));

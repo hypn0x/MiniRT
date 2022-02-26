@@ -11,6 +11,22 @@
 #include <constants.h>
 #include "../includes/rendering/colors.h"
 
+void	format_lights(t_data *img)
+{
+	t_list	*elem;
+	t_light	*L;
+
+	img->ambient.colour = mult3(img->ambient.colour, img->ambient.brightness / 255.0f);
+
+	elem = img->light;
+	while (elem)
+	{
+		L = elem->content;
+		L->colour = mult3(L->colour, L->brightness / 255.0f);
+		elem = elem->next;
+	}
+}
+
 void	init_image(t_data *img)
 {
 	img->mlx = mlx_init();
@@ -26,6 +42,7 @@ void	init_image(t_data *img)
 	img->top_left_corner = min_vec(plus_vec(min_vec(min_vec(img->camera.view_point, div3(img->horizontal, 2)), div3(img->vertical, 2)), img->camera.orientation), img->camera.view_point);
 	img->vertical = div3(img->vertical, IMG_H); // todo: fix case where cross prod = 0
 	img->horizontal = div3(img->horizontal, IMG_W);
+	format_lights(img);
 	mlx_hook(img->mlx_win, 17, 1L, ft_exit, img);
 	mlx_hook(img->mlx_win, 2, 1L, key_hook, img);
 }

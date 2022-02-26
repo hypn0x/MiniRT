@@ -23,6 +23,6 @@ int	add_ambient(char *line, t_ambient *A);
 
 int	add_camera(char *line, t_camera *C);
 
-int	add_light(char *line, t_light *L);
+int	add_light(char *line, t_list **L);
 
 #endif //LIGHTS_PARSER_H

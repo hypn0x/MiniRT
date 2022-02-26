@@ -49,21 +49,29 @@ int	add_camera(char *line, t_camera *C)
 	return (0);
 }
 
-int	add_light(char *line, t_light *L)
+int	add_light(char *line, t_list **L)
 {
 	char		*word;
+	t_list 		*elem;
+	t_light		*light;
 
-	if (L->brightness != -1)
-		return (parsing_error(NULL, "L: cannot be defined more than once"));
-	if (parse_vec3(&line, &(L->coordinates)))
+	light = malloc(sizeof(t_light));
+	if (!light)
+		return (parsing_error(light, "Malloc failure."));
+	if (parse_vec3(&line, &(light->coordinates)))
 		return (parsing_error(NULL, "L: coordinates are invalid"));
 	word = chop_word(&line, ft_isspace);
-	if (ft_atof(word, &(L->brightness)))
+	if (ft_atof(word, &(light->brightness)))
 		return (parsing_error(NULL, "L: brightness is invalid"));
-	if (parse_vec3(&line, &(L->colour)))
+	if (parse_vec3(&line, &(light->colour)))
 		return (parsing_error(NULL, "L: colours are invalid"));
 	skip_spaces(&line);
 	if (*line)
 		return (parsing_error(NULL, "Error parsing L. Garbage at EOL."));
+	elem = ft_lstlast(*L);
+	if (elem == NULL)
+		*L = ft_lstnew(light);
+	else
+		elem->next = ft_lstnew(light);
 	return (0);
 }
