@@ -33,6 +33,8 @@ int	parse_line(char *line, t_list **head, t_camera *C, t_light *L, t_ambient *A)
 		return (add_plane(line + 2, head));
 	if (!ft_strncmp("cy", line, 2) && ft_isspace(line[2]))
 		return (add_cylinder(line + 2, head));
+	if (!ft_strncmp("tr", line, 2) && ft_isspace(line[2]))
+		return (add_triangle(line +2, head));
 	return (1);
 }
 

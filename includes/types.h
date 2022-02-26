@@ -6,7 +6,7 @@
 /*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 00:04:13 by msegrans          #+#    #+#             */
-/*   Updated: 2022/02/23 15:50:01 by                  ###   ########.fr       */
+/*   Updated: 2022/02/26 10:40:05 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,13 @@ typedef struct s_cylinder
 	t_colour	colour;
 	t_plane		*cap[2];
 }	t_cylinder;
+
+typedef struct	s_triangle
+{
+	t_vec3	a;
+	t_vec3	b;
+	t_vec3	c;
+}	t_triangle;
 
 typedef struct s_object
 {
