@@ -6,7 +6,7 @@
 /*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 23:34:45 by msegrans          #+#    #+#             */
-/*   Updated: 2022/02/26 10:47:09 by                  ###   ########.fr       */
+/*   Updated: 2022/02/26 11:58:36 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,4 +88,26 @@ int	add_cylinder(char *line, t_list **head)
 	(*head)->content = elem;
 	(*head)->type = 'c';
 	return (0);
+}
+
+int	add_triangle(char *line, t_list **head)
+{
+	t_triangle 	*elem;
+
+	elem = malloc(sizeof(t_cylinder));
+	if (!elem)
+		return (parsing_error(elem, "Malloc failure."));
+	if (parse_vec3(&line, &(elem->a)) || parse_vec3(&line, &(elem->b))
+		|| parse_vec3(&line, &elem->c))
+		return (parsing_error(elem, "tr: a/b/c is invalid"));
+	if (parse_vec3(&line, &(elem)->colour))
+		return (parsing_error(elem, "tr: invalid colour"));
+	skip_spaces(&line);
+	if (*line)
+		return (parsing_error(elem, "tr: Garbage at EOL"));
+	if (new_elem(head))
+		return (parsing_error(elem, "Malloc failure"));
+	(*head)->content = elem;
+	(*head)->type = 't';
+	return (1);
 }

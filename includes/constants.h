@@ -6,7 +6,7 @@
 /*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 15:48:58 by msegrans          #+#    #+#             */
-/*   Updated: 2022/02/18 14:02:21 by                  ###   ########.fr       */
+/*   Updated: 2022/02/26 11:11:04 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # ifndef M_PI_2
 #  define M_PI_2		1.57079632679489661923f	/* pi/2 */
 # endif
-# define IMG_W 1440
+# define IMG_W 1080
 # define ASPECT_RATIO (16.0f / 9.0f)
 # define IMG_H (int)(IMG_W / ASPECT_RATIO)
 # ifndef SUPERSAMPLING
