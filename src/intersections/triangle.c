@@ -23,12 +23,11 @@ static int	solve_quadratic(t_triangle *triangle, t_vec3 P, t_vec3 N)
 	edge = min_vec(triangle->c, triangle->b);
 	v = min_vec(P, triangle->b);
 	c = cross_prod(edge, v);
-	if (dot(N, c) < 0)
+	if (isless(dot(N, c), 0))
 		return (0);
 	edge = min_vec(triangle->a, triangle->c);
 	v = min_vec(P, triangle->c);
 	c = cross_prod(edge, v);
-//	if (dot(N, c) < 0)
 	if (isless(dot(N, c), 0))
 		return (0);
 	return (1);
