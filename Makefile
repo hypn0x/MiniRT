@@ -6,7 +6,7 @@
 #    By: hsabir <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/22 13:45:33 by hsabir            #+#    #+#              #
-#   Updated: 2022/02/23 15:50:01 by                  ###   ########.fr       # #
+#   Updated: 2022/02/27 18:17:48 by                  ###   ########.fr       # #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,7 @@ INC_FLAGS += $(addprefix -I,$(INC_DIRS))
 
 CFLAGS += -Wall -Wextra -Werror
 CFLAGS += -std=c99 -pedantic
-CFLAGS += -O3 -march=native
+#CFLAGS += -O3 -march=native
 CFLAGS += -g3
 #CFLAGS += -fsanitize=address -v
 
