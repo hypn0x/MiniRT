@@ -6,7 +6,7 @@
 /*   By:  <>                                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 14:32:52 by                   #+#    #+#             */
-/*   Updated: 2022/02/24 12:03:30 by                  ###   ########.fr       */
+/*   Updated: 2022/02/27 12:31:01 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ int	cylinder_root(float *t0, float *t1, t_cylinder *cylinder, t_ray ray)
 	z = dot(right, right) - (cylinder->diameter / 2 * cylinder->diameter / 2);
 	if (solve_quadratic(new_vec(x, y, z), t0, t1))
 		return (0);
+	if (isless(*t0, 0) && isless(*t1, 0))
+		return (0);
 	return (1);
 }
 
@@ -75,18 +77,16 @@ float	hit_cylinder(t_cylinder *cylinder, t_ray ray)
 		return (-1);
 	check_t(&t0, cylinder, ray);
 	check_t(&t1, cylinder, ray);
-	if (t0 < 0 && t1 < 0)
-		return (-1);
-	if (t1 < t0)
+	if (isless(t1, t0))
 	{
-		if (t1 >= 0)
+		if (isgreaterequal(t1, 0))
 			return (t1);
 		else
 			return (t0);
 	}
 	else
 	{
-		if (t0 > 0)
+		if (isgreater(t0, 0))
 			return (t0);
 		else
 			return (t1);
