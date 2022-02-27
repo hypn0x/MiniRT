@@ -10,30 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-//
-// Created by segransm on 2/3/22.
-//
-
 #include <limits.h>
-#include <unistd.h>
-#include <constants.h>
-#include <stdio.h>
 
-float	rnd(int fd)
+float	ft_rand(unsigned long seed)
 {
-	static int				i;
-	static unsigned char	rand[IMG_W * IMG_W];
-	unsigned char			ret;
+	static unsigned long	lfsr;
 
-	if (fd == -1)
-		return (.5f);
-	if (i == -1)
-	{
-		if (read(fd, &rand, sizeof(rand)) == -1)
-			return (.5f);
-		i = sizeof(rand) - 1;
-	}
-	ret = rand[i];
-	i--;
-	return ((float)ret / (float)UCHAR_MAX);
+	if (!lfsr)
+		lfsr = seed;
+	lfsr ^= lfsr << 13;
+	lfsr ^= lfsr >> 7;
+	lfsr ^= lfsr << 17;
+	return ((float)lfsr / (float)ULLONG_MAX);
 }

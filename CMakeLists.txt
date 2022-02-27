@@ -43,7 +43,6 @@ add_executable(
         src/parsing/validate_utils.c
         src/parsing/error.c
         src/hook_utils.c
-        src/vector/rotate_vec.c
         src/utils/random.c
 )
 

@@ -17,7 +17,6 @@
 #include <libft.h>
 #include <types.h>
 #include <hit_objs.h>
-#include <math.h>
 #include <colors.h>
 #include "op_vec.h"
 
