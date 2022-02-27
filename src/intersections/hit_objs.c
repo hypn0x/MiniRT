@@ -21,7 +21,7 @@
 #include <colors.h>
 #include "op_vec.h"
 
-t_colour	cast_ray(t_list **head, t_ray r, t_data img, t_object obj)
+t_colour	cast_ray(t_ray r, t_data img, t_object obj)
 {
 	t_list	*elem;
 	t_list	*L;
@@ -33,9 +33,10 @@ t_colour	cast_ray(t_list **head, t_ray r, t_data img, t_object obj)
 	while (L)
 	{
 		light = L->content;
-		elem = *head;
+		elem = *(img.objects);
 		t = -1;
 		distance_to_light = len3(min_vec(light->coordinates, r.origin));
+		r.direction = normalize(min_vec(light->coordinates, r.origin));
 		while (elem != NULL)
 		{
 			if (elem->type == 's')
@@ -55,5 +56,5 @@ t_colour	cast_ray(t_list **head, t_ray r, t_data img, t_object obj)
 		}
 		L = L->next;
 	}
-	return (get_ray_luminosity(img, obj, r));
+	return (get_pixel_colour(img, obj, r));
 }

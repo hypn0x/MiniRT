@@ -10,6 +10,6 @@
 
 void	init_image(t_data *img);
 
-void	create_img(t_list **objects, t_data	*img);
+void	create_img(t_data	*img);
 
 #endif //MLX_IMG_H

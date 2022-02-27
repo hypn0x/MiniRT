@@ -63,8 +63,7 @@ t_vec3	cross_prod(t_vec3 a, t_vec3 b)
 	return (new);
 }
 
-
-t_vec3 	vec_unit(t_vec3 vec)
+t_vec3	vec_unit(t_vec3 vec)
 {
 	float	len;
 

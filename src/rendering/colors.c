@@ -14,22 +14,20 @@
 // Created by Hajar Sabir on 2/8/22.
 //
 
-#include "../../includes/rendering/colors.h"
+#include <colors.h>
 #include <libft.h>
 #include <types.h>
 #include <op_vec_double.h>
 #include <op_vec.h>
-#include <float.h>
 #include <hit_objs.h>
 
-t_list	*ray_color(t_ray r, t_list **head, float *distance)
+t_list	*get_hit_elem(t_ray r, t_list **head, float *distance)
 {
 	float	t;
 	t_list	*elem;
 	t_list	*hit_elem;
 
 	hit_elem = NULL;
-	*distance = DBL_MAX;
 	elem = *head;
 	while (elem != NULL)
 	{
@@ -52,7 +50,7 @@ t_list	*ray_color(t_ray r, t_list **head, float *distance)
 	return (hit_elem);
 }
 
-t_colour	create_obj(t_list *hit_elem, t_ray r, t_data img, float distance, t_list **head)
+t_colour	create_obj(t_list *hit_elem, t_ray r, t_data img, float distance)
 {
 	t_object	obj;
 
@@ -81,7 +79,7 @@ t_colour	create_obj(t_list *hit_elem, t_ray r, t_data img, float distance, t_lis
 		else
 			obj.normal_to_surface = normalize(min_vec(obj.intersection, obj.coordinates));
 		r.origin = plus_vec(obj.intersection,mult3(obj.normal_to_surface,(float)1e-3));
-		return (cast_ray(head, r, img, obj));
+		return (cast_ray(r, img, obj));
 	}
-	return (new_vec(.0f, 0.0f, 0.0f));
+	return (new_vec(0.0f, 0.0f, 0.0f));
 }
