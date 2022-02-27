@@ -29,6 +29,6 @@ t_vec3	normalize(t_vec3 a);
 
 t_vec3	cross_prod(t_vec3 a, t_vec3 b);
 
-t_vec3 	vec_unit(t_vec3 vec);
+t_vec3	vec_unit(t_vec3 vec);
 
 #endif //OP_VEC_H

@@ -79,7 +79,7 @@ typedef struct s_cylinder
 	t_plane		*cap[2];
 }	t_cylinder;
 
-typedef struct	s_triangle
+typedef struct s_triangle
 {
 	t_vec3		a;
 	t_vec3		b;
@@ -93,7 +93,6 @@ typedef struct s_object
 	t_colour	colour;
 	t_vec3		normal_to_surface;
 	t_vec3		intersection;
-	double		distance_to_light;
 }	t_object;
 
 typedef struct s_data
@@ -111,8 +110,9 @@ typedef struct s_data
 	t_vec3		vertical;
 	t_point		top_left_corner;
 	t_camera	camera;
-	t_light		light;
+	t_list		*light;
 	t_ambient	ambient;
+	t_list		**objects;
 }	t_data;
 
 int	ft_exit(t_data *data);

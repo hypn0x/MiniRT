@@ -20,22 +20,22 @@
 
 int	main(int argc, char **argv)
 {
-	t_list		**objects;
 	t_data		img;
 
 	if (argc != 2)
 		return (ft_printf(2, "Usage: ./miniRT (scene)\n"));
-	objects = parser(argv[1], &(img.camera), &(img.light), &(img.ambient));
-	if (objects == NULL)
+	img.light = NULL;
+	img.objects = parser(argv[1], &(img.camera), &(img.light), &(img.ambient));
+	if (img.objects == NULL)
 		return (ft_printf(2, "Error\nFile scene corrupted\n"));
-	else if (check_list_values(*objects, &(img.ambient), &(img.light), &(img.camera)))
+	else if (check_list_values(*(img.objects), &(img.ambient), &(img.light), &(img.camera)))
 	{
-		ft_lstclear(objects, free);
-		free(objects);
+		ft_lstclear(img.objects, free);
+		free(img.objects);
 		return (ft_printf(2, "Error\nInvalid value in scene\n"));
 	}
 	init_image(&img);
-	create_img(objects, &img);
+	create_img(&img);
 	mlx_put_image_to_window(img.mlx, img.mlx_win, img.img, 0, 0);
 	mlx_loop(img.mlx);
 }

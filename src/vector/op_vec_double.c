@@ -49,7 +49,7 @@ t_vec3	new_vec(float a, float b, float c)
 	t_vec3	vec;
 
 	vec.x = a;
-	vec.y= b;
+	vec.y = b;
 	vec.z = c;
 	return (vec);
 }
