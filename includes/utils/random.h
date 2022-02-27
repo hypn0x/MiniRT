@@ -5,6 +5,6 @@
 #ifndef RANDOM_H
 # define RANDOM_H
 
-float	rnd(int fd);
+float	ft_rand(unsigned long seed);
 
 #endif //RANDOM_H
