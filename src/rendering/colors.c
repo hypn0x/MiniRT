@@ -6,10 +6,9 @@
 /*   By:  <>                                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 14:54:07 by                   #+#    #+#             */
-/*   Updated: 2022/02/28 15:57:08 by                  ###   ########.fr       */
+/*   Updated: 2022/02/28 17:50:37 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include <colors.h>
 #include <libft.h>
@@ -63,41 +62,55 @@ t_list	*get_hit_elem(t_ray r, t_list **head, float *distance)
 	return (hit_elem);
 }
 
+t_point	get_elem_colour_p2(t_list *hit_elem, t_object *obj,
+			t_triangle *t, t_point coordinates)
+{
+	if (hit_elem->type == 's')
+	{
+		obj->colour = ((t_sphere *) hit_elem->content)->colour;
+		coordinates = ((t_sphere *) hit_elem->content)->coordinates;
+	}
+	else if (hit_elem->type == 'p')
+	{
+		obj->colour = ((t_plane *) hit_elem->content)->colour;
+		obj->normal_to_surface = ((t_plane *)
+				hit_elem->content)->orientation;
+	}
+	else if (hit_elem->type == 'c')
+	{
+		obj->colour = ((t_cylinder *) hit_elem->content)->colour;
+		coordinates = ((t_cylinder *)
+				hit_elem->content)->coordinates;
+	}
+	else if (hit_elem->type == 't')
+	{
+		*t = *((t_triangle *) hit_elem->content);
+		obj->colour = t->colour;
+		obj->normal_to_surface = normalize(cross_prod(min_vec(t->b, t->a),
+					min_vec(t->c, t->a)));
+	}
+	return (coordinates);
+}
+
 t_colour
 	get_elem_colour(t_list *hit_elem, t_ray r, t_data img, float distance)
 {
-	t_object	obj;
 	t_point		coordinates;
+	t_object	obj;
 	t_triangle	t;
 
 	if (hit_elem != NULL)
 	{
+		coordinates.x = 0;
+		coordinates.y = 0;
+		coordinates.z = 0;
 		obj.intersection = plus_vec(r.origin, mult3(r.direction, distance));
-		if (hit_elem->type == 's')
-		{
-			obj.colour = ((t_sphere *) hit_elem->content)->colour;
-			coordinates = ((t_sphere *) hit_elem->content)->coordinates;
-		}
-		else if (hit_elem->type == 'p')
-		{
-			obj.colour = ((t_plane *) hit_elem->content)->colour;
-			obj.normal_to_surface = ((t_plane *)
-					hit_elem->content)->orientation;
-		}
-		else if (hit_elem->type == 'c')
-		{
-			obj.colour = ((t_cylinder *) hit_elem->content)->colour;
-			coordinates = ((t_cylinder *) hit_elem->content)->coordinates;
-		}
-		else if (hit_elem->type == 't')
-		{
-			t = *((t_triangle *) hit_elem->content);
-			obj.colour = t.colour;
-			obj.normal_to_surface = normalize(cross_prod(min_vec(t.b, t.a), min_vec(t.c, t.a)));
-		}
+		coordinates = get_elem_colour_p2(hit_elem, &obj, &t, coordinates);
 		if (hit_elem->type != 'p' && hit_elem->type != 't')
-			obj.normal_to_surface = normalize(min_vec(obj.intersection, coordinates));
-		r.origin = plus_vec(obj.intersection,mult3(obj.normal_to_surface,(float)1e-3));
+			obj.normal_to_surface = normalize
+				(min_vec(obj.intersection, coordinates));
+		r.origin = plus_vec(obj.intersection,
+				mult3(obj.normal_to_surface, (float)1e-3));
 		return (cast_ray(r, img, obj));
 	}
 	return (new_vec(0.0f, 0.0f, 0.0f));

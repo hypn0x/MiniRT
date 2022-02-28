@@ -6,7 +6,7 @@
 /*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 15:48:58 by msegrans          #+#    #+#             */
-/*   Updated: 2022/02/28 15:41:18 by                  ###   ########.fr       */
+/*   Updated: 2022/02/28 16:59:54 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,6 @@
 # define ASPECT_RATIO (16.0f / 9.0f)
 # define IMG_H (int)(IMG_W / ASPECT_RATIO)
 # ifndef SUPERSAMPLING
-#  define SUPERSAMPLING 0
+#  define SUPERSAMPLING 1
 # endif
 #endif //CONSTANTS_H
