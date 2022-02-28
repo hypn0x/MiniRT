@@ -1,6 +1,14 @@
-//
-// Created by Hajar Sabir on 2/26/22.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   triangle.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By:  <>                                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/28 18:32:06 by                   #+#    #+#             */
+/*   Updated: 2022/02/28 18:34:56 by                  ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include <hit_objs.h>
 #include <op_vec.h>
@@ -11,9 +19,9 @@
 
 static int	solve_quadratic(t_triangle *triangle, t_vec3 P, t_vec3 N)
 {
-	t_vec3 	c;
-	t_vec3 	edge;
-	t_vec3 	v;
+	t_vec3	c;
+	t_vec3	edge;
+	t_vec3	v;
 
 	edge = min_vec(triangle->b, triangle->a);
 	v = min_vec(P, triangle->a);
@@ -35,24 +43,23 @@ static int	solve_quadratic(t_triangle *triangle, t_vec3 P, t_vec3 N)
 
 float	hit_triangle(t_triangle *triangle, t_ray ray)
 {
-	t_vec3	A; // edge0
-	t_vec3	B; // edge1
-	t_vec3	N;  // Triangle normal
-	t_vec3	P;
+	t_vec3	e01[2];
+	t_vec3	normal;
+	t_vec3	point;
 	float	edge;
 	float	t;
 
-	A = min_vec(triangle->b, triangle->a);
-	B = min_vec(triangle->c, triangle->a);
-	N = normalize(cross_prod(A, B));
-	edge = dot(N, ray.direction);
+	e01[0] = min_vec(triangle->b, triangle->a);
+	e01[1] = min_vec(triangle->c, triangle->a);
+	normal = normalize(cross_prod(e01[0], e01[1]));
+	edge = dot(normal, ray.direction);
 	if (isless(fabsf(edge), (float)1e-6))
 		return (-1);
-	t = dot(N, min_vec(triangle->a, ray.origin)) / edge;
+	t = dot(normal, min_vec(triangle->a, ray.origin)) / edge;
 	if (isless(t, 0))
 		return (-1);
-	P = plus_vec(ray.origin, mult3(ray.direction, t));
-	if (solve_quadratic(triangle, P, N))
+	point = plus_vec(ray.origin, mult3(ray.direction, t));
+	if (solve_quadratic(triangle, point, normal))
 		return (t);
 	return (-1);
 }

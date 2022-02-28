@@ -6,7 +6,7 @@
 /*   By:  <>                                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 14:33:05 by                   #+#    #+#             */
-/*   Updated: 2022/02/24 10:27:54 by                  ###   ########.fr       */
+/*   Updated: 2022/02/28 17:57:12 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,9 @@ void	check_t(float *t, t_cylinder *cylinder, t_ray ray)
 			mult3(cylinder->orientation, cylinder->height));
 	q = plus_vec(ray.origin, mult3(ray.direction, *t));
 	if (dot(cylinder->orientation, min_vec(q, cylinder->coordinates)) <= 0)
-//		*t = (hit_cylinder_cap(cylinder, ray, *t));
 		*t = -1;
 	if (dot(cylinder->orientation, min_vec(q, p2)) >= 0)
-		*t = -1;//(hit_cylinder_cap(cylinder, ray, *t));
+		*t = -1;
 	*t = (hit_cylinder_cap(cylinder, ray, *t));
 }
 

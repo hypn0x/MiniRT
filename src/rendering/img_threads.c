@@ -6,7 +6,7 @@
 /*   By:  <>                                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 15:48:30 by                   #+#    #+#             */
-/*   Updated: 2022/02/28 15:52:39 by                  ###   ########.fr       */
+/*   Updated: 2022/02/28 15:52:42 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@
 #include <random.h>
 #include <pthread.h>
 #include <mlx_img.h>
-
-#include <stdio.h>
 
 t_colour	supersample_px(t_ray ray, t_data img)
 {

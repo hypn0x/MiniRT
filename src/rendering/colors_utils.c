@@ -1,8 +1,16 @@
-//
-// Created by Hajar Sabir on 2/8/22.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   colors_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By:  <>                                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/28 17:51:42 by                   #+#    #+#             */
+/*   Updated: 2022/02/28 17:51:56 by                  ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "../../includes/rendering/colors.h"
+#include <colors.h>
 #include <types.h>
 #include <op_vec_double.h>
 #include <op_vec.h>
@@ -40,7 +48,6 @@ t_colour	get_specular_light(t_object obj, t_light light, t_ray r, t_data img)
 	brightness = light.brightness * fabsf(dot(obj.normal_to_surface,
 				normalize(plus_vec(r.direction,
 						min_vec(img.camera.view_point, obj.intersection)))));
-
 	return (mult3(light.colour, powf(brightness, 100
 				* len3(min_vec(light.coordinates, obj.intersection)))
 			* 255.0f));
