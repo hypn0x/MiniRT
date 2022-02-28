@@ -6,13 +6,10 @@
 /*   By:  <>                                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 14:54:07 by                   #+#    #+#             */
-/*   Updated: 2022/02/26 12:58:14 by                  ###   ########.fr       */
+/*   Updated: 2022/02/28 15:57:08 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//
-// Created by Hajar Sabir on 2/8/22.
-//
 
 #include <colors.h>
 #include <libft.h>
@@ -20,6 +17,22 @@
 #include <op_vec_double.h>
 #include <op_vec.h>
 #include <hit_objs.h>
+
+void	format_lights(t_data *img)
+{
+	t_list	*elem;
+	t_light	*light;
+
+	img->ambient.colour = mult3(img->ambient.colour,
+			img->ambient.brightness / 255.0f);
+	elem = img->light;
+	while (elem)
+	{
+		light = elem->content;
+		light->colour = mult3(light->colour, light->brightness / 255.0f);
+		elem = elem->next;
+	}
+}
 
 t_list	*get_hit_elem(t_ray r, t_list **head, float *distance)
 {
@@ -50,7 +63,8 @@ t_list	*get_hit_elem(t_ray r, t_list **head, float *distance)
 	return (hit_elem);
 }
 
-t_colour	get_elem_colour(t_list *hit_elem, t_ray r, t_data img, float distance)
+t_colour
+	get_elem_colour(t_list *hit_elem, t_ray r, t_data img, float distance)
 {
 	t_object	obj;
 	t_point		coordinates;
@@ -67,7 +81,8 @@ t_colour	get_elem_colour(t_list *hit_elem, t_ray r, t_data img, float distance)
 		else if (hit_elem->type == 'p')
 		{
 			obj.colour = ((t_plane *) hit_elem->content)->colour;
-			obj.normal_to_surface = ((t_plane *) hit_elem->content)->orientation;
+			obj.normal_to_surface = ((t_plane *)
+					hit_elem->content)->orientation;
 		}
 		else if (hit_elem->type == 'c')
 		{

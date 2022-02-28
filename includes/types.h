@@ -6,7 +6,7 @@
 /*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 00:04:13 by msegrans          #+#    #+#             */
-/*   Updated: 2022/02/27 14:26:07 by                  ###   ########.fr       */
+/*   Updated: 2022/02/28 15:19:24 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # define TYPES_H
 
 # include <libft.h>
+
+
 
 typedef struct s_vec3
 {
@@ -113,6 +115,13 @@ typedef struct s_data
 	t_ambient	ambient;
 	t_list		**objects;
 }	t_data;
+
+typedef struct s_thread
+{
+	int		i;
+	int		start_y;
+	t_data	*img;
+}	t_thread;
 
 int	ft_exit(t_data *data);
 int	key_hook(int keycode, t_data *data);

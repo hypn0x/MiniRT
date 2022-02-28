@@ -1,6 +1,14 @@
-//
-// Created by Hajar Sabir on 2/8/22.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mlx_img.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By:  <>                                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/28 15:34:48 by                   #+#    #+#             */
+/*   Updated: 2022/02/28 15:44:54 by                  ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include <mlx.h>
 #include <libft.h>
@@ -12,23 +20,10 @@
 #include <float.h>
 #include <colors.h>
 #include <random.h>
+#include <pthread.h>
+#include <mlx_img.h>
 
-void	format_lights(t_data *img)
-{
-	t_list	*elem;
-	t_light	*light;
-
-	img->ambient.colour = mult3(img->ambient.colour,
-			img->ambient.brightness / 255.0f);
-	elem = img->light;
-	while (elem)
-	{
-		light = elem->content;
-		light->colour = mult3(light->colour, light->brightness / 255.0f);
-		elem = elem->next;
-	}
-}
-
+// todo: fix case where cross prod = 0 l:38
 void	init_image(t_data *img)
 {
 	img->mlx = mlx_init();
@@ -49,7 +44,6 @@ void	init_image(t_data *img)
 					div3(img->vertical, 2)), img->camera.orientation),
 			img->camera.view_point);
 	img->vertical = div3(img->vertical, IMG_H);
-	// todo: fix case where cross prod = 0
 	img->horizontal = div3(img->horizontal, IMG_W);
 	format_lights(img);
 	mlx_hook(img->mlx_win, 17, 1L, ft_exit, img);
@@ -64,64 +58,27 @@ t_colour	get_mean_pixel(t_ray ray, t_data img)
 	float		distance;
 
 	top_left = ray.direction;
-	// top_left
 	ray.direction = normalize(top_left);
 	distance = DBL_MAX;
 	hit_elem = get_hit_elem(ray, img.objects, &distance);
 	val = get_elem_colour(hit_elem, ray, img, distance);
-	// top_right
 	ray.direction = normalize(plus_vec(top_left, img.horizontal));
 	distance = DBL_MAX;
 	hit_elem = get_hit_elem(ray, img.objects, &distance);
 	val = plus_vec(val, get_elem_colour(hit_elem, ray, img, distance));
-	// bottom_left
 	ray.direction = normalize(plus_vec(top_left, img.vertical));
 	distance = DBL_MAX;
 	hit_elem = get_hit_elem(ray, img.objects, &distance);
 	val = plus_vec(val, get_elem_colour(hit_elem, ray, img, distance));
-	// bottom_right
-	ray.direction = normalize(plus_vec(plus_vec(top_left, img.vertical), img.horizontal));
+	ray.direction = normalize(plus_vec(plus_vec(top_left, img.vertical),
+				img.horizontal));
 	distance = DBL_MAX;
 	hit_elem = get_hit_elem(ray, img.objects, &distance);
 	val = plus_vec(val, get_elem_colour(hit_elem, ray, img, distance));
 	return (div3(val, 4));
 }
 
-int	is_px_diff(t_colour c1, t_colour c2)
-{
-	float	diff;
-
-	diff = 2.0f;
-	if (c1.x - diff > c2.x || c1.x + diff < c2.x)
-		return (1);
-	if (c1.y - diff > c2.y || c1.y + diff < c2.y)
-		return (1);
-	if (c1.z - diff > c2.z || c1.z + diff < c2.z)
-		return (1);
-	return (0);
-}
-
-t_colour	supersample_px(t_ray ray, t_data img)
-{
-	int	i;
-	t_colour	c;
-	t_list		*hit_elem;
-	float		distance;
-	i = -1;
-
-	c = new_vec(0.0f, 0.0f, 0.0f);
-	while (++i < 4)
-	{
-		ray.direction = normalize(plus_vec(plus_vec(ray.direction,
-			mult3(img.vertical, ft_rand(0))), mult3(img.horizontal, ft_rand(0))));
-		distance = DBL_MAX;
-		hit_elem = get_hit_elem(ray, img.objects, &distance);
-		c = plus_vec(c, get_elem_colour(hit_elem, ray, img, distance));
-	}
-	return (div3(c, 4));
-}
-
-void *new_light(void *content)
+void	*new_light(void *content)
 {
 	t_light	*light;
 	t_light	*new_light;
@@ -148,93 +105,25 @@ int	get_pixel_value(t_ray ray, t_data img)
 		v1 = get_mean_pixel(ray, img);
 	top_left = ray.direction;
 	ray.direction = normalize(plus_vec(plus_vec(ray.direction,
-			mult3(img.vertical, 0.5f)), mult3(img.horizontal, 0.5f)));
+					mult3(img.vertical, 0.5f)), mult3(img.horizontal, 0.5f)));
 	distance = DBL_MAX;
 	hit_elem = get_hit_elem(ray, img.objects, &distance);
 	v2 = get_elem_colour(hit_elem, ray, img, distance);
 	ray.direction = top_left;
 	if (SUPERSAMPLING && is_px_diff(v1, v2))
-		return (rgb_to_int(div3(plus_vec(v1, plus_vec(v2, supersample_px(ray, img))), 3)));
+		return (rgb_to_int(div3(plus_vec(v1,
+						plus_vec(v2, supersample_px(ray, img))), 3)));
 	if (SUPERSAMPLING)
 		return (rgb_to_int(div3(plus_vec(v1, v2), 2)));
 	return (rgb_to_int(v2));
 }
 
-#include <pthread.h>
-
-typedef struct s_thread
-{
-	int		i;
-	int		start_y;
-	t_data	*img;
-}	t_thread;
-
-#include <stdio.h>
-
-void px_loop(t_data img, t_ray ray, t_thread dt)
-{
-	int		x;
-	int		y;
-	size_t	px;
-	t_vec3	horiz;
-
-	y = dt.start_y - 1;
-	px = dt.start_y * IMG_W;
-	horiz = mult3(img.horizontal, IMG_W);
-	img.light = ft_lstmap(img.light, new_light, free);
-	while (++y < (dt.i + 1) * (IMG_H / 12))
-	{
-		x = -1;
-		while (++x < IMG_W)
-		{
-			ray.direction = plus_vec(ray.direction, img.horizontal);
-			dt.img->addr[px++] = get_pixel_value(ray, img);
-		}
-		ray.direction = plus_vec(ray.direction, img.vertical);
-		ray.direction = min_vec(ray.direction, horiz);
-	}
-	ft_lstclear(&(img.light), free);
-}
-
-void	*thread_loop(void *ptr)
-{
-	t_thread	*dt;
-	t_ray	ray;
-
-	dt = ptr;
-	t_data *img = dt->img;
-	ray.origin = img->camera.view_point;
-	ray.direction = plus_vec(img->top_left_corner, mult3(img->vertical, (float)(dt->start_y - 1)));
-	px_loop(*img, ray, *dt);
-	return (NULL);
-}
-
-void	multithreading(t_data *img)
-{
-	int	i;
-	t_thread *dt = malloc(sizeof(t_thread) * 12);
-	pthread_t *t = malloc(sizeof(pthread_t) * 12);
-
-	i = -1;
-	while (++i < 12)
-	{
-		dt[i].start_y = i * (IMG_H / 12);
-		dt[i].img = img;
-		dt[i].i = i;
-		pthread_create(&(t[i]), NULL, thread_loop, &(dt[i]));
-	}
-	i = -1;
-	while (++i < 12)
-		pthread_join(t[i], NULL);
-	free(dt);
-	free(t);
-}
+// nor = y[0], x[1], px[2]
+// TODO norminette
 
 void	create_img(t_data *img)
 {
-	int		y;
-	int		x;
-	int		px;
+	int		nor[3];
 	t_ray	ray;
 	t_vec3	horiz;
 	time_t	t;
@@ -247,17 +136,17 @@ void	create_img(t_data *img)
 	else
 	{
 		horiz = mult3(img->horizontal, IMG_W);
-		y = -1;
-		px = 0;
+		nor[0] = -1;
+		nor[2] = 0;
 		ray.origin = img->camera.view_point;
 		ray.direction = img->top_left_corner;
-		while (++y < IMG_H)
+		while (++nor[0] < IMG_H)
 		{
-			x = -1;
-			while (++x < IMG_W)
+			nor[1] = -1;
+			while (++nor[1] < IMG_W)
 			{
 				ray.direction = plus_vec(ray.direction, img->horizontal);
-				img->addr[px++] = get_pixel_value(ray, *img);
+				img->addr[nor[2]++] = get_pixel_value(ray, *img);
 			}
 			ray.direction = plus_vec(ray.direction, img->vertical);
 			ray.direction = min_vec(ray.direction, horiz);

@@ -44,6 +44,7 @@ add_executable(
         src/parsing/error.c
         src/hook_utils.c
         src/utils/random.c
+        src/rendering/img_threads.c
 )
 
 TARGET_LINK_LIBRARIES(miniRT ${LIBS})
