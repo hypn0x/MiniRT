@@ -68,22 +68,22 @@ t_colour	get_mean_pixel(t_ray ray, t_data img)
 	ray.direction = normalize(top_left);
 	distance = DBL_MAX;
 	hit_elem = get_hit_elem(ray, img.objects, &distance);
-	val = create_obj(hit_elem, ray, img, distance);
+	val = get_elem_colour(hit_elem, ray, img, distance);
 	// top_right
 	ray.direction = normalize(plus_vec(top_left, img.horizontal));
 	distance = DBL_MAX;
 	hit_elem = get_hit_elem(ray, img.objects, &distance);
-	val = plus_vec(val, create_obj(hit_elem, ray, img, distance));
+	val = plus_vec(val, get_elem_colour(hit_elem, ray, img, distance));
 	// bottom_left
 	ray.direction = normalize(plus_vec(top_left, img.vertical));
 	distance = DBL_MAX;
 	hit_elem = get_hit_elem(ray, img.objects, &distance);
-	val = plus_vec(val, create_obj(hit_elem, ray, img, distance));
+	val = plus_vec(val, get_elem_colour(hit_elem, ray, img, distance));
 	// bottom_right
 	ray.direction = normalize(plus_vec(plus_vec(top_left, img.vertical), img.horizontal));
 	distance = DBL_MAX;
 	hit_elem = get_hit_elem(ray, img.objects, &distance);
-	val = plus_vec(val, create_obj(hit_elem, ray, img, distance));
+	val = plus_vec(val, get_elem_colour(hit_elem, ray, img, distance));
 	return (div3(val, 4));
 }
 
@@ -116,7 +116,7 @@ t_colour	supersample_px(t_ray ray, t_data img)
 			mult3(img.vertical, ft_rand(0))), mult3(img.horizontal, ft_rand(0))));
 		distance = DBL_MAX;
 		hit_elem = get_hit_elem(ray, img.objects, &distance);
-		c = plus_vec(c, create_obj(hit_elem, ray, img, distance));
+		c = plus_vec(c, get_elem_colour(hit_elem, ray, img, distance));
 	}
 	return (div3(c, 4));
 }
@@ -144,7 +144,6 @@ int	get_pixel_value(t_ray ray, t_data img)
 	t_list		*hit_elem;
 	float		distance;
 
-	img.light = ft_lstmap(img.light, new_light, free);
 	if (SUPERSAMPLING)
 		v1 = get_mean_pixel(ray, img);
 	top_left = ray.direction;
@@ -152,13 +151,13 @@ int	get_pixel_value(t_ray ray, t_data img)
 			mult3(img.vertical, 0.5f)), mult3(img.horizontal, 0.5f)));
 	distance = DBL_MAX;
 	hit_elem = get_hit_elem(ray, img.objects, &distance);
-	v2 = create_obj(hit_elem, ray, img, distance);
+	v2 = get_elem_colour(hit_elem, ray, img, distance);
 	ray.direction = top_left;
 	if (SUPERSAMPLING && is_px_diff(v1, v2))
 		return (rgb_to_int(div3(plus_vec(v1, plus_vec(v2, supersample_px(ray, img))), 3)));
 	if (SUPERSAMPLING)
 		return (rgb_to_int(div3(plus_vec(v1, v2), 2)));
-	return (rgb_to_int(v1));
+	return (rgb_to_int(v2));
 }
 
 #include <pthread.h>
@@ -172,35 +171,41 @@ typedef struct s_thread
 
 #include <stdio.h>
 
-
-void	*thread_loop(void *ptr)
+void px_loop(t_data img, t_ray ray, t_thread dt)
 {
-	t_thread	*dt;
-	int		y;
 	int		x;
-	int		px;
-	t_ray	ray;
+	int		y;
+	size_t	px;
 	t_vec3	horiz;
 
-	dt = ptr;
-	t_data *img = dt->img;
-	horiz = mult3(img->horizontal, IMG_W);
-	y = dt->start_y - 1;
-	px = dt->start_y * IMG_W;
-	ray.origin = img->camera.view_point;
-	ray.direction = plus_vec(img->top_left_corner, mult3(img->vertical, (float)y));
-	while (++y < (dt->i + 1) * (IMG_H / 12))
+	y = dt.start_y - 1;
+	px = dt.start_y * IMG_W;
+	horiz = mult3(img.horizontal, IMG_W);
+	img.light = ft_lstmap(img.light, new_light, free);
+	while (++y < (dt.i + 1) * (IMG_H / 12))
 	{
 		x = -1;
 		while (++x < IMG_W)
 		{
-			ray.direction = plus_vec(ray.direction, img->horizontal);
-			img->addr[px++] = get_pixel_value(ray, *img);
+			ray.direction = plus_vec(ray.direction, img.horizontal);
+			dt.img->addr[px++] = get_pixel_value(ray, img);
 		}
-		ray.direction = plus_vec(ray.direction, img->vertical);
+		ray.direction = plus_vec(ray.direction, img.vertical);
 		ray.direction = min_vec(ray.direction, horiz);
 	}
-//	ft_lstclear(&(img->light), free);
+	ft_lstclear(&(img.light), free);
+}
+
+void	*thread_loop(void *ptr)
+{
+	t_thread	*dt;
+	t_ray	ray;
+
+	dt = ptr;
+	t_data *img = dt->img;
+	ray.origin = img->camera.view_point;
+	ray.direction = plus_vec(img->top_left_corner, mult3(img->vertical, (float)(dt->start_y - 1)));
+	px_loop(*img, ray, *dt);
 	return (NULL);
 }
 

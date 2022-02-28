@@ -47,7 +47,7 @@ INC_FLAGS += $(addprefix -I,$(INC_DIRS))
 
 CFLAGS += -Wall -Wextra -Werror
 CFLAGS += -std=c99 -pedantic
-#CFLAGS += -O3 -march=native
+CFLAGS += -O3 -march=native
 CFLAGS += -g3
 #CFLAGS += -fsanitize=address -v
 

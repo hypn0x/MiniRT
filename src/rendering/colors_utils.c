@@ -40,6 +40,7 @@ t_colour	get_specular_light(t_object obj, t_light light, t_ray r, t_data img)
 	brightness = light.brightness * fabsf(dot(obj.normal_to_surface,
 				normalize(plus_vec(r.direction,
 						min_vec(img.camera.view_point, obj.intersection)))));
+
 	return (mult3(light.colour, powf(brightness, 4
 				* len3(min_vec(light.coordinates, obj.intersection)))
 			* 255.0f));

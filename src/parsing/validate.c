@@ -38,12 +38,10 @@ static int	check_objects_values(t_list *head)
 	return (0);
 }
 
-int	check_light(t_list **L)
+int	check_light(t_list *elem)
 {
-	t_list	*elem;
 	t_light *light;
 
-	elem = *L;
 	while (elem)
 	{
 		light = elem->content;
@@ -55,7 +53,7 @@ int	check_light(t_list **L)
 	return (0);
 }
 
-int	check_list_values(t_list *head, t_ambient *A, t_list **L, t_camera *C)
+int	check_list_values(t_list *head, t_ambient *A, t_list *L, t_camera *C)
 {
 	if (A->brightness == -1)
 		A->brightness = 0;

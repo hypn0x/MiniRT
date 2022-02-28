@@ -3,7 +3,7 @@ project(miniRT C)
 
 set(CMAKE_VERBOSE_MAKEFILE on)
 set(CMAKE_C_STANDARD 99)
-add_compile_options(-Wall -Werror -Wextra)
+add_compile_options(-Wall -Werror -Wextra -O3 -march=native)
 
 INCLUDE_DIRECTORIES(/System/Library/Frameworks)
 

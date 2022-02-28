@@ -50,34 +50,38 @@ t_list	*get_hit_elem(t_ray r, t_list **head, float *distance)
 	return (hit_elem);
 }
 
-t_colour	create_obj(t_list *hit_elem, t_ray r, t_data img, float distance)
+t_colour	get_elem_colour(t_list *hit_elem, t_ray r, t_data img, float distance)
 {
 	t_object	obj;
+	t_point		coordinates;
+	t_triangle	t;
 
 	if (hit_elem != NULL)
 	{
 		obj.intersection = plus_vec(r.origin, mult3(r.direction, distance));
 		if (hit_elem->type == 's')
 		{
-			obj.coordinates = ((t_sphere *) hit_elem->content)->coordinates;
 			obj.colour = ((t_sphere *) hit_elem->content)->colour;
+			coordinates = ((t_sphere *) hit_elem->content)->coordinates;
 		}
 		else if (hit_elem->type == 'p')
 		{
-			obj.coordinates = ((t_plane *) hit_elem->content)->coordinates;
 			obj.colour = ((t_plane *) hit_elem->content)->colour;
+			obj.normal_to_surface = ((t_plane *) hit_elem->content)->orientation;
 		}
 		else if (hit_elem->type == 'c')
 		{
-			obj.coordinates = ((t_cylinder *) hit_elem->content)->coordinates;
 			obj.colour = ((t_cylinder *) hit_elem->content)->colour;
+			coordinates = ((t_cylinder *) hit_elem->content)->coordinates;
 		}
 		else if (hit_elem->type == 't')
-			obj.colour = ((t_triangle *) hit_elem->content)->colour;
-		if (hit_elem->type == 'p')
-			obj.normal_to_surface = ((t_plane *) hit_elem->content)->orientation;
-		else
-			obj.normal_to_surface = normalize(min_vec(obj.intersection, obj.coordinates));
+		{
+			t = *((t_triangle *) hit_elem->content);
+			obj.colour = t.colour;
+			obj.normal_to_surface = normalize(cross_prod(min_vec(t.b, t.a), min_vec(t.c, t.a)));
+		}
+		if (hit_elem->type != 'p' && hit_elem->type != 't')
+			obj.normal_to_surface = normalize(min_vec(obj.intersection, coordinates));
 		r.origin = plus_vec(obj.intersection,mult3(obj.normal_to_surface,(float)1e-3));
 		return (cast_ray(r, img, obj));
 	}

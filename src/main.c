@@ -28,9 +28,11 @@ int	main(int argc, char **argv)
 	img.objects = parser(argv[1], &(img.camera), &(img.light), &(img.ambient));
 	if (img.objects == NULL)
 		return (ft_printf(2, "Error\nFile scene corrupted\n"));
-	else if (check_list_values(*(img.objects), &(img.ambient), &(img.light), &(img.camera)))
+	else if (check_list_values(*(img.objects), &(img.ambient), img.light, &(img.camera)))
 	{
 		ft_lstclear(img.objects, free);
+		ft_lstclear(&(img.light), free);
+		free(img.objects);
 		free(img.objects);
 		return (ft_printf(2, "Error\nInvalid value in scene\n"));
 	}

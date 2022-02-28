@@ -89,7 +89,6 @@ typedef struct s_triangle
 
 typedef struct s_object
 {
-	t_point		coordinates;
 	t_colour	colour;
 	t_vec3		normal_to_surface;
 	t_vec3		intersection;

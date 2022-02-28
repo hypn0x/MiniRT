@@ -94,7 +94,7 @@ int	add_triangle(char *line, t_list **head)
 {
 	t_triangle 	*elem;
 
-	elem = malloc(sizeof(t_cylinder));
+	elem = malloc(sizeof(t_triangle));
 	if (!elem)
 		return (parsing_error(elem, "Malloc failure."));
 	if (parse_vec3(&line, &(elem->a)) || parse_vec3(&line, &(elem->b))
