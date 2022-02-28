@@ -92,7 +92,7 @@ int	add_cylinder(char *line, t_list **head)
 
 int	add_triangle(char *line, t_list **head)
 {
-	t_triangle 	*elem;
+	t_triangle	*elem;
 
 	elem = malloc(sizeof(t_triangle));
 	if (!elem)

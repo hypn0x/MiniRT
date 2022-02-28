@@ -52,7 +52,7 @@ int	add_camera(char *line, t_camera *C)
 int	add_light(char *line, t_list **L)
 {
 	char		*word;
-	t_list 		*elem;
+	t_list		*elem;
 	t_light		*light;
 
 	light = malloc(sizeof(t_light));

@@ -6,7 +6,7 @@
 /*   By:  <>                                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 18:32:06 by                   #+#    #+#             */
-/*   Updated: 2022/02/28 18:34:56 by                  ###   ########.fr       */
+/*   Updated: 2022/02/28 18:35:07 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ static int	solve_quadratic(t_triangle *triangle, t_vec3 P, t_vec3 N)
 		return (0);
 	return (1);
 }
+
+// e01 edges
 
 float	hit_triangle(t_triangle *triangle, t_ray ray)
 {

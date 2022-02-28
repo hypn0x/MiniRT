@@ -6,7 +6,7 @@
 /*   By: msegrans <msegrans@student.42lausanne      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 23:34:55 by msegrans          #+#    #+#             */
-/*   Updated: 2022/02/28 15:19:24 by                  ###   ########.fr       */
+/*   Updated: 2022/02/28 18:38:14 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ static int	check_objects_values(t_list *head)
 
 int	check_light(t_list *elem)
 {
-	t_light *light;
+	t_light	*light;
 
 	while (elem)
 	{
 		light = elem->content;
 		if (check_brightness(light->brightness)
-			   || check_colour(light->colour))
+			|| check_colour(light->colour))
 			return (1);
 		elem = elem->next;
 	}
