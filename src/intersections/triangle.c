@@ -12,7 +12,6 @@
 
 #include <hit_objs.h>
 #include <op_vec.h>
-#include <op_vec_double.h>
 #include <math.h>
 
 //TODO: Fast, minimum storage ray-triangle intersection - Möller-Trumbore

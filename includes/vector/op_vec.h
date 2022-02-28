@@ -21,6 +21,10 @@ t_vec3	plus_vec(t_vec3 a, t_vec3 b);
 
 t_vec3	mult_vec(t_vec3 a, t_vec3 b);
 
+t_vec3	mult3(t_vec3 a, float n);
+
+t_vec3	div3(t_vec3 a, float n);
+
 float	dot(t_vec3 a, t_vec3 b);
 
 float	len3(t_vec3 a);
@@ -29,6 +33,6 @@ t_vec3	normalize(t_vec3 a);
 
 t_vec3	cross_prod(t_vec3 a, t_vec3 b);
 
-t_vec3	vec_unit(t_vec3 vec);
+t_vec3	new_vec(float a, float b, float c);
 
 #endif //OP_VEC_H

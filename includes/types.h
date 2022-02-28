@@ -19,8 +19,6 @@
 
 # include <libft.h>
 
-
-
 typedef struct s_vec3
 {
 	float	x;

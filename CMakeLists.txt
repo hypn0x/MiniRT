@@ -38,7 +38,7 @@ add_executable(
         src/parsing/lights_parser.c
         src/parsing/parse_utils.c
         src/parsing/objects_parser.c
-        src/vector/op_vec_double.c
+        src/vector/op_vec2.c
         src/vector/op_vec.c
         src/parsing/validate.c
         src/parsing/validate_utils.c

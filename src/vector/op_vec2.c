@@ -12,35 +12,19 @@
 
 #include <types.h>
 
-t_vec3	mult3(t_vec3 a, float n)
+t_vec3	min_vec(t_vec3 a, t_vec3 b)
 {
-	a.x *= n;
-	a.y *= n;
-	a.z *= n;
+	a.x -= b.x;
+	a.y -= b.y;
+	a.z -= b.z;
 	return (a);
 }
 
-t_vec3	div3(t_vec3 a, float n)
+t_vec3	plus_vec(t_vec3 a, t_vec3 b)
 {
-	a.x /= n;
-	a.y /= n;
-	a.z /= n;
-	return (a);
-}
-
-t_vec3	plus3(t_vec3 a, float n)
-{
-	a.x += n;
-	a.y += n;
-	a.z += n;
-	return (a);
-}
-
-t_vec3	min3(t_vec3 a, float n)
-{
-	a.x -= n;
-	a.y -= n;
-	a.z -= n;
+	a.x += b.x;
+	a.y += b.y;
+	a.z += b.z;
 	return (a);
 }
 
@@ -52,4 +36,22 @@ t_vec3	new_vec(float a, float b, float c)
 	vec.y = b;
 	vec.z = c;
 	return (vec);
+}
+
+t_vec3	cross_prod(t_vec3 a, t_vec3 b)
+{
+	t_vec3	new;
+
+	new.x = a.y * b.z - a.z * b.y;
+	new.y = a.z * b.x - a.x * b.z;
+	new.z = a.x * b.y - a.y * b.x;
+	return (new);
+}
+
+t_vec3	mult_vec(t_vec3 a, t_vec3 b)
+{
+	a.x *= b.x;
+	a.y *= b.y;
+	a.z *= b.z;
+	return (a);
 }

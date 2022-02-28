@@ -16,13 +16,17 @@
 # ifndef M_PI
 #  define M_PI		3.14159265358979323846f	/* pi */
 # endif
+
 # ifndef M_PI_2
 #  define M_PI_2		1.57079632679489661923f	/* pi/2 */
 # endif
+
 # define IMG_W 1920
-# define ASPECT_RATIO (16.0f / 9.0f)
-# define IMG_H (int)(IMG_W / ASPECT_RATIO)
+# define IMG_H 1080
+# define ASPECT_RATIO 1.7777777777777777f /* 16 / 9 */
+
 # ifndef SUPERSAMPLING
-#  define SUPERSAMPLING 1
+#  define SUPERSAMPLING 0
 # endif
+
 #endif //CONSTANTS_H

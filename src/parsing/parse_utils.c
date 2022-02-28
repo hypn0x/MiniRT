@@ -46,7 +46,7 @@ char	*chop_word(char **line, int (fn)(int))
 	return (word);
 }
 
-int	is_comma(int c)
+static int	is_comma(int c)
 {
 	return ((char)c == ',');
 }

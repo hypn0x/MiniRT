@@ -38,7 +38,7 @@ static int	check_objects_values(t_list *head)
 	return (0);
 }
 
-int	check_light(t_list *elem)
+static int	check_light(t_list *elem)
 {
 	t_light	*light;
 

@@ -16,6 +16,6 @@
 # include <libft.h>
 # include <types.h>
 
-t_list	**parser(char *filename, t_camera *C, t_list **L, t_ambient *A);
+void	parser(char *filename, t_data *img);
 
 #endif

@@ -12,10 +12,9 @@
 
 #include <hit_objs.h>
 #include <op_vec.h>
-#include <op_vec_double.h>
 #include <math.h>
 
-int	solve_quadratic(t_vec3 vec, float *x0, float *x1)
+static int	solve_quadratic(t_vec3 vec, float *x0, float *x1)
 {
 	float	discr;
 	float	q;
@@ -40,7 +39,7 @@ int	solve_quadratic(t_vec3 vec, float *x0, float *x1)
 	return (0);
 }
 
-int	cylinder_root(float *t0, float *t1, t_cylinder *cylinder, t_ray ray)
+static int	cylinder_root(float *t0, float *t1, t_cylinder *cylinder, t_ray ray)
 {
 	t_vec3	a_sqrt;
 	t_vec3	right;

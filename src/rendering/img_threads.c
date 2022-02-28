@@ -12,7 +12,6 @@
 
 #include <libft.h>
 #include <types.h>
-#include <op_vec_double.h>
 #include <op_vec.h>
 #include <constants.h>
 #include <float.h>
@@ -42,21 +41,22 @@ t_colour	supersample_px(t_ray ray, t_data img)
 	return (div3(c, 4));
 }
 
-int	is_px_diff(t_colour c1, t_colour c2)
+static void	*new_light(void *content)
 {
-	float	diff;
+	t_light	*light;
+	t_light	*new_light;
 
-	diff = 2.0f;
-	if (c1.x - diff > c2.x || c1.x + diff < c2.x)
-		return (1);
-	if (c1.y - diff > c2.y || c1.y + diff < c2.y)
-		return (1);
-	if (c1.z - diff > c2.z || c1.z + diff < c2.z)
-		return (1);
-	return (0);
+	light = content;
+	new_light = malloc(sizeof(t_light));
+	if (!new_light)
+		return (NULL);
+	new_light->colour = light->colour;
+	new_light->brightness = light->brightness;
+	new_light->coordinates = light->coordinates;
+	return (new_light);
 }
 
-void	px_loop(t_data img, t_ray ray, t_thread dt)
+static void	px_loop(t_data img, t_ray ray, t_thread dt)
 {
 	int		x;
 	int		y;
@@ -81,7 +81,7 @@ void	px_loop(t_data img, t_ray ray, t_thread dt)
 	ft_lstclear(&(img.light), free);
 }
 
-void	*thread_loop(void *ptr)
+static void	*thread_loop(void *ptr)
 {
 	t_thread	*dt;
 	t_ray		ray;

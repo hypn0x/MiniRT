@@ -15,7 +15,6 @@
 //
 
 #include <libft.h>
-#include <types.h>
 
 int	parsing_error(void *elem, char *error)
 {

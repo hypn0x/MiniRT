@@ -16,8 +16,10 @@
 #include <colors.h>
 #include <op_vec.h>
 
-float	get_t(t_list *elem, float t, t_ray r)
+static float	get_t(t_list *elem, t_ray r)
 {
+	float	t;
+
 	if (elem->type == 's')
 		t = hit_sphere(((t_sphere *) elem->content), r);
 	else if (elem->type == 'p')
@@ -26,6 +28,8 @@ float	get_t(t_list *elem, float t, t_ray r)
 		t = hit_cylinder(((t_cylinder *) elem->content), r);
 	else if (elem->type == 't')
 		t = hit_triangle(((t_triangle *)elem->content), r);
+	else
+		return (-1);
 	return (t);
 }
 
@@ -48,7 +52,7 @@ t_colour	cast_ray(t_ray r, t_data img, t_object obj)
 		r.direction = normalize(min_vec(light->coordinates, r.origin));
 		while (elem != NULL)
 		{
-			td[0] = get_t(elem, td[0], r);
+			td[0] = get_t(elem, r);
 			if (td[0] > 0 && td[0] < td[1] - (float)1e-5)
 			{
 				light->brightness = -light->brightness;

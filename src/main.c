@@ -10,13 +10,29 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing/parser.h"
+#include <parser.h>
 #include <mlx.h>
 #include <libft.h>
 #include <validate.h>
 #include <types.h>
 #include <stdlib.h>
 #include <mlx_img.h>
+#include <constants.h>
+#include <random.h>
+#include <time.h>
+
+static void	create_img(t_data *img)
+{
+	time_t	t;
+
+	if (SUPERSAMPLING)
+	{
+		ft_rand(time(&t));
+		multithreading(img);
+	}
+	else
+		img_loop(img);
+}
 
 int	main(int argc, char **argv)
 {
@@ -24,8 +40,7 @@ int	main(int argc, char **argv)
 
 	if (argc != 2)
 		return (ft_printf(2, "Usage: ./miniRT (scene)\n"));
-	img.light = NULL;
-	img.objects = parser(argv[1], &(img.camera), &(img.light), &(img.ambient));
+	parser(argv[1], &img);
 	if (img.objects == NULL)
 		return (ft_printf(2, "Error\nFile scene corrupted\n"));
 	else if (check_list_values(*(img.objects),

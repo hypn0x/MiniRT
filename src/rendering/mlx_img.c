@@ -13,13 +13,11 @@
 #include <mlx.h>
 #include <libft.h>
 #include <types.h>
-#include <op_vec_double.h>
 #include <op_vec.h>
 #include <math.h>
 #include <constants.h>
 #include <float.h>
 #include <colors.h>
-#include <random.h>
 #include <pthread.h>
 #include <mlx_img.h>
 
@@ -50,7 +48,7 @@ void	init_image(t_data *img)
 	mlx_hook(img->mlx_win, 2, 1L, key_hook, img);
 }
 
-t_colour	get_mean_pixel(t_ray ray, t_data img)
+static t_colour	get_mean_pixel(t_ray ray, t_data img)
 {
 	t_colour	val;
 	t_list		*hit_elem;
@@ -78,19 +76,18 @@ t_colour	get_mean_pixel(t_ray ray, t_data img)
 	return (div3(val, 4));
 }
 
-void	*new_light(void *content)
+int	is_px_diff(t_colour c1, t_colour c2)
 {
-	t_light	*light;
-	t_light	*new_light;
+	float	diff;
 
-	light = content;
-	new_light = malloc(sizeof(t_light));
-	if (!new_light)
-		return (NULL);
-	new_light->colour = light->colour;
-	new_light->brightness = light->brightness;
-	new_light->coordinates = light->coordinates;
-	return (new_light);
+	diff = 2.0f;
+	if (c1.x - diff > c2.x || c1.x + diff < c2.x)
+		return (1);
+	if (c1.y - diff > c2.y || c1.y + diff < c2.y)
+		return (1);
+	if (c1.z - diff > c2.z || c1.z + diff < c2.z)
+		return (1);
+	return (0);
 }
 
 int	get_pixel_value(t_ray ray, t_data img)
@@ -118,38 +115,28 @@ int	get_pixel_value(t_ray ray, t_data img)
 	return (rgb_to_int(v2));
 }
 
-// nor = y[0], x[1], px[2]
-// TODO norminette
-
-void	create_img(t_data *img)
+void	img_loop(t_data *img)
 {
-	int		nor[3];
-	t_ray	ray;
+	size_t	x;
+	size_t	y;
+	size_t	px;
 	t_vec3	horiz;
-	time_t	t;
+	t_ray	ray;
 
-	if (SUPERSAMPLING)
+	horiz = mult3(img->horizontal, IMG_W);
+	y = -1;
+	px = 0;
+	ray.origin = img->camera.view_point;
+	ray.direction = img->top_left_corner;
+	while (++y < IMG_H)
 	{
-		ft_rand(time(&t));
-		multithreading(img);
-	}
-	else
-	{
-		horiz = mult3(img->horizontal, IMG_W);
-		nor[0] = -1;
-		nor[2] = 0;
-		ray.origin = img->camera.view_point;
-		ray.direction = img->top_left_corner;
-		while (++nor[0] < IMG_H)
+		x = -1;
+		while (++x < IMG_W)
 		{
-			nor[1] = -1;
-			while (++nor[1] < IMG_W)
-			{
-				ray.direction = plus_vec(ray.direction, img->horizontal);
-				img->addr[nor[2]++] = get_pixel_value(ray, *img);
-			}
-			ray.direction = plus_vec(ray.direction, img->vertical);
-			ray.direction = min_vec(ray.direction, horiz);
+			ray.direction = plus_vec(ray.direction, img->horizontal);
+			img->addr[px++] = get_pixel_value(ray, *img);
 		}
+		ray.direction = plus_vec(ray.direction, img->vertical);
+		ray.direction = min_vec(ray.direction, horiz);
 	}
 }

@@ -19,26 +19,26 @@
 #include "parsing/lights_parser.h"
 #include <parse_utils.h>
 
-int	parse_line(char *line, t_list **head, t_camera *C, t_list **L, t_ambient *A)
+static int	parse_object(char *line, t_data *img)
 {
 	if (line[0] == 'A' && ft_isspace(line[1]))
-		return (add_ambient(line + 1, A));
+		return (add_ambient(line + 1, &(img->ambient)));
 	if (line[0] == 'C' && ft_isspace(line[1]))
-		return (add_camera(line + 1, C));
+		return (add_camera(line + 1, &(img->camera)));
 	if (line[0] == 'L' && ft_isspace(line[1]))
-		return (add_light(line + 1, L));
+		return (add_light(line + 1, &(img->light)));
 	if (!ft_strncmp("sp", line, 2) && ft_isspace(line[2]))
-		return (add_sphere(line + 2, head));
+		return (add_sphere(line + 2, img->objects));
 	if (!ft_strncmp("pl", line, 2) && ft_isspace(line[2]))
-		return (add_plane(line + 2, head));
+		return (add_plane(line + 2, img->objects));
 	if (!ft_strncmp("cy", line, 2) && ft_isspace(line[2]))
-		return (add_cylinder(line + 2, head));
+		return (add_cylinder(line + 2, img->objects));
 	if (!ft_strncmp("tr", line, 2) && ft_isspace(line[2]))
-		return (add_triangle(line + 2, head));
+		return (add_triangle(line + 2, img->objects));
 	return (1);
 }
 
-int	check_ext(const char *filename)
+static int	check_ext(const char *filename)
 {
 	char	*dot;
 
@@ -48,7 +48,7 @@ int	check_ext(const char *filename)
 	return (ft_strncmp(".rt", dot, 4));
 }
 
-int	open_file(char *filename)
+static int	open_file(char *filename)
 {
 	int	fd;
 
@@ -66,52 +66,55 @@ int	open_file(char *filename)
 	return (fd);
 }
 
-void	remove_comments(char *line)
+static int	parse_line(char *line_head, t_data *img)
 {
+	char	*line;
+
+	line = line_head;
 	while (*line)
 	{
 		if (*line == '#')
-		{
 			*line = 0;
-			return ;
-		}
 		line++;
 	}
+	skip_spaces(&line_head);
+	if (*line_head)
+	{
+		if (parse_object(line_head, img))
+		{
+			ft_lstclear(img->objects, free);
+			free(img->objects);
+			free(line_head);
+			return (1);
+		}
+	}
+	return (0);
 }
 
-t_list	**parser(char *filename, t_camera *C, t_list **L, t_ambient *A)
+void	parser(char *filename, t_data *img)
 {
 	char	*line;
-	t_list	**head;
 	int		fd;
 
-	C->fov = -1;
-	A->brightness = -1;
+	img->light = NULL;
+	img->camera.fov = -1;
+	img->ambient.brightness = -1;
 	fd = open_file(filename);
-	head = malloc(sizeof(t_list *));
-	if (!head)
-		return (NULL);
-	*head = NULL;
+	img->objects = malloc(sizeof(t_list *));
+	if (!img->objects)
+		return ;
+	*(img->objects) = NULL;
 	line = get_next_line(fd);
 	while (line)
 	{
-		remove_comments(line);
-		skip_spaces(&line);
-		if (*line)
+		if (parse_line(line, img))
 		{
-			if (parse_line(line, head, C, L, A))
-			{
-				ft_lstclear(head, free);
-				free(head);
-				free(line);
-				close(fd);
-				exit (EXIT_FAILURE);
-			}
+			close(fd);
+			exit (EXIT_FAILURE);
 		}
 		free(line);
 		line = get_next_line(fd);
 	}
 	free(line);
 	close(fd);
-	return (head);
 }

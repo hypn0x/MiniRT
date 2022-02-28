@@ -12,11 +12,10 @@
 
 #include <colors.h>
 #include <types.h>
-#include <op_vec_double.h>
 #include <op_vec.h>
 #include <math.h>
 
-int	clip_colour(float c)
+static int	clip_colour(float c)
 {
 	if (c < 0)
 		return (0);
@@ -35,13 +34,14 @@ int	rgb_to_int(t_colour c)
 	return (rgb);
 }
 
-t_colour	get_diffuse_light(t_object obj, t_light light, t_ray r)
+static t_colour	get_diffuse_light(t_object obj, t_light light, t_ray r)
 {
 	return (mult_vec(obj.colour, mult3(light.colour,
 				dot(r.direction, obj.normal_to_surface))));
 }
 
-t_colour	get_specular_light(t_object obj, t_light light, t_ray r, t_data img)
+static t_colour	get_specular_light(t_object obj, t_light light, t_ray r,
+					t_data img)
 {
 	float	brightness;
 

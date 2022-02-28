@@ -12,24 +12,17 @@
 
 #include <hit_objs.h>
 #include <op_vec.h>
-#include <op_vec_double.h>
 #include <math.h>
 
-float	hit_cap(t_plane *pl, t_ray ray)
+t_vec3	vec_unit(t_vec3 vec)
 {
-	t_vec3		a;
-	float		b;
-	float		t;
+	float	len;
 
-	a = min_vec(pl->coordinates, ray.origin);
-	b = dot(pl->orientation, ray.direction);
-	t = dot(pl->orientation, a) / b;
-	if (t < 0)
-		return (-1);
-	return (t);
+	len = sqrtf(len3(vec));
+	return (div3(vec, len));
 }
 
-float	hit_cylinder_cap(t_cylinder *cy, t_ray ray, float t)
+static float	hit_cylinder_cap(t_cylinder *cy, t_ray ray, float t)
 {
 	t_vec3		rt;
 	float		h;
