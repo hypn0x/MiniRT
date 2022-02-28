@@ -65,22 +65,22 @@ t_colour	get_mean_pixel(t_ray ray, t_data img)
 
 	top_left = ray.direction;
 	// top_left
-	ray.direction = normalize(ray.direction);
+	ray.direction = normalize(top_left);
 	distance = DBL_MAX;
 	hit_elem = get_hit_elem(ray, img.objects, &distance);
 	val = create_obj(hit_elem, ray, img, distance);
 	// top_right
-	ray.direction = normalize(plus_vec(ray.direction, img.horizontal));
+	ray.direction = normalize(plus_vec(top_left, img.horizontal));
 	distance = DBL_MAX;
 	hit_elem = get_hit_elem(ray, img.objects, &distance);
 	val = plus_vec(val, create_obj(hit_elem, ray, img, distance));
 	// bottom_left
-	ray.direction = normalize(plus_vec(ray.direction, img.vertical));
+	ray.direction = normalize(plus_vec(top_left, img.vertical));
 	distance = DBL_MAX;
 	hit_elem = get_hit_elem(ray, img.objects, &distance);
 	val = plus_vec(val, create_obj(hit_elem, ray, img, distance));
 	// bottom_right
-	ray.direction = normalize(plus_vec(plus_vec(ray.direction, img.vertical), img.horizontal));
+	ray.direction = normalize(plus_vec(plus_vec(top_left, img.vertical), img.horizontal));
 	distance = DBL_MAX;
 	hit_elem = get_hit_elem(ray, img.objects, &distance);
 	val = plus_vec(val, create_obj(hit_elem, ray, img, distance));
@@ -155,11 +155,10 @@ int	get_pixel_value(t_ray ray, t_data img)
 	v2 = create_obj(hit_elem, ray, img, distance);
 	ray.direction = top_left;
 	if (SUPERSAMPLING && is_px_diff(v1, v2))
-//		return (0);
 		return (rgb_to_int(div3(plus_vec(v1, plus_vec(v2, supersample_px(ray, img))), 3)));
-	if (!SUPERSAMPLING)
-		v1 = v2;
-	return (rgb_to_int(div3(plus_vec(v1, v2), 2)));
+	if (SUPERSAMPLING)
+		return (rgb_to_int(div3(plus_vec(v1, v2), 2)));
+	return (rgb_to_int(v1));
 }
 
 #include <pthread.h>

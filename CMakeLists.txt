@@ -14,7 +14,7 @@ if (APPLE)
     FIND_LIBRARY(APPKIT_LIBRARY AppKit)
     SET(LIBS ${LIBS} ${OPENGL_LIBRARY} ${APPKIT_LIBRARY})
 else ()
-    SET(LIBS ${LIBS} Xext X11 m bsd)
+    SET(LIBS ${LIBS} Xext X11 m)
 endif ()
 
 include_directories(libs/libft/incs includes includes/parsing includes/vector

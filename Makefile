@@ -23,7 +23,7 @@ LIBS := -Llibs/libft -lft -lmlx
 UNAME = $(shell uname -s)
 ifeq ($(UNAME), Linux)
 	NPROC := $(shell nproc)
-	LIBS += -lmlx -lXext -lX11 -lm -lbsd
+	LIBS += -lmlx -lXext -lX11 -lm
 else
 	NPROC := $(shell sysctl -n hw.ncpu)
 	INC_FLAGS += -Ilibs/mlx
