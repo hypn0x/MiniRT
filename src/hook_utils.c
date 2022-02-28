@@ -21,6 +21,9 @@ int	ft_exit(t_data *data)
 	mlx_destroy_window(data->mlx, data->mlx_win);
 	//mlx_destroy_display(data->mlx); Linux variant
 	free(data->mlx);
+	ft_lstclear(data->objects, free);
+	ft_lstclear(&(data->light), free);
+	free(data->objects);
 	exit(0);
 }
 

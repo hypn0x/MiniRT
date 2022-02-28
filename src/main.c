@@ -16,7 +16,7 @@
 #include <validate.h>
 #include <types.h>
 #include <stdlib.h>
-#include "../includes/rendering/mlx_img.h"
+#include <mlx_img.h>
 
 int	main(int argc, char **argv)
 {
@@ -32,7 +32,6 @@ int	main(int argc, char **argv)
 	{
 		ft_lstclear(img.objects, free);
 		ft_lstclear(&(img.light), free);
-		free(img.objects);
 		free(img.objects);
 		return (ft_printf(2, "Error\nInvalid value in scene\n"));
 	}
