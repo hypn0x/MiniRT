@@ -16,7 +16,7 @@
 #include <validate.h>
 #include <types.h>
 #include <stdlib.h>
-#include "../includes/rendering/mlx_img.h"
+#include <mlx_img.h>
 
 int	main(int argc, char **argv)
 {

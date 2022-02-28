@@ -115,6 +115,8 @@ Temporary Items
 .apdisk
 
 miniRT
+bonusMiniRT
+build
+build_bonus
 *.o
 *.a
-

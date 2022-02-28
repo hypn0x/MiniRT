@@ -23,6 +23,6 @@
 # define ASPECT_RATIO (16.0f / 9.0f)
 # define IMG_H (int)(IMG_W / ASPECT_RATIO)
 # ifndef SUPERSAMPLING
-#  define SUPERSAMPLING 1
+#  define SUPERSAMPLING 0
 # endif
 #endif //CONSTANTS_H
