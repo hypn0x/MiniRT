@@ -21,7 +21,6 @@
 #include <pthread.h>
 #include <mlx_img.h>
 
-// todo: fix case where cross prod = 0 l:38
 void	init_image(t_data *img)
 {
 	img->mlx = mlx_init();
@@ -34,6 +33,9 @@ void	init_image(t_data *img)
 	img->viewport_height = img->viewport_width / ASPECT_RATIO;
 	img->horizontal = cross_prod(img->camera.orientation,
 			new_vec(0.0f, 1.0f, 0.0f));
+	if (img->horizontal.x == 0 && img->horizontal.y == 0
+		&& img->horizontal.z == 0)
+		img->horizontal = new_vec(0.0f, 0.0f, -1.0f);
 	img->vertical = mult3(cross_prod(img->camera.orientation, img->horizontal),
 			img->viewport_height);
 	img->horizontal = mult3(img->horizontal, img->viewport_width);
