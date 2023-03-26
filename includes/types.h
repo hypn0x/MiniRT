@@ -76,7 +76,6 @@ typedef struct s_cylinder
 	float		diameter;
 	float		height;
 	t_colour	colour;
-	t_plane		*cap[2];
 }	t_cylinder;
 
 typedef struct s_triangle

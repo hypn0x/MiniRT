@@ -14,80 +14,60 @@
 #include <op_vec.h>
 #include <math.h>
 
-static int	solve_quadratic(t_vec3 vec, float *x0, float *x1)
+float hit_cylinder(t_cylinder *cylinder, t_ray ray)
 {
-	float	discr;
-	float	q;
+	// Coefficients of the quadratic equation
+	float a_coefficient;
+	float b_coefficient;
+	float c_coefficient;
+	// Discriminant
+	float disc;
+	// solutions of the quadratic equation
+	float t1;
+	float t2;
+	// distance from the origin of the ray to the intersection point
+	float m1;
+	float m2;
 
-	discr = powf(vec.y, 2) - 4 * vec.x * vec.z;
-	if (discr < 0)
-		return (-1);
-	if (discr == 0)
-	{
-		*x0 = -0.5f * vec.y / vec.x;
-		*x1 = -0.5f * vec.y / vec.x;
-	}
+	// used to solve m and t
+	t_vec3 closest_ray_intersection = min_vec(ray.origin, cylinder->coordinates);
+	// used to find the a_coefficient coefficient -> a = D|D - (D|V)^2
+	float VD = dot(ray.direction, cylinder->orientation);
+	float COD = dot(closest_ray_intersection, cylinder->orientation);
+
+	// a = D|D - (D|V)^2
+	a_coefficient = dot(ray.direction, ray.direction) - VD * VD;
+	// b = 2 * (D|X - (D|V)*(X|V))
+	b_coefficient = 2 * (dot(ray.direction, closest_ray_intersection) - VD * COD);
+	// c = X|X - (X|V)^2 - r^2
+	c_coefficient = dot(closest_ray_intersection, closest_ray_intersection) - COD * COD - cylinder->diameter * cylinder->diameter / 4.0;
+
+	// b^2 - 4ac
+	disc = b_coefficient * b_coefficient - 4 * a_coefficient * c_coefficient;
+	if (disc < 0)
+		return -1;
+
+	// Quadratic equation -> t = (-b +- sqrt(b^2 - 4ac)) / 2a
+	t1 = (-b_coefficient + sqrtf(disc)) / (2 * a_coefficient);
+	t2 = (-b_coefficient - sqrtf(disc)) / (2 * a_coefficient);
+
+	// m = (D|V)t + (X|V) : It is usefully because we don't want to intersect with the infinite cylinder
+	m1 = dot(ray.direction, cylinder->orientation) * t1 + dot(closest_ray_intersection, cylinder->orientation);
+	m2 = dot(ray.direction, cylinder->orientation) * t2 + dot(closest_ray_intersection, cylinder->orientation);
+
+	// The intersection point must be between 0 and the height of the cylinder
+	if (m1 < 0 || m1 > cylinder->height)
+		t1 = -1;
+	if (m2 < 0 || m2 > cylinder->height)
+		t2 = -1;
+
+	// Return the smallest positive value
+	if (t1 > 0 && t2 > 0)
+		return (t1 < t2 ? t1 : t2);
+	else if (t1 > 0)
+		return t1;
+	else if (t2 > 0)
+		return t2;
 	else
-	{
-		if (vec.y > 0)
-			q = -(vec.y + sqrtf(discr)) / 2;
-		else
-			q = -(vec.y - sqrtf(discr)) / 2;
-		*x0 = q / vec.x;
-		*x1 = vec.z / q;
-	}
-	return (0);
-}
-
-static int	cylinder_root(float *t0, float *t1, t_cylinder *cylinder, t_ray ray)
-{
-	t_vec3	a_sqrt;
-	t_vec3	right;
-	float	x;
-	float	y;
-	float	z;
-
-	a_sqrt = min_vec(ray.direction,
-			mult3(cylinder->orientation,
-				dot(ray.direction, cylinder->orientation)));
-	x = dot(a_sqrt, a_sqrt);
-	right = min_vec(min_vec(ray.origin, cylinder->coordinates),
-			mult3(cylinder->orientation,
-				dot(min_vec(ray.origin, cylinder->coordinates),
-					cylinder->orientation)));
-	y = 2 * dot(a_sqrt, right);
-	z = dot(right, right) - (cylinder->diameter / 2 * cylinder->diameter / 2);
-	if (solve_quadratic(new_vec(x, y, z), t0, t1))
-		return (0);
-	if (isless(*t0, 0) && isless(*t1, 0))
-		return (0);
-	return (1);
-}
-
-float	hit_cylinder(t_cylinder *cylinder, t_ray ray)
-{
-	float	t0;
-	float	t1;
-
-	if (cylinder->diameter > 2 && cylinder->orientation.z == 1)
-		cylinder->diameter = 2;
-	create_caps(cylinder);
-	if (!cylinder_root(&t0, &t1, cylinder, ray))
-		return (-1);
-	check_t(&t0, cylinder, ray);
-	check_t(&t1, cylinder, ray);
-	if (isless(t1, t0))
-	{
-		if (isgreaterequal(t1, 0))
-			return (t1);
-		else
-			return (t0);
-	}
-	else
-	{
-		if (isgreater(t0, 0))
-			return (t0);
-		else
-			return (t1);
-	}
+		return -1;
 }
